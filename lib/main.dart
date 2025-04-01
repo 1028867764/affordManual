@@ -1735,8 +1735,11 @@ class _BiologyAppState extends State<BiologyApp> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('生物篇'),
-        backgroundColor: Colors.red,
+        title: const Text(
+          '生物篇',
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+        ),
+        backgroundColor: Color(0xFFE65100),
         foregroundColor: Colors.white,
         centerTitle: true,
         leadingWidth: 100,
@@ -1872,4 +1875,3 @@ class _BiologyAppState extends State<BiologyApp> {
     );
   }
 }
-//测试
