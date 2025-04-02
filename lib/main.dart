@@ -3,6 +3,7 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter/services.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:intl/intl.dart';
 
 void main() {
   runApp(const MyApp());
@@ -514,6 +515,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   String? _enlargedImageUrl;
   ScrollController _scrollController = ScrollController();
   double _scrollPosition = 0.0;
+  List<Map<String, dynamic>> _priceHistory = []; // 存储历史价格数据
 
   void _enlargeImage(String imageUrl) {
     _scrollPosition = _scrollController.position.pixels;
@@ -533,14 +535,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
   void _copyText(String text) {
     Clipboard.setData(ClipboardData(text: text));
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text('已复制到剪贴板: $text')));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('已复制到剪贴板: $text'))
+    );
   }
 
   @override
   void initState() {
     super.initState();
+    _loadPriceHistory(); // 加载历史价格数据
     Future.delayed(const Duration(milliseconds: 500), () {
       if (mounted) {
         setState(() {
@@ -550,11 +553,142 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     });
   }
 
+  // 模拟从JSON文件加载历史价格数据
+  Future<void> _loadPriceHistory() async {
+    // 这里应该是从JSON文件加载数据，这里用模拟数据代替
+    final mockData = [
+      {
+        "time": "2023-01-01",
+        "price": "¥12.50",
+        "detail": "点击查看详情"
+      },
+      {
+        "time": "2023-02-15",
+        "price": "¥13.20",
+        "detail": "点击查看详情"
+      },
+      {
+        "time": "2023-03-30",
+        "price": "¥11.80",
+        "detail": "点击查看详情"
+      },
+      {
+        "time": "2023-05-10",
+        "price": "¥14.00",
+        "detail": "点击查看详情"
+      },
+    ];
+    
+    setState(() {
+      _priceHistory = mockData;
+    });
+  }
+
   @override
   void dispose() {
     _scrollController.dispose();
     super.dispose();
   }
+
+  // 构建历史价格表格
+ Widget _buildPriceHistoryTable() {
+
+  // 获取最新的两条数据
+  final latestData = (_priceHistory.toList()..sort((a, b) => b['time'].compareTo(a['time']))).take(2).toList();
+
+  return Container(
+    margin: const EdgeInsets.symmetric(horizontal: 16),
+    decoration: BoxDecoration(
+      border: Border.all(color: Colors.blue.shade300),
+      borderRadius: BorderRadius.circular(8),
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Container(
+          padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
+          decoration: BoxDecoration(
+            color: Colors.orange.shade100,
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(8),
+              topRight: Radius.circular(8),
+            ),
+          ),
+          child: const Center(
+    child: Text(
+      '历史价格',
+      style: TextStyle(
+        fontSize: 16,
+        fontWeight: FontWeight.bold,
+        color: Colors.orange,
+      ),
+    ),
+  ),
+        ),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: DataTable(
+            dataRowHeight: 30, // 设置数据行高度
+            headingRowHeight: 0, // 设置标题行高度
+            columnSpacing: 20,
+            columns: const [
+      DataColumn(label: SizedBox.shrink()), // 使用空组件替代 Text('')
+      DataColumn(label: SizedBox.shrink()),
+      DataColumn(label: SizedBox.shrink()),
+                                           ],
+            rows: latestData.map((item) {
+              return DataRow(
+                cells: [
+                DataCell(Text(item['time'])),
+                DataCell(Text(item['price'])),
+                DataCell(
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        PageRouteBuilder(
+                          pageBuilder: (context, animation, secondaryAnimation) => PriceTag(
+                            time: item['time'],
+                            price: item['price'],
+                            productName: widget.product.name,
+                          ),
+                          transitionsBuilder: (
+                            context,
+                            animation,
+                            secondaryAnimation,
+                            child,
+                          ) {
+                            const begin = Offset(1.0, 0.0);
+                            const end = Offset.zero;
+                            const curve = Curves.ease;
+                            var tween = Tween(begin: begin, end: end)
+                                .chain(CurveTween(curve: curve));
+                            var offsetAnimation = animation.drive(tween);
+                            return SlideTransition(
+                              position: offsetAnimation,
+                              child: child,
+                            );
+                          },
+                        ),
+                      );
+                    },
+                    child: const Text(
+                      '详情',
+                      style: TextStyle(
+                        color: Colors.blue,
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  ),
+                ),
+              ]);
+            }).toList(),
+          ),
+        ),
+      ],
+    ),
+  );
+}
 
   @override
   Widget build(BuildContext context) {
@@ -665,65 +799,214 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           const SizedBox(width: 10),
         ],
       ),
-      body:
-          _enlargedImageUrl != null
-              ? GestureDetector(
-                onTap: _closeEnlargedImage,
-                child: Container(
-                  color: Colors.black.withOpacity(0.9),
-                  child: Center(
-                    child: InteractiveViewer(
-                      panEnabled: true,
-                      minScale: 0.5,
-                      maxScale: 4.0,
-                      child: Image.network(_enlargedImageUrl!),
-                    ),
+      body: _enlargedImageUrl != null
+          ? GestureDetector(
+              onTap: _closeEnlargedImage,
+              child: Container(
+                color: Colors.black.withOpacity(0.9),
+                child: Center(
+                  child: InteractiveViewer(
+                    panEnabled: true,
+                    minScale: 0.5,
+                    maxScale: 4.0,
+                    child: Image.network(_enlargedImageUrl!),
                   ),
                 ),
-              )
-              : _isLoading
+              ),
+            )
+          : _isLoading
               ? const Center(child: CircularProgressIndicator())
               : SingleChildScrollView(
-                controller: _scrollController,
-                child: Markdown(
-                  data: markdownContent,
-                  shrinkWrap: true,
-                  selectable: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  padding: const EdgeInsets.all(16),
-                  imageBuilder: (uri, title, alt) {
-                    return GestureDetector(
-                      onTap: () => _enlargeImage(uri.toString()),
-                      child: CachedNetworkImage(
-                        imageUrl: uri.toString(),
-                        placeholder:
-                            (context, url) => Container(
-                              color: Colors.grey[300],
+                  controller: _scrollController,
+                  child: Column(
+                    children: [
+                      // 价格历史表格（无外边距）
+          Padding(
+            padding: EdgeInsets.zero,
+            child: _buildPriceHistoryTable(),
+          ),
+                      Markdown(
+                        data: markdownContent,
+                        shrinkWrap: true,
+                        selectable: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        padding: const EdgeInsets.fromLTRB(10, 0, 10, 15),
+                        imageBuilder: (uri, title, alt) {
+                          return GestureDetector(
+                            onTap: () => _enlargeImage(uri.toString()),
+                            child: CachedNetworkImage(
+                              imageUrl: uri.toString(),
+                              placeholder: (context, url) => Container(
+                                color: Colors.grey[300],
+                                width: 100,
+                                height: 100,
+                                child: const Icon(
+                                  Icons.image,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                              errorWidget: (context, url, error) => Container(
+                                color: Colors.grey[300],
+                                width: 100,
+                                height: 100,
+                                child: const Icon(
+                                  Icons.broken_image,
+                                  color: Colors.grey,
+                                ),
+                              ),
                               width: 100,
                               height: 100,
-                              child: const Icon(
-                                Icons.image,
-                                color: Colors.grey,
-                              ),
+                              fit: BoxFit.cover,
                             ),
-                        errorWidget:
-                            (context, url, error) => Container(
-                              color: Colors.grey[300],
-                              width: 100,
-                              height: 100,
-                              child: const Icon(
-                                Icons.broken_image,
-                                color: Colors.grey,
-                              ),
-                            ),
-                        width: 100,
-                        height: 100,
-                        fit: BoxFit.cover,
+                          );
+                        },
                       ),
-                    );
-                  },
+                    ],
+                  ),
+                ),
+    );
+  }
+}
+
+// 新增的PriceTag页面
+class PriceTag extends StatefulWidget {
+  final String time;
+  final String price;
+  final String productName;
+
+  const PriceTag({
+    super.key,
+    required this.time,
+    required this.price,
+    required this.productName,
+  });
+
+ @override
+  State<PriceTag> createState() => _PriceTagState();
+}
+
+class _PriceTagState extends State<PriceTag> {
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    // 模拟加载延迟
+    Future.delayed(const Duration(milliseconds: 500), () {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        leadingWidth: 100,
+        leading: Row(
+          children: [
+            const SizedBox(width: 10),
+            Material(
+              color: Colors.transparent,
+              borderRadius: BorderRadius.circular(24),
+              child: InkWell(
+                borderRadius: BorderRadius.circular(24),
+                onTap: () => Navigator.pop(context),
+                child: const Padding(
+                  padding: EdgeInsets.all(12),
+                  child: Icon(Icons.arrow_back),
                 ),
               ),
+            ),
+            const SizedBox(width: 10),
+            Material(
+              color: Colors.transparent,
+              borderRadius: BorderRadius.circular(24),
+              child: InkWell(
+                borderRadius: BorderRadius.circular(24),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    PageRouteBuilder(
+                      pageBuilder: (context, animation, secondaryAnimation) =>
+                          const SearchPage(),
+                      transitionsBuilder: (
+                        context,
+                        animation,
+                        secondaryAnimation,
+                        child,
+                      ) {
+                        const begin = Offset(1.0, 0.0);
+                        const end = Offset.zero;
+                        const curve = Curves.ease;
+                        var tween = Tween(begin: begin, end: end)
+                            .chain(CurveTween(curve: curve));
+                        var offsetAnimation = animation.drive(tween);
+                        return SlideTransition(
+                          position: offsetAnimation,
+                          child: child,
+                        );
+                      },
+                    ),
+                  );
+                },
+                child: const Padding(
+                  padding: EdgeInsets.all(12),
+                  child: Icon(Icons.search),
+                ),
+              ),
+            ),
+          ],
+        ),
+        title: Text(widget.productName), // 修改这里，使用传入的productName作为标题
+        actions: [
+          Material(
+            color: Colors.transparent,
+            borderRadius: BorderRadius.circular(24),
+            child: InkWell(
+              borderRadius: BorderRadius.circular(24),
+              onTap: () {
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => const MainHomePage()),
+                  (route) => false,
+                );
+              },
+              child: const Padding(
+                padding: EdgeInsets.all(12),
+                child: Icon(Icons.home),
+              ),
+            ),
+          ),
+          const SizedBox(width: 10),
+        ],
+      ),
+      body: 
+      _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('产品名称: ${widget.productName}', style: const TextStyle(fontSize: 18)),
+            const SizedBox(height: 10),
+            Text('时间: ${widget.time}', style: const TextStyle(fontSize: 16)),
+            const SizedBox(height: 10),
+            Text('价格: ${widget.price}', style: const TextStyle(fontSize: 16, color: Colors.red)),
+            const SizedBox(height: 20),
+            const Text('更多价格详情:', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 10),
+            const Text('这里可以显示更详细的价格信息，比如:'),
+            const Text('- 价格变动趋势'),
+            const Text('- 同期市场价格对比'),
+            const Text('- 历史最低/最高价格'),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -1841,7 +2124,7 @@ class _BiologyAppState extends State<BiologyApp> {
           '生物篇',
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
         ),
-        backgroundColor: Colors.grey[200], // 设置为淡黄色
+        backgroundColor: Colors.grey[200], 
         foregroundColor: Colors.black,
         centerTitle: true,
         leadingWidth: 100,
