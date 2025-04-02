@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter App',
       theme: ThemeData(
-        fontFamily: 'Noto Sans SC',
+        fontFamily: 'Roboto',
         primarySwatch: Colors.blue,
       ), // 设置默认字体
       home: const MainHomePage(),
@@ -248,7 +248,7 @@ class CategoryMenu extends StatelessWidget {
                       index == currentIndex
                           ? FontWeight.bold
                           : FontWeight.normal,
-                  color: index == currentIndex ? Colors.orange : null,
+                  color: index == currentIndex ? Colors.orange: null,
                 ),
               ),
             ),
@@ -272,9 +272,10 @@ class ProductGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool isSingleGroup = category.parentProductGroups.length == 1;
+    int groupCount = category.parentProductGroups.length;
 
     return ListView.builder(
-      itemCount: category.parentProductGroups.length * 2 - 1,
+      itemCount: groupCount * 2 - 1,
       itemBuilder: (context, index) {
         if (index.isOdd) {
           return const SizedBox(height: 15);
@@ -282,120 +283,221 @@ class ProductGrid extends StatelessWidget {
 
         final groupIndex = index ~/ 2;
         final group = category.parentProductGroups[groupIndex];
+        final isFirstGroup = groupIndex == 0;
+        final isLastGroup = groupIndex == groupCount - 1;
 
-        return Column(
-          children: [
-            if (!isSingleGroup && groupIndex == 0) const SizedBox(height: 10),
-            if (!isSingleGroup && group.id.isNotEmpty)
-              Container(
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                margin: const EdgeInsets.only(left: 10, right: 10, bottom: 0),
+        // 当有多个组时，包装整个组
+        if (!isSingleGroup) {
+          return Container(
+            margin: EdgeInsets.only(
+              left: 10,
+              right: 10,
+              top: isFirstGroup ? 10 : 0,  // 第一个组顶部有间距
+              bottom: isLastGroup ? 10 : 0, // 最后一个组底部有间距
+            ),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              color: Colors.orange[50],
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: _buildGroupContent(group, isSingleGroup, groupIndex, isLastGroup),
+            ),
+          );
+        } else {
+          // 单个组时直接返回内容
+          return _buildGroupContent(group, isSingleGroup, groupIndex, isLastGroup);
+        }
+      },
+    );
+  }
+
+Widget _buildGroupContent(
+  ParentProductGroup group, 
+  bool isSingleGroup, 
+  int groupIndex,
+  bool isLastGroup,
+) {
+  int parentProductCount = group.parentProducts.length;
+
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    mainAxisAlignment: MainAxisAlignment.start, // 确保子项从顶部开始排列
+    children: [
+      if (!isSingleGroup && group.id.isNotEmpty)
+        Container(
+          child: Align( // 替换原来的 Center
+          alignment: Alignment.centerLeft, // 左对齐
+            child: IntrinsicWidth(
+              child: Container( // 通过Container设置颜色
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                 decoration: BoxDecoration(
-                  color: Colors.grey[800],
-                  borderRadius: BorderRadius.circular(0),
-                ),
-                child: Center(
-                  child: Text(
-                    group.id,
-                    style: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
+                  color: Colors.orange[300],
+                  borderRadius: BorderRadius.only(
+                    bottomRight: Radius.circular(12), // 仅右下角圆角
                   ),
                 ),
+          child: Text(
+            group.id,
+            style: const TextStyle(
+              fontSize: 15,
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+            ),
+          ),
+        ),
+      ...group.parentProducts.map((parentProduct) {
+        final isLastParentProduct = group.parentProducts.indexOf(parentProduct) == parentProductCount - 1;
+
+        return Container(
+          margin: EdgeInsets.only(
+            top: isSingleGroup ? (groupIndex == 0 ? 10 : 0) : 0,
+            left: isSingleGroup ? 10 : 0,
+            right: isSingleGroup ? 10 : 0,
+            bottom: isSingleGroup ? (isLastParentProduct ? 10 : 0) : 0, // 确保最后一个 ParentProduct 没有下边距
+          ),
+          decoration: BoxDecoration(
+            color: isSingleGroup ? Colors.orange[50] : Colors.orange[50],
+            borderRadius: isSingleGroup ? BorderRadius.circular(12) : BorderRadius.zero,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch, // 确保子项拉伸填充
+            children: [
+              Padding(
+                padding: EdgeInsets.zero, // 所有方向内边距为 0
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    if (isSingleGroup) 
+  LayoutBuilder(
+    builder: (context, constraints) {
+      return Container(  
+        child: Align(
+        alignment: Alignment.centerLeft, // 左对齐
+      child: IntrinsicWidth(                          // 使用 IntrinsicWidth 包裹 Text
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+          decoration: BoxDecoration(
+            color: Colors.orange[300],
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(12),
+              topRight: Radius.circular(0),
+              bottomLeft: Radius.circular(0),
+              bottomRight: Radius.circular(12)
+            )
+          ),
+          child: Text(
+            parentProduct.id,
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
+              fontStyle: FontStyle.italic,
+              color: Colors.white,
+            ),
+          ),
+        ),
+        ),
+      ),
+    );
+    },
+  ),
+                    if (isSingleGroup)
+                      Container(
+                        padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 8),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Text(
+                          parentProduct.name,
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    if (!isSingleGroup)
+                      Container(
+                        padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 8),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Text(
+                          parentProduct.id,
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            fontStyle: FontStyle.italic,
+                          ),
+                        ),
+                      ),
+                    if (!isSingleGroup)
+                      Container(
+                        padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 8),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Text(
+                          parentProduct.name,
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
               ),
-            ...group.parentProducts.map((parentProduct) {
-              return Container(
-                margin: EdgeInsets.only(
-                  top: isSingleGroup ? 10 : 0,
+              GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  childAspectRatio: 0.8,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                ),
+                padding: const EdgeInsets.only(
+                  top: 0,
+                  bottom: 10,
                   left: 10,
                   right: 10,
-                  bottom: 0,
                 ),
-                decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  borderRadius: BorderRadius.circular(0),
-                ),
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(
-                        left: 10,
-                        top:
-                            (isSingleGroup ||
-                                    group.parentProducts.indexOf(
-                                          parentProduct,
-                                        ) ==
-                                        0)
-                                ? 0
-                                : 10,
-                        bottom: 5,
+                itemCount: parentProduct.childProducts.length,
+                itemBuilder: (context, index) {
+                  final product = parentProduct.childProducts[index];
+                  return GestureDetector(
+                    onTap: () => onProductSelected(product),
+                    child: Card(
+                      elevation: 1,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
                       ),
+                      child: Container(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            parentProduct.id,
-                            style: const TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
-                              fontStyle: FontStyle.italic, // 斜体
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                          Text(
-                            parentProduct.name,
-                            style: TextStyle(fontSize: 12),
+                            product.name,
+                            style: const TextStyle(fontSize: 11),
                             textAlign: TextAlign.center,
                           ),
                         ],
                       ),
                     ),
-                    GridView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 3,
-                            childAspectRatio: 0.8,
-                            crossAxisSpacing: 10,
-                            mainAxisSpacing: 10,
-                          ),
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      itemCount: parentProduct.childProducts.length,
-                      itemBuilder: (context, index) {
-                        final product = parentProduct.childProducts[index];
-                        return GestureDetector(
-                          onTap: () => onProductSelected(product),
-                          child: Card(
-                            elevation: 1,
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(vertical: 8),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    product.name,
-                                    style: const TextStyle(fontSize: 11),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        );
-                      },
                     ),
-                  ],
-                ),
-              );
-            }),
-          ],
+                  );
+                },
+              ),
+            ],
+          ),
         );
-      },
-    );
-  }
+      }).toList(), // 确保 map 返回的是一个列表
+    ],
+  );
+}
 }
 
 class ProductDetailScreen extends StatefulWidget {
@@ -1739,8 +1841,8 @@ class _BiologyAppState extends State<BiologyApp> {
           '生物篇',
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
         ),
-        backgroundColor: Color(0xFFE65100),
-        foregroundColor: Colors.white,
+        backgroundColor: Colors.grey[200], // 设置为淡黄色
+        foregroundColor: Colors.black,
         centerTitle: true,
         leadingWidth: 100,
         leading: Row(
