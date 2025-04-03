@@ -4,6 +4,8 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter/services.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:intl/intl.dart';
+import 'industry_app.dart';
+import 'luxury_app.dart';
 
 void main() {
   runApp(const MyApp());
@@ -38,9 +40,8 @@ class MainHomePage extends StatelessWidget {
               Navigator.push(
                 context,
                 PageRouteBuilder(
-                  pageBuilder:
-                      (context, animation, secondaryAnimation) =>
-                          const SearchPage(),
+                  pageBuilder: (context, animation, secondaryAnimation) =>
+                      const SearchPage(),
                   transitionsBuilder: (
                     context,
                     animation,
@@ -50,13 +51,9 @@ class MainHomePage extends StatelessWidget {
                     const begin = Offset(1.0, 0.0);
                     const end = Offset.zero;
                     const curve = Curves.ease;
-
-                    var tween = Tween(
-                      begin: begin,
-                      end: end,
-                    ).chain(CurveTween(curve: curve));
+                    var tween = Tween(begin: begin, end: end)
+                        .chain(CurveTween(curve: curve));
                     var offsetAnimation = animation.drive(tween);
-
                     return SlideTransition(
                       position: offsetAnimation,
                       child: child,
@@ -87,53 +84,163 @@ class MainHomePage extends StatelessWidget {
         ),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: GridView.count(
+          shrinkWrap: true,
+          crossAxisCount: 2, // 两列
+          mainAxisSpacing: 20, // 垂直间距
+          crossAxisSpacing: 20, // 水平间距
+          padding: const EdgeInsets.all(20), // 整体边距
           children: [
-            SizedBox(
-              width: 150,
-              height: 150,
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    PageRouteBuilder(
-                      pageBuilder:
-                          (context, animation, secondaryAnimation) =>
-                              const BiologyApp(),
-                      transitionsBuilder: (
-                        context,
-                        animation,
-                        secondaryAnimation,
-                        child,
-                      ) {
-                        const begin = Offset(1.0, 0.0);
-                        const end = Offset.zero;
-                        const curve = Curves.ease;
-
-                        var tween = Tween(
-                          begin: begin,
-                          end: end,
-                        ).chain(CurveTween(curve: curve));
-                        var offsetAnimation = animation.drive(tween);
-
-                        return SlideTransition(
-                          position: offsetAnimation,
-                          child: child,
-                        );
-                      },
-                    ),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(0),
+            _buildImageButton(
+              context,
+              'assets/images/biology_bg.webp',
+              '生物篇',
+              () {
+                Navigator.push(
+                  context,
+                  PageRouteBuilder(
+                    pageBuilder: (context, animation, secondaryAnimation) =>
+                        const BiologyApp(),
+                    transitionsBuilder: (
+                      context,
+                      animation,
+                      secondaryAnimation,
+                      child,
+                    ) {
+                      const begin = Offset(1.0, 0.0);
+                      const end = Offset.zero;
+                      const curve = Curves.ease;
+                      var tween = Tween(begin: begin, end: end)
+                          .chain(CurveTween(curve: curve));
+                      var offsetAnimation = animation.drive(tween);
+                      return SlideTransition(
+                        position: offsetAnimation,
+                        child: child,
+                      );
+                    },
                   ),
-                ),
-                child: const Text('生物篇'),
-              ),
+                );
+              },
+            ),
+            _buildImageButton(
+              context,
+              'assets/images/industry_bg.jpg',
+              '工业篇',
+              () {
+                Navigator.push(
+                  context,
+                  PageRouteBuilder(
+                    pageBuilder: (context, animation, secondaryAnimation) =>
+                        const IndustryApp(),
+                    transitionsBuilder: (
+                      context,
+                      animation,
+                      secondaryAnimation,
+                      child,
+                    ) {
+                      const begin = Offset(1.0, 0.0);
+                      const end = Offset.zero;
+                      const curve = Curves.ease;
+                      var tween = Tween(begin: begin, end: end)
+                          .chain(CurveTween(curve: curve));
+                      var offsetAnimation = animation.drive(tween);
+                      return SlideTransition(
+                        position: offsetAnimation,
+                        child: child,
+                      );
+                    },
+                  ),
+                );
+              },
+            ),
+            _buildImageButton(
+              context,
+              'assets/images/luxury_bg.webp',
+              '土豪篇',
+              () {
+                Navigator.push(
+                  context,
+                  PageRouteBuilder(
+                    pageBuilder: (context, animation, secondaryAnimation) =>
+                        const LuxuryApp(),
+                    transitionsBuilder: (
+                      context,
+                      animation,
+                      secondaryAnimation,
+                      child,
+                    ) {
+                      const begin = Offset(1.0, 0.0);
+                      const end = Offset.zero;
+                      const curve = Curves.ease;
+                      var tween = Tween(begin: begin, end: end)
+                          .chain(CurveTween(curve: curve));
+                      var offsetAnimation = animation.drive(tween);
+                      return SlideTransition(
+                        position: offsetAnimation,
+                        child: child,
+                      );
+                    },
+                  ),
+                );
+              },
+            ),
+            _buildImageButton(
+              context,
+              'assets/images/unknown_bg.jpg',
+              '',
+              () {},
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildImageButton(
+    BuildContext context,
+    String imagePath,
+    String text,
+    VoidCallback onPressed,
+  ) {
+    return SizedBox(
+      width: 100,
+      height: 100,
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+          padding: EdgeInsets.zero,
+          backgroundColor: Colors.transparent,
+          shadowColor: Colors.transparent,
+          shape: const CircleBorder(),
+        ),
+        child: ClipOval(
+          child: Stack(
+            children: [
+              Image.asset(
+                imagePath,
+                width: 600,
+                height: 600,
+                fit: BoxFit.cover,
+              ),
+              Center(
+                child: Text(
+                  text,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    shadows: [
+                      Shadow(
+                        color: Colors.black,
+                        blurRadius: 6,
+                        offset: const Offset(1, 1),
+                        )
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -456,8 +563,8 @@ Widget _buildGroupContent(
                 physics: const NeverScrollableScrollPhysics(),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 3,
-                  childAspectRatio: 0.8,
-                  crossAxisSpacing: 10,
+                  childAspectRatio: 1.0,
+                  crossAxisSpacing: 2,
                   mainAxisSpacing: 10,
                 ),
                 padding: const EdgeInsets.only(
