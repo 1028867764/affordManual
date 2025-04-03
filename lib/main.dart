@@ -6,6 +6,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:intl/intl.dart';
 import 'industry_app.dart';
 import 'luxury_app.dart';
+import 'search_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -247,46 +248,6 @@ class MainHomePage extends StatelessWidget {
   }
 }
 
-class SearchPage extends StatelessWidget {
-  const SearchPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leadingWidth: 43,
-        leading: Padding(
-          padding: const EdgeInsets.only(left: 3),
-          child: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            padding: EdgeInsets.zero,
-            constraints: const BoxConstraints(),
-            onPressed: () => Navigator.pop(context),
-          ),
-        ),
-        titleSpacing: 0,
-        title: Container(
-          margin: const EdgeInsets.only(right: 16),
-          height: 30,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: const TextField(
-            style: TextStyle(fontSize: 14),
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.symmetric(horizontal: 16),
-              suffixIcon: Icon(Icons.search, color: Colors.grey),
-              hintText: '搜索...',
-            ),
-          ),
-        ),
-      ),
-      body: const Center(child: Text('这里是搜索页面内容')),
-    );
-  }
-}
 
 class Product {
   final String id;
@@ -1966,7 +1927,7 @@ class _BiologyAppState extends State<BiologyApp> {
               id: "Camellia",
               name: ["山茶属"],
               childProducts: [
-                Product(id: "182", name: ["阿萨姆"]),
+                Product(id: "182", name: ["阿萨姆红茶"]),
              //   Product(id: "183", name: ["红茶粉"]),
               ],
             ),

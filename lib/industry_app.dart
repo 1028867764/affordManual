@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'main.dart';
+import 'search_page.dart';
 
 class IndustryApp extends StatefulWidget {
   const IndustryApp({super.key});

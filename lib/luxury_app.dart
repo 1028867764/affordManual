@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'main.dart';
+import 'search_page.dart';
 
 class LuxuryApp extends StatefulWidget {
   const LuxuryApp({super.key});
