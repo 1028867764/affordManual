@@ -356,7 +356,7 @@ class CategoryMenu extends StatelessWidget {
                       index == currentIndex
                           ? FontWeight.bold
                           : FontWeight.normal,
-                  color: index == currentIndex ? Colors.orange: null,
+                  color: index == currentIndex ? Colors.blue: null,
                 ),
               ),
             ),
@@ -405,7 +405,7 @@ class ProductGrid extends StatelessWidget {
             ),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
-              color: Colors.orange[50],
+              color: Colors.blue[50],
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(12),
@@ -440,7 +440,7 @@ Widget _buildGroupContent(
               child: Container( // 通过Container设置颜色
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                 decoration: BoxDecoration(
-                  color: Colors.orange[300],
+                  color: Colors.blue[300],
                   borderRadius: BorderRadius.only(
                     bottomRight: Radius.circular(12), // 仅右下角圆角
                   ),
@@ -468,7 +468,7 @@ Widget _buildGroupContent(
             bottom: isSingleGroup ? (isLastParentProduct ? 10 : 0) : 0, // 确保最后一个 ParentProduct 没有下边距
           ),
           decoration: BoxDecoration(
-            color: isSingleGroup ? Colors.orange[50] : Colors.orange[50],
+            color: isSingleGroup ? Colors.blue[50] : Colors.blue[50],
             borderRadius: isSingleGroup ? BorderRadius.circular(12) : BorderRadius.zero,
           ),
           child: Column(
@@ -489,7 +489,7 @@ Widget _buildGroupContent(
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
           decoration: BoxDecoration(
-            color: Colors.orange[300],
+            color: Colors.blue[300],
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(12),
               topRight: Radius.circular(0),
@@ -1966,8 +1966,8 @@ class _BiologyAppState extends State<BiologyApp> {
               id: "Camellia",
               name: "山茶属",
               childProducts: [
-                Product(id: "182", name: "茶叶"),
-                Product(id: "183", name: "红茶粉"),
+                Product(id: "182", name: "阿萨姆"),
+             //   Product(id: "183", name: "红茶粉"),
               ],
             ),
           ],
