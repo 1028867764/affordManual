@@ -521,6 +521,7 @@ class _IndustryAppState extends State<IndustryApp> {
   String? selectedCategory;
   bool _isLoadingProducts = false;
   final ScrollController _scrollController = ScrollController();
+  int count = 0; // 新增计数器变量
 
   @override
   void initState() {
@@ -532,6 +533,7 @@ class _IndustryAppState extends State<IndustryApp> {
     setState(() {
       selectedCategory = category;
       _isLoadingProducts = true;
+      count++; // 每次点击左边菜单栏时增加计数器
     });
 
     // Simulate loading delay
@@ -698,7 +700,10 @@ class _IndustryAppState extends State<IndustryApp> {
 
                                   // 计算颜色索引：(index + 当前分类商品总数 + 100) % 7
                                   final colorIndex =
-                                      (index + categoryItemCount + 100) %
+                                      (index +
+                                          categoryItemCount +
+                                          100 +
+                                          count) %
                                       _pastelColors.length;
                                   final containerColor =
                                       _pastelColors[colorIndex];
