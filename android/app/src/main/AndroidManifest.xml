@@ -4,7 +4,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     
     <application
-        android:label="simple_counter_app"
+        android:label="平替经济学"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
