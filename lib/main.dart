@@ -424,7 +424,7 @@ class ProductGrid extends StatelessWidget {
                             child: Text(
                               group.id, // 显示 ParentProductGroup 名称
                               style: TextStyle(
-                                fontSize: 12,
+                                fontSize: 13,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white,
                               ),
