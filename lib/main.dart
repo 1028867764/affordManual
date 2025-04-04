@@ -22,11 +22,11 @@ class MyApp extends StatelessWidget {
       title: 'Flutter App',
       theme: ThemeData(
         appBarTheme: AppBarTheme(
-      titleTextStyle: TextStyle(
-        fontSize: 16, // 全局设置标题字号
-        color: Colors.black, // 全局设置标题字体颜色
-      ),
-    ),
+          titleTextStyle: TextStyle(
+            fontSize: 16, // 全局设置标题字号
+            color: Colors.black, // 全局设置标题字体颜色
+          ),
+        ),
         fontFamily: 'Roboto',
         primarySwatch: Colors.blue,
       ), // 设置默认字体
@@ -48,8 +48,9 @@ class MainHomePage extends StatelessWidget {
               Navigator.push(
                 context,
                 PageRouteBuilder(
-                  pageBuilder: (context, animation, secondaryAnimation) =>
-                      const SearchPage(),
+                  pageBuilder:
+                      (context, animation, secondaryAnimation) =>
+                          const SearchPage(),
                   transitionsBuilder: (
                     context,
                     animation,
@@ -59,8 +60,10 @@ class MainHomePage extends StatelessWidget {
                     const begin = Offset(1.0, 0.0);
                     const end = Offset.zero;
                     const curve = Curves.ease;
-                    var tween = Tween(begin: begin, end: end)
-                        .chain(CurveTween(curve: curve));
+                    var tween = Tween(
+                      begin: begin,
+                      end: end,
+                    ).chain(CurveTween(curve: curve));
                     var offsetAnimation = animation.drive(tween);
                     return SlideTransition(
                       position: offsetAnimation,
@@ -107,8 +110,9 @@ class MainHomePage extends StatelessWidget {
                 Navigator.push(
                   context,
                   PageRouteBuilder(
-                    pageBuilder: (context, animation, secondaryAnimation) =>
-                        const BiologyApp(),
+                    pageBuilder:
+                        (context, animation, secondaryAnimation) =>
+                            const BiologyApp(),
                     transitionsBuilder: (
                       context,
                       animation,
@@ -118,8 +122,10 @@ class MainHomePage extends StatelessWidget {
                       const begin = Offset(1.0, 0.0);
                       const end = Offset.zero;
                       const curve = Curves.ease;
-                      var tween = Tween(begin: begin, end: end)
-                          .chain(CurveTween(curve: curve));
+                      var tween = Tween(
+                        begin: begin,
+                        end: end,
+                      ).chain(CurveTween(curve: curve));
                       var offsetAnimation = animation.drive(tween);
                       return SlideTransition(
                         position: offsetAnimation,
@@ -138,8 +144,9 @@ class MainHomePage extends StatelessWidget {
                 Navigator.push(
                   context,
                   PageRouteBuilder(
-                    pageBuilder: (context, animation, secondaryAnimation) =>
-                        const IndustryApp(),
+                    pageBuilder:
+                        (context, animation, secondaryAnimation) =>
+                            const IndustryApp(),
                     transitionsBuilder: (
                       context,
                       animation,
@@ -149,8 +156,10 @@ class MainHomePage extends StatelessWidget {
                       const begin = Offset(1.0, 0.0);
                       const end = Offset.zero;
                       const curve = Curves.ease;
-                      var tween = Tween(begin: begin, end: end)
-                          .chain(CurveTween(curve: curve));
+                      var tween = Tween(
+                        begin: begin,
+                        end: end,
+                      ).chain(CurveTween(curve: curve));
                       var offsetAnimation = animation.drive(tween);
                       return SlideTransition(
                         position: offsetAnimation,
@@ -169,8 +178,9 @@ class MainHomePage extends StatelessWidget {
                 Navigator.push(
                   context,
                   PageRouteBuilder(
-                    pageBuilder: (context, animation, secondaryAnimation) =>
-                        const LuxuryApp(),
+                    pageBuilder:
+                        (context, animation, secondaryAnimation) =>
+                            const LuxuryApp(),
                     transitionsBuilder: (
                       context,
                       animation,
@@ -180,8 +190,10 @@ class MainHomePage extends StatelessWidget {
                       const begin = Offset(1.0, 0.0);
                       const end = Offset.zero;
                       const curve = Curves.ease;
-                      var tween = Tween(begin: begin, end: end)
-                          .chain(CurveTween(curve: curve));
+                      var tween = Tween(
+                        begin: begin,
+                        end: end,
+                      ).chain(CurveTween(curve: curve));
                       var offsetAnimation = animation.drive(tween);
                       return SlideTransition(
                         position: offsetAnimation,
@@ -242,7 +254,7 @@ class MainHomePage extends StatelessWidget {
                         color: Colors.black,
                         blurRadius: 6,
                         offset: const Offset(1, 1),
-                        )
+                      ),
                     ],
                   ),
                 ),
@@ -254,7 +266,6 @@ class MainHomePage extends StatelessWidget {
     );
   }
 }
-
 
 class CategoryMenu extends StatelessWidget {
   final List<Category> categories;
@@ -291,7 +302,7 @@ class CategoryMenu extends StatelessWidget {
                       index == currentIndex
                           ? FontWeight.bold
                           : FontWeight.normal,
-                  color: index == currentIndex ? Colors.blue: null,
+                  color: index == currentIndex ? Colors.blue : null,
                 ),
               ),
             ),
@@ -335,7 +346,7 @@ class ProductGrid extends StatelessWidget {
             margin: EdgeInsets.only(
               left: 10,
               right: 10,
-              top: isFirstGroup ? 10 : 0,  // 第一个组顶部有间距
+              top: isFirstGroup ? 10 : 0, // 第一个组顶部有间距
               bottom: isLastGroup ? 10 : 0, // 最后一个组底部有间距
             ),
             decoration: BoxDecoration(
@@ -344,203 +355,237 @@ class ProductGrid extends StatelessWidget {
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(12),
-              child: _buildGroupContent(group, isSingleGroup, groupIndex, isLastGroup),
+              child: _buildGroupContent(
+                group,
+                isSingleGroup,
+                groupIndex,
+                isLastGroup,
+              ),
             ),
           );
         } else {
           // 单个组时直接返回内容
-          return _buildGroupContent(group, isSingleGroup, groupIndex, isLastGroup);
+          return _buildGroupContent(
+            group,
+            isSingleGroup,
+            groupIndex,
+            isLastGroup,
+          );
         }
       },
     );
   }
 
-Widget _buildGroupContent(
-  ParentProductGroup group, 
-  bool isSingleGroup, 
-  int groupIndex,
-  bool isLastGroup,
-) {
-  int parentProductCount = group.parentProducts.length;
+  Widget _buildGroupContent(
+    ParentProductGroup group,
+    bool isSingleGroup,
+    int groupIndex,
+    bool isLastGroup,
+  ) {
+    int parentProductCount = group.parentProducts.length;
 
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.stretch,
-    mainAxisAlignment: MainAxisAlignment.start, // 确保子项从顶部开始排列
-    children: [
-      if (!isSingleGroup && group.id.isNotEmpty)
-        Container(
-          child: Align( // 替换原来的 Center
-          alignment: Alignment.centerLeft, // 左对齐
-            child: IntrinsicWidth(
-              child: Container( // 通过Container设置颜色
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                decoration: BoxDecoration(
-                  color: Colors.blue[300],
-                  borderRadius: BorderRadius.only(
-                    bottomRight: Radius.circular(12), // 仅右下角圆角
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      mainAxisAlignment: MainAxisAlignment.start, // 确保子项从顶部开始排列
+      children: [
+        if (!isSingleGroup && group.id.isNotEmpty)
+          Container(
+            child: Align(
+              // 替换原来的 Center
+              alignment: Alignment.centerLeft, // 左对齐
+              child: IntrinsicWidth(
+                child: Container(
+                  // 通过Container设置颜色
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 4,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.blue[300],
+                    borderRadius: BorderRadius.only(
+                      bottomRight: Radius.circular(12), // 仅右下角圆角
+                    ),
+                  ),
+                  child: Text(
+                    group.id,
+                    style: const TextStyle(
+                      fontSize: 15,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-          child: Text(
-            group.id,
-            style: const TextStyle(
-              fontSize: 15,
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
+              ),
             ),
           ),
-        ),
-            ),
-          ),
-        ),
-      ...group.parentProducts.map((parentProduct) {
-        final isLastParentProduct = group.parentProducts.indexOf(parentProduct) == parentProductCount - 1;
+        ...group.parentProducts.map((parentProduct) {
+          final isLastParentProduct =
+              group.parentProducts.indexOf(parentProduct) ==
+              parentProductCount - 1;
 
-        return Container(
-          margin: EdgeInsets.only(
-            top: isSingleGroup ? (groupIndex == 0 ? 10 : 0) : 0,
-            left: isSingleGroup ? 10 : 0,
-            right: isSingleGroup ? 10 : 0,
-            bottom: isSingleGroup ? (isLastParentProduct ? 10 : 0) : 0, // 确保最后一个 ParentProduct 没有下边距
-          ),
-          decoration: BoxDecoration(
-            color: isSingleGroup ? Colors.blue[50] : Colors.blue[50],
-            borderRadius: isSingleGroup ? BorderRadius.circular(12) : BorderRadius.zero,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch, // 确保子项拉伸填充
-            children: [
-              Padding(
-                padding: EdgeInsets.zero, // 所有方向内边距为 0
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    if (isSingleGroup) 
-  LayoutBuilder(
-    builder: (context, constraints) {
-      return Container(  
-        child: Align(
-        alignment: Alignment.centerLeft, // 左对齐
-      child: IntrinsicWidth(                          // 使用 IntrinsicWidth 包裹 Text
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-          decoration: BoxDecoration(
-            color: Colors.blue[300],
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(12),
-              topRight: Radius.circular(0),
-              bottomLeft: Radius.circular(0),
-              bottomRight: Radius.circular(12)
-            )
-          ),
-          child: Text(
-            parentProduct.id,
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
-              fontStyle: FontStyle.italic,
-              color: Colors.white,
+          return Container(
+            margin: EdgeInsets.only(
+              top: isSingleGroup ? (groupIndex == 0 ? 10 : 0) : 0,
+              left: isSingleGroup ? 10 : 0,
+              right: isSingleGroup ? 10 : 0,
+              bottom:
+                  isSingleGroup
+                      ? (isLastParentProduct ? 10 : 0)
+                      : 0, // 确保最后一个 ParentProduct 没有下边距
             ),
-          ),
-        ),
-        ),
-      ),
+            decoration: BoxDecoration(
+              color: isSingleGroup ? Colors.blue[50] : Colors.blue[50],
+              borderRadius:
+                  isSingleGroup ? BorderRadius.circular(12) : BorderRadius.zero,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch, // 确保子项拉伸填充
+              children: [
+                Padding(
+                  padding: EdgeInsets.zero, // 所有方向内边距为 0
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      if (isSingleGroup)
+                        LayoutBuilder(
+                          builder: (context, constraints) {
+                            return Container(
+                              child: Align(
+                                alignment: Alignment.centerLeft, // 左对齐
+                                child: IntrinsicWidth(
+                                  // 使用 IntrinsicWidth 包裹 Text
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 4,
+                                      horizontal: 8,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: Colors.blue[300],
+                                      borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(12),
+                                        topRight: Radius.circular(0),
+                                        bottomLeft: Radius.circular(0),
+                                        bottomRight: Radius.circular(12),
+                                      ),
+                                    ),
+                                    child: Text(
+                                      parentProduct.id,
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                        fontStyle: FontStyle.italic,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      if (isSingleGroup)
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 0,
+                            horizontal: 8,
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Text(
+                            parentProduct.name[0],
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      if (!isSingleGroup)
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 0,
+                            horizontal: 8,
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Text(
+                            parentProduct.id,
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                              fontStyle: FontStyle.italic,
+                            ),
+                          ),
+                        ),
+                      if (!isSingleGroup)
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 0,
+                            horizontal: 8,
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Text(
+                            parentProduct.name[0],
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+                GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    childAspectRatio: 1.0,
+                    crossAxisSpacing: 2,
+                    mainAxisSpacing: 10,
+                  ),
+                  padding: const EdgeInsets.only(
+                    top: 0,
+                    bottom: 10,
+                    left: 10,
+                    right: 10,
+                  ),
+                  itemCount: parentProduct.childProducts.length,
+                  itemBuilder: (context, index) {
+                    final product = parentProduct.childProducts[index];
+                    return GestureDetector(
+                      onTap: () => onProductSelected(product),
+                      child: Card(
+                        elevation: 1,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Container(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                product.name[0],
+                                style: const TextStyle(fontSize: 11),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
+          );
+        }).toList(), // 确保 map 返回的是一个列表
+      ],
     );
-    },
-  ),
-                    if (isSingleGroup)
-                      Container(
-                        padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 8),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Text(
-                          parentProduct.name[0],
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    if (!isSingleGroup)
-                      Container(
-                        padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 8),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Text(
-                          parentProduct.id,
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                            fontStyle: FontStyle.italic,
-                          ),
-                        ),
-                      ),
-                    if (!isSingleGroup)
-                      Container(
-                        padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 8),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Text(
-                          parentProduct.name[0],
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                  ],
-                ),
-              ),
-              GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                  childAspectRatio: 1.0,
-                  crossAxisSpacing: 2,
-                  mainAxisSpacing: 10,
-                ),
-                padding: const EdgeInsets.only(
-                  top: 0,
-                  bottom: 10,
-                  left: 10,
-                  right: 10,
-                ),
-                itemCount: parentProduct.childProducts.length,
-                itemBuilder: (context, index) {
-                  final product = parentProduct.childProducts[index];
-                  return GestureDetector(
-                    onTap: () => onProductSelected(product),
-                    child: Card(
-                      elevation: 1,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Container(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            product.name[0],
-                            style: const TextStyle(fontSize: 11),
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
-                      ),
-                    ),
-                    ),
-                  );
-                },
-              ),
-            ],
-          ),
-        );
-      }).toList(), // 确保 map 返回的是一个列表
-    ],
-  );
-}
+  }
 }
 
 class ProductDetailScreen extends StatefulWidget {
@@ -577,9 +622,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
   void _copyText(String text) {
     Clipboard.setData(ClipboardData(text: text));
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('已复制到剪贴板: $text'))
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text('已复制到剪贴板: $text')));
   }
 
   @override
@@ -599,28 +644,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   Future<void> _loadPriceHistory() async {
     // 这里应该是从JSON文件加载数据，这里用模拟数据代替
     final mockData = [
-      {
-        "time": "2023-01-01",
-        "price": "¥12.50",
-        "detail": "点击查看详情"
-      },
-      {
-        "time": "2023-02-15",
-        "price": "¥13.20",
-        "detail": "点击查看详情"
-      },
-      {
-        "time": "2023-03-30",
-        "price": "¥11.80",
-        "detail": "点击查看详情"
-      },
-      {
-        "time": "2023-05-10",
-        "price": "¥14.00",
-        "detail": "点击查看详情"
-      },
+      {"time": "2023-01-01", "price": "¥12.50", "detail": "点击查看详情"},
+      {"time": "2023-02-15", "price": "¥13.20", "detail": "点击查看详情"},
+      {"time": "2023-03-30", "price": "¥11.80", "detail": "点击查看详情"},
+      {"time": "2023-05-10", "price": "¥14.00", "detail": "点击查看详情"},
     ];
-    
+
     setState(() {
       _priceHistory = mockData;
     });
@@ -633,104 +662,117 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   }
 
   // 构建历史价格表格
- Widget _buildPriceHistoryTable() {
+  Widget _buildPriceHistoryTable() {
+    // 获取最新的两条数据
+    final latestData =
+        (_priceHistory.toList()..sort((a, b) => b['time'].compareTo(a['time'])))
+            .take(2)
+            .toList();
 
-  // 获取最新的两条数据
-  final latestData = (_priceHistory.toList()..sort((a, b) => b['time'].compareTo(a['time']))).take(2).toList();
-
-  return Container(
-    margin: const EdgeInsets.symmetric(horizontal: 16),
-    decoration: BoxDecoration(
-      border: Border.all(color: Colors.blue.shade300),
-      borderRadius: BorderRadius.circular(8),
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Container(
-          padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
-          decoration: BoxDecoration(
-            color: Colors.orange.shade100,
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(8),
-              topRight: Radius.circular(8),
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.blue.shade300),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
+            decoration: BoxDecoration(
+              color: Colors.orange.shade100,
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(8),
+                topRight: Radius.circular(8),
+              ),
+            ),
+            child: const Center(
+              child: Text(
+                '历史价格',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.orange,
+                ),
+              ),
             ),
           ),
-          child: const Center(
-    child: Text(
-      '历史价格',
-      style: TextStyle(
-        fontSize: 16,
-        fontWeight: FontWeight.bold,
-        color: Colors.orange,
-      ),
-    ),
-  ),
-        ),
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: DataTable(
-            dataRowHeight: 30, // 设置数据行高度
-            headingRowHeight: 0, // 设置标题行高度
-            columnSpacing: 20,
-            columns: const [
-      DataColumn(label: SizedBox.shrink()), // 使用空组件替代 Text('')
-      DataColumn(label: SizedBox.shrink()),
-      DataColumn(label: SizedBox.shrink()),
-                                           ],
-            rows: latestData.map((item) {
-              return DataRow(
-                cells: [
-                DataCell(Text(item['time'])),
-                DataCell(Text(item['price'])),
-                DataCell(
-                  InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        PageRouteBuilder(
-                          pageBuilder: (context, animation, secondaryAnimation) => PriceTag(
-                            time: item['time'],
-                            price: item['price'],
-                            productName: widget.product.name[0],
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: DataTable(
+              dataRowHeight: 30, // 设置数据行高度
+              headingRowHeight: 0, // 设置标题行高度
+              columnSpacing: 20,
+              columns: const [
+                DataColumn(label: SizedBox.shrink()), // 使用空组件替代 Text('')
+                DataColumn(label: SizedBox.shrink()),
+                DataColumn(label: SizedBox.shrink()),
+              ],
+              rows:
+                  latestData.map((item) {
+                    return DataRow(
+                      cells: [
+                        DataCell(Text(item['time'])),
+                        DataCell(Text(item['price'])),
+                        DataCell(
+                          InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                PageRouteBuilder(
+                                  pageBuilder:
+                                      (
+                                        context,
+                                        animation,
+                                        secondaryAnimation,
+                                      ) => PriceTag(
+                                        time: item['time'],
+                                        price: item['price'],
+                                        productName: widget.product.name[0],
+                                      ),
+                                  transitionsBuilder: (
+                                    context,
+                                    animation,
+                                    secondaryAnimation,
+                                    child,
+                                  ) {
+                                    const begin = Offset(1.0, 0.0);
+                                    const end = Offset.zero;
+                                    const curve = Curves.ease;
+                                    var tween = Tween(
+                                      begin: begin,
+                                      end: end,
+                                    ).chain(CurveTween(curve: curve));
+                                    var offsetAnimation = animation.drive(
+                                      tween,
+                                    );
+                                    return SlideTransition(
+                                      position: offsetAnimation,
+                                      child: child,
+                                    );
+                                  },
+                                ),
+                              );
+                            },
+                            child: const Text(
+                              '详情',
+                              style: TextStyle(
+                                color: Colors.blue,
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
                           ),
-                          transitionsBuilder: (
-                            context,
-                            animation,
-                            secondaryAnimation,
-                            child,
-                          ) {
-                            const begin = Offset(1.0, 0.0);
-                            const end = Offset.zero;
-                            const curve = Curves.ease;
-                            var tween = Tween(begin: begin, end: end)
-                                .chain(CurveTween(curve: curve));
-                            var offsetAnimation = animation.drive(tween);
-                            return SlideTransition(
-                              position: offsetAnimation,
-                              child: child,
-                            );
-                          },
                         ),
-                      );
-                    },
-                    child: const Text(
-                      '详情',
-                      style: TextStyle(
-                        color: Colors.blue,
-                        decoration: TextDecoration.underline,
-                      ),
-                    ),
-                  ),
-                ),
-              ]);
-            }).toList(),
+                      ],
+                    );
+                  }).toList(),
+            ),
           ),
-        ),
-      ],
-    ),
-  );
-}
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -841,71 +883,74 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           const SizedBox(width: 10),
         ],
       ),
-      body: _enlargedImageUrl != null
-          ? GestureDetector(
-              onTap: _closeEnlargedImage,
-              child: Container(
-                color: Colors.black.withOpacity(0.9),
-                child: Center(
-                  child: InteractiveViewer(
-                    panEnabled: true,
-                    minScale: 0.5,
-                    maxScale: 4.0,
-                    child: Image.network(_enlargedImageUrl!),
+      body:
+          _enlargedImageUrl != null
+              ? GestureDetector(
+                onTap: _closeEnlargedImage,
+                child: Container(
+                  color: Colors.black.withOpacity(0.9),
+                  child: Center(
+                    child: InteractiveViewer(
+                      panEnabled: true,
+                      minScale: 0.5,
+                      maxScale: 4.0,
+                      child: Image.network(_enlargedImageUrl!),
+                    ),
                   ),
                 ),
-              ),
-            )
-          : _isLoading
+              )
+              : _isLoading
               ? const Center(child: CircularProgressIndicator())
               : SingleChildScrollView(
-                  controller: _scrollController,
-                  child: Column(
-                    children: [
-                      // 价格历史表格（无外边距）
-          Padding(
-            padding: EdgeInsets.zero,
-            child: _buildPriceHistoryTable(),
-          ),
-                      Markdown(
-                        data: markdownContent,
-                        shrinkWrap: true,
-                        selectable: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        padding: const EdgeInsets.fromLTRB(10, 0, 10, 15),
-                        imageBuilder: (uri, title, alt) {
-                          return GestureDetector(
-                            onTap: () => _enlargeImage(uri.toString()),
-                            child: CachedNetworkImage(
-                              imageUrl: uri.toString(),
-                              placeholder: (context, url) => Container(
-                                color: Colors.grey[300],
-                                width: 100,
-                                height: 100,
-                                child: const Icon(
-                                  Icons.image,
-                                  color: Colors.grey,
+                controller: _scrollController,
+                child: Column(
+                  children: [
+                    // 价格历史表格（无外边距）
+                    Padding(
+                      padding: EdgeInsets.zero,
+                      child: _buildPriceHistoryTable(),
+                    ),
+                    Markdown(
+                      data: markdownContent,
+                      shrinkWrap: true,
+                      selectable: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 15),
+                      imageBuilder: (uri, title, alt) {
+                        return GestureDetector(
+                          onTap: () => _enlargeImage(uri.toString()),
+                          child: CachedNetworkImage(
+                            imageUrl: uri.toString(),
+                            placeholder:
+                                (context, url) => Container(
+                                  color: Colors.grey[300],
+                                  width: 100,
+                                  height: 100,
+                                  child: const Icon(
+                                    Icons.image,
+                                    color: Colors.grey,
+                                  ),
                                 ),
-                              ),
-                              errorWidget: (context, url, error) => Container(
-                                color: Colors.grey[300],
-                                width: 100,
-                                height: 100,
-                                child: const Icon(
-                                  Icons.broken_image,
-                                  color: Colors.grey,
+                            errorWidget:
+                                (context, url, error) => Container(
+                                  color: Colors.grey[300],
+                                  width: 100,
+                                  height: 100,
+                                  child: const Icon(
+                                    Icons.broken_image,
+                                    color: Colors.grey,
+                                  ),
                                 ),
-                              ),
-                              width: 100,
-                              height: 100,
-                              fit: BoxFit.cover,
-                            ),
-                          );
-                        },
-                      ),
-                    ],
-                  ),
+                            width: 100,
+                            height: 100,
+                            fit: BoxFit.cover,
+                          ),
+                        );
+                      },
+                    ),
+                  ],
                 ),
+              ),
     );
   }
 }
@@ -923,7 +968,7 @@ class PriceTag extends StatefulWidget {
     required this.productName,
   });
 
- @override
+  @override
   State<PriceTag> createState() => _PriceTagState();
 }
 
@@ -973,8 +1018,9 @@ class _PriceTagState extends State<PriceTag> {
                   Navigator.push(
                     context,
                     PageRouteBuilder(
-                      pageBuilder: (context, animation, secondaryAnimation) =>
-                          const SearchPage(),
+                      pageBuilder:
+                          (context, animation, secondaryAnimation) =>
+                              const SearchPage(),
                       transitionsBuilder: (
                         context,
                         animation,
@@ -984,8 +1030,10 @@ class _PriceTagState extends State<PriceTag> {
                         const begin = Offset(1.0, 0.0);
                         const end = Offset.zero;
                         const curve = Curves.ease;
-                        var tween = Tween(begin: begin, end: end)
-                            .chain(CurveTween(curve: curve));
+                        var tween = Tween(
+                          begin: begin,
+                          end: end,
+                        ).chain(CurveTween(curve: curve));
                         var offsetAnimation = animation.drive(tween);
                         return SlideTransition(
                           position: offsetAnimation,
@@ -1026,29 +1074,44 @@ class _PriceTagState extends State<PriceTag> {
           const SizedBox(width: 10),
         ],
       ),
-      body: 
-      _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('产品名称: ${widget.productName}', style: const TextStyle(fontSize: 18)),
-            const SizedBox(height: 10),
-            Text('时间: ${widget.time}', style: const TextStyle(fontSize: 16)),
-            const SizedBox(height: 10),
-            Text('价格: ${widget.price}', style: const TextStyle(fontSize: 16, color: Colors.red)),
-            const SizedBox(height: 20),
-            const Text('更多价格详情:', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 10),
-            const Text('这里可以显示更详细的价格信息，比如:'),
-            const Text('- 价格变动趋势'),
-            const Text('- 同期市场价格对比'),
-            const Text('- 历史最低/最高价格'),
-          ],
-        ),
-      ),
+      body:
+          _isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '产品名称: ${widget.productName}',
+                      style: const TextStyle(fontSize: 18),
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      '时间: ${widget.time}',
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      '价格: ${widget.price}',
+                      style: const TextStyle(fontSize: 16, color: Colors.red),
+                    ),
+                    const SizedBox(height: 20),
+                    const Text(
+                      '更多价格详情:',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    const Text('这里可以显示更详细的价格信息，比如:'),
+                    const Text('- 价格变动趋势'),
+                    const Text('- 同期市场价格对比'),
+                    const Text('- 历史最低/最高价格'),
+                  ],
+                ),
+              ),
     );
   }
 }
@@ -1063,7 +1126,6 @@ class BiologyApp extends StatefulWidget {
 class _BiologyAppState extends State<BiologyApp> {
   int currentCategoryIndex = 0;
   bool _isLoading = false;
-
 
   void selectCategory(int index) {
     setState(() {
@@ -1088,7 +1150,7 @@ class _BiologyAppState extends State<BiologyApp> {
           '生物篇',
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
         ),
-        backgroundColor: Colors.grey[200], 
+        backgroundColor: Colors.grey[200],
         foregroundColor: Colors.black,
         centerTitle: true,
         leadingWidth: 100,

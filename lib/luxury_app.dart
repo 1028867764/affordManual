@@ -11,16 +11,13 @@ class LuxuryApp extends StatefulWidget {
 
 class _LuxuryAppState extends State<LuxuryApp> {
   // 这里可以添加土豪篇的特定状态和逻辑
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          '土豪篇',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        backgroundColor: Colors.grey[200], 
+        title: const Text('土豪篇', style: TextStyle(fontWeight: FontWeight.bold)),
+        backgroundColor: Colors.grey[200],
         foregroundColor: Colors.black,
         centerTitle: true,
         leadingWidth: 100,
@@ -104,9 +101,7 @@ class _LuxuryAppState extends State<LuxuryApp> {
           const SizedBox(width: 10),
         ],
       ),
-      body: const Center(
-        child: Text('敬请期待', style: TextStyle(fontSize: 24)),
-      ),
+      body: const Center(child: Text('敬请期待', style: TextStyle(fontSize: 24))),
     );
   }
 }
