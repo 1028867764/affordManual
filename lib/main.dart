@@ -730,6 +730,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                         time: item['time'],
                                         price: item['price'],
                                         productName: widget.product.name[0],
+                                        id: widget.product.id, // Add this line
                                       ),
                                   transitionsBuilder: (
                                     context,
@@ -960,12 +961,14 @@ class PriceTag extends StatefulWidget {
   final String time;
   final String price;
   final String productName;
+  final String id; // Add this line
 
   const PriceTag({
     super.key,
     required this.time,
     required this.price,
     required this.productName,
+    required this.id, // Add this line
   });
 
   @override
@@ -1082,6 +1085,10 @@ class _PriceTagState extends State<PriceTag> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Text(
+                      '产品ID: ${widget.id}', // Now displaying the actual ID
+                      style: const TextStyle(fontSize: 16),
+                    ),
                     Text(
                       '产品名称: ${widget.productName}',
                       style: const TextStyle(fontSize: 18),

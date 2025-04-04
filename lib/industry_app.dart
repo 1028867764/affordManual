@@ -116,6 +116,9 @@ class _IndustryProductDetailScreenState
                                               price: item['price'],
                                               productName:
                                                   widget.product['name'][0],
+                                              productId:
+                                                  widget
+                                                      .product['id'], // 传递产品ID
                                             ),
                                         transitionsBuilder: (
                                           context,
@@ -354,12 +357,14 @@ class IndustryPriceTag extends StatefulWidget {
   final String time;
   final String price;
   final String productName;
+  final int productId; // 新增 productId 参数
 
   const IndustryPriceTag({
     super.key,
     required this.time,
     required this.price,
     required this.productName,
+    required this.productId, // 新增
   });
 
   @override
@@ -474,6 +479,18 @@ class _IndustryPriceTagState extends State<IndustryPriceTag> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Text(
+                      '产品ID: ${widget.productId}', // 新增显示产品ID
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      '产品名称: ${widget.productName}',
+                      style: const TextStyle(fontSize: 18),
+                    ),
+                    const SizedBox(height: 8), // 添加一些间距
                     Text(
                       '时间: ${widget.time}',
                       style: const TextStyle(fontSize: 16),
