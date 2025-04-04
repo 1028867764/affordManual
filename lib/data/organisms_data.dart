@@ -414,6 +414,7 @@ final List<Category> organisms = [
             name: ["向日葵属"],
             childProducts: [
               Product(id: "95", name: ["葵花籽"]),
+              Product(id: "95a", name: ["葵花籽仁"]),
             ],
           ),
           ParentProduct(

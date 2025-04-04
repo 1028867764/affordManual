@@ -271,12 +271,14 @@ class CategoryMenu extends StatelessWidget {
   final List<Category> categories;
   final int currentIndex;
   final Function(int) onCategorySelected;
+  final bool isOrangeTheme; // 新增参数
 
   const CategoryMenu({
     super.key,
     required this.categories,
     required this.currentIndex,
     required this.onCategorySelected,
+    required this.isOrangeTheme, // 接收主题状态
   });
 
   @override
@@ -302,7 +304,12 @@ class CategoryMenu extends StatelessWidget {
                       index == currentIndex
                           ? FontWeight.bold
                           : FontWeight.normal,
-                  color: index == currentIndex ? Colors.blue : null,
+                  color:
+                      index == currentIndex
+                          ? (isOrangeTheme
+                              ? Colors.orange
+                              : Colors.blue) // 根据主题切换颜色
+                          : null,
                 ),
               ),
             ),
@@ -316,11 +323,13 @@ class CategoryMenu extends StatelessWidget {
 class ProductGrid extends StatelessWidget {
   final Category category;
   final Function(Product) onProductSelected;
+  final bool isOrangeTheme; // 新增参数
 
   const ProductGrid({
     super.key,
     required this.category,
     required this.onProductSelected,
+    required this.isOrangeTheme, // 接收主题状态
   });
 
   @override
@@ -389,7 +398,8 @@ class ProductGrid extends StatelessWidget {
               bottom: isSingleGroup ? (isLastParentProduct ? 10 : 0) : 10,
             ),
             decoration: BoxDecoration(
-              color: isSingleGroup ? Colors.blue[50] : Colors.blue[50],
+              color:
+                  isOrangeTheme ? Colors.orange[50] : Colors.blue[50], // 切换背景色
               borderRadius:
                   isSingleGroup
                       ? BorderRadius.circular(12)
@@ -413,7 +423,10 @@ class ProductGrid extends StatelessWidget {
                               horizontal: 8,
                             ),
                             decoration: BoxDecoration(
-                              color: Colors.blue[300],
+                              color:
+                                  isOrangeTheme
+                                      ? Colors.orange[300]
+                                      : Colors.blue[300], // 切换标签背景色
                               borderRadius: BorderRadius.only(
                                 topLeft: Radius.circular(12),
                                 topRight: Radius.circular(0),
@@ -444,7 +457,10 @@ class ProductGrid extends StatelessWidget {
                                       horizontal: 8,
                                     ),
                                     decoration: BoxDecoration(
-                                      color: Colors.blue[300],
+                                      color:
+                                          isOrangeTheme
+                                              ? Colors.orange[300]
+                                              : Colors.blue[300], // 切换标签背景色
                                       borderRadius: BorderRadius.only(
                                         topLeft: Radius.circular(12),
                                         topRight: Radius.circular(0),
@@ -1117,11 +1133,13 @@ class BiologyApp extends StatefulWidget {
 class _BiologyAppState extends State<BiologyApp> {
   int currentCategoryIndex = 0;
   bool _isLoading = false;
+  bool _isOrangeTheme = false; // 新增状态变量，控制是否使用橙色主题
 
   void selectCategory(int index) {
     setState(() {
       _isLoading = true;
       currentCategoryIndex = index;
+      _isOrangeTheme = !_isOrangeTheme; // 切换主题颜色
     });
 
     Future.delayed(const Duration(milliseconds: 500), () {
@@ -1231,6 +1249,7 @@ class _BiologyAppState extends State<BiologyApp> {
             categories: organisms,
             currentIndex: currentCategoryIndex,
             onCategorySelected: selectCategory,
+            isOrangeTheme: _isOrangeTheme, // 传递主题状态
           ),
           Expanded(
             child: Container(
@@ -1269,6 +1288,7 @@ class _BiologyAppState extends State<BiologyApp> {
                             ),
                           );
                         },
+                        isOrangeTheme: _isOrangeTheme, // 传递主题状态
                       ),
             ),
           ),
