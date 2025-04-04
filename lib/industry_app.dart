@@ -685,7 +685,7 @@ class _IndustryAppState extends State<IndustryApp> {
       {"id": 186, "name": ["PVC管", "PVC pipe"]},
       {"id": 187, "name": ["PPR管", "PPR pipe"]},
     ],
-    "其他": [
+    "其它": [
       {"id": 188, "name": ["氟氯醚菊酯", "Flumethrin"]},
       {"id": 189, "name": ["靛蓝", "Indigo"]},
       {"id": 190, "name": ["保险粉", "Sodium dithionite"]},
@@ -711,7 +711,7 @@ class _IndustryAppState extends State<IndustryApp> {
     ]
   };
 
-  String selectedCategory = "橡胶";
+  String? selectedCategory;
   bool _isLoadingProducts = false;
   final ScrollController _scrollController = ScrollController();
 
