@@ -332,7 +332,7 @@ class ProductGrid extends StatelessWidget {
       itemCount: groupCount * 2 - 1,
       itemBuilder: (context, index) {
         if (index.isOdd) {
-          return const SizedBox(height: 15);
+          return const SizedBox(height: 0);
         }
 
         final groupIndex = index ~/ 2;
@@ -342,26 +342,11 @@ class ProductGrid extends StatelessWidget {
 
         // 当有多个组时，包装整个组
         if (!isSingleGroup) {
-          return Container(
-            margin: EdgeInsets.only(
-              left: 10,
-              right: 10,
-              top: isFirstGroup ? 10 : 0, // 第一个组顶部有间距
-              bottom: isLastGroup ? 10 : 0, // 最后一个组底部有间距
-            ),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              color: Colors.blue[50],
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(12),
-              child: _buildGroupContent(
-                group,
-                isSingleGroup,
-                groupIndex,
-                isLastGroup,
-              ),
-            ),
+          return _buildGroupContent(
+            group,
+            isSingleGroup,
+            groupIndex,
+            isLastGroup,
           );
         } else {
           // 单个组时直接返回内容
@@ -386,38 +371,11 @@ class ProductGrid extends StatelessWidget {
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
-      mainAxisAlignment: MainAxisAlignment.start, // 确保子项从顶部开始排列
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        if (!isSingleGroup && group.id.isNotEmpty)
-          Container(
-            child: Align(
-              // 替换原来的 Center
-              alignment: Alignment.centerLeft, // 左对齐
-              child: IntrinsicWidth(
-                child: Container(
-                  // 通过Container设置颜色
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 4,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.blue[300],
-                    borderRadius: BorderRadius.only(
-                      bottomRight: Radius.circular(12), // 仅右下角圆角
-                    ),
-                  ),
-                  child: Text(
-                    group.id,
-                    style: const TextStyle(
-                      fontSize: 15,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
+        // 当有多个组时，在第一个组上方添加 SizedBox
+        if (!isSingleGroup && groupIndex == 0) SizedBox(height: 10),
+        if (!isSingleGroup && group.id.isNotEmpty) Container(),
         ...group.parentProducts.map((parentProduct) {
           final isLastParentProduct =
               group.parentProducts.indexOf(parentProduct) ==
@@ -426,34 +384,60 @@ class ProductGrid extends StatelessWidget {
           return Container(
             margin: EdgeInsets.only(
               top: isSingleGroup ? (groupIndex == 0 ? 10 : 0) : 0,
-              left: isSingleGroup ? 10 : 0,
-              right: isSingleGroup ? 10 : 0,
-              bottom:
-                  isSingleGroup
-                      ? (isLastParentProduct ? 10 : 0)
-                      : 0, // 确保最后一个 ParentProduct 没有下边距
+              left: isSingleGroup ? 10 : 10,
+              right: isSingleGroup ? 10 : 10,
+              bottom: isSingleGroup ? (isLastParentProduct ? 10 : 0) : 10,
             ),
             decoration: BoxDecoration(
               color: isSingleGroup ? Colors.blue[50] : Colors.blue[50],
               borderRadius:
-                  isSingleGroup ? BorderRadius.circular(12) : BorderRadius.zero,
+                  isSingleGroup
+                      ? BorderRadius.circular(12)
+                      : BorderRadius.circular(12),
             ),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch, // 确保子项拉伸填充
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Padding(
-                  padding: EdgeInsets.zero, // 所有方向内边距为 0
+                  padding: EdgeInsets.zero,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+                      // 添加标签显示 ParentProductGroup 名称
+                      if (!isSingleGroup)
+                        Align(
+                          alignment: Alignment.topLeft, // 强制左对齐父容器
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 4,
+                              horizontal: 8,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.blue[300],
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(12),
+                                topRight: Radius.circular(0),
+                                bottomLeft: Radius.circular(0),
+                                bottomRight: Radius.circular(12),
+                              ),
+                            ),
+                            child: Text(
+                              group.id, // 显示 ParentProductGroup 名称
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
                       if (isSingleGroup)
                         LayoutBuilder(
                           builder: (context, constraints) {
                             return Container(
                               child: Align(
-                                alignment: Alignment.centerLeft, // 左对齐
+                                alignment: Alignment.centerLeft,
                                 child: IntrinsicWidth(
-                                  // 使用 IntrinsicWidth 包裹 Text
                                   child: Container(
                                     padding: const EdgeInsets.symmetric(
                                       vertical: 4,
@@ -582,7 +566,7 @@ class ProductGrid extends StatelessWidget {
               ],
             ),
           );
-        }).toList(), // 确保 map 返回的是一个列表
+        }).toList(),
       ],
     );
   }
