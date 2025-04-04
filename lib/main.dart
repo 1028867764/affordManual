@@ -21,6 +21,12 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter App',
       theme: ThemeData(
+        appBarTheme: AppBarTheme(
+      titleTextStyle: TextStyle(
+        fontSize: 16, // 全局设置标题字号
+        color: Colors.black, // 全局设置标题字体颜色
+      ),
+    ),
         fontFamily: 'Roboto',
         primarySwatch: Colors.blue,
       ), // 设置默认字体
@@ -1080,7 +1086,7 @@ class _BiologyAppState extends State<BiologyApp> {
       appBar: AppBar(
         title: const Text(
           '生物篇',
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
         ),
         backgroundColor: Colors.grey[200], 
         foregroundColor: Colors.black,

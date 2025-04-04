@@ -18,7 +18,7 @@ class _LuxuryAppState extends State<LuxuryApp> {
       appBar: AppBar(
         title: const Text(
           '土豪篇',
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
         backgroundColor: Colors.grey[200], 
         foregroundColor: Colors.black,

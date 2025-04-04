@@ -743,7 +743,7 @@ class _IndustryAppState extends State<IndustryApp> {
       appBar: AppBar(
         title: const Text(
           '工业篇',
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
         backgroundColor: Colors.grey[200],
         foregroundColor: Colors.black,
@@ -882,6 +882,13 @@ class _IndustryAppState extends State<IndustryApp> {
                               (context, index) {
                                 final item = factories[selectedCategory]![index];
                                 final itemName = item['name'][0];
+
+ final categoryItemCount = factories[selectedCategory]!.length;
+        
+        // 计算颜色索引：(index + 当前分类商品总数 + 100) % 7
+        final colorIndex = (index + categoryItemCount + 100) % _pastelColors.length;
+        final containerColor = _pastelColors[colorIndex];
+
                                 return GestureDetector(
                                   onTap: () {
                                     Navigator.push(
@@ -914,7 +921,7 @@ class _IndustryAppState extends State<IndustryApp> {
                                   child: Container(
                                     margin: const EdgeInsets.only(bottom: 12),
                                     decoration: BoxDecoration(
-                                      color: Colors.grey[50],
+                                      color: containerColor, // 应用计算出的颜色
                                       borderRadius: BorderRadius.circular(8),
                                       boxShadow: [
                                         BoxShadow(
@@ -926,43 +933,25 @@ class _IndustryAppState extends State<IndustryApp> {
                                       ],
                                     ),
                                     child: ListTile(
-                                      leading: Container(
-                                        width: 48,
-                                        height: 48,
-                                        decoration: BoxDecoration(
-                                          color: Colors.blue[50],
-                                          shape: BoxShape.circle,
-                                        ),
-                                        child: Center(
-                                          child: Text(
-                                            itemName.substring(0, 1),
-                                            style: const TextStyle(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.blue,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      title: Text(
-                                        itemName,
-                                        style: const TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      subtitle: const Text(
-                                        '暂无价格',
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.grey,
-                                        ),
-                                      ),
-                                      contentPadding: const EdgeInsets.symmetric(
-                                        horizontal: 16,
-                                        vertical: 8,
-                                      ),
-                                    ),
+  title: Stack(
+    children: [
+      Align(
+        alignment: Alignment.center, // 水平和垂直居中
+        child: Text(
+          itemName,
+          style: const TextStyle(
+            fontSize: 13,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    ],
+  ),
+  contentPadding: const EdgeInsets.symmetric(
+    horizontal: 16,
+    vertical: 8,
+  ),
+),
                                   ),
                                 );
                               },
@@ -979,3 +968,13 @@ class _IndustryAppState extends State<IndustryApp> {
     );
   }
 }
+
+const List<Color> _pastelColors = [
+  Color(0xFFFFD1DC), // 淡粉红
+  Color(0xFFFFB6C1), // 淡红
+  Color(0xFFFFD3B6), // 淡橙
+  Color(0xFFFFFFB6), // 淡黄
+  Color(0xFFD1FFB6), // 淡绿
+  Color(0xFFB6E6FF), // 淡蓝
+  Color(0xFFD1B6FF), // 淡紫
+];
