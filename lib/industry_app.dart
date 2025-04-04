@@ -357,7 +357,7 @@ class IndustryPriceTag extends StatefulWidget {
   final String time;
   final String price;
   final String productName;
-  final int productId; // 新增 productId 参数
+  final String productId; // 新增 productId 参数
 
   const IndustryPriceTag({
     super.key,
