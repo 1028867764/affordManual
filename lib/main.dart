@@ -646,7 +646,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   Widget _buildFavoriteButton() {
     return Positioned(
       top: 85,
-      right: 10,
+      right: 15,
       child: AnimatedOpacity(
         duration: Duration(milliseconds: 100),
         opacity: _buttonOpacity,
@@ -662,7 +662,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               child: Icon(
                 _isFavorited ? Icons.star_rounded : Icons.star_outline_rounded,
                 color: _isFavorited ? kBilibiliPink : Colors.grey[300],
-                size: 40,
+                size: 50,
               ),
             ),
           ),
