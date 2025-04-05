@@ -1,22 +1,24 @@
 import 'package:flutter/material.dart';
 import 'main.dart';
 import 'search_page.dart';
+import 'data/organisms_data.dart';
+import 'data/industry_data.dart';
 
-class LuxuryApp extends StatefulWidget {
-  const LuxuryApp({super.key});
+class FavoriteApp extends StatefulWidget {
+  const FavoriteApp({super.key});
 
   @override
-  State<LuxuryApp> createState() => _LuxuryAppState();
+  State<FavoriteApp> createState() => _FavoriteAppState();
 }
 
-class _LuxuryAppState extends State<LuxuryApp> {
-  // 这里可以添加土豪篇的特定状态和逻辑
+class _FavoriteAppState extends State<FavoriteApp> {
+  // 这里可以添加收藏夹的特定状态和逻辑
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('土豪篇', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: const Text('收藏夹', style: TextStyle(fontWeight: FontWeight.bold)),
         backgroundColor: Colors.grey[200],
         foregroundColor: Colors.black,
         centerTitle: true,
@@ -101,12 +103,7 @@ class _LuxuryAppState extends State<LuxuryApp> {
           const SizedBox(width: 10),
         ],
       ),
-      body: const Center(
-        child: Text(
-          '还未完工\n敬请期待！\n^_^',
-          style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-        ),
-      ),
+      body: const Center(child: Text('敬请期待', style: TextStyle(fontSize: 24))),
     );
   }
 }

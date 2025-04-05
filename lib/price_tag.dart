@@ -161,6 +161,13 @@ class _PriceTagState extends State<PriceTag> {
                     const Text('- 价格变动趋势'),
                     const Text('- 同期市场价格对比'),
                     const Text('- 历史最低/最高价格'),
+                    const Text(
+                      '还未完工\n敬请期待！\n^_^',
+                      style: TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ],
                 ),
               ),

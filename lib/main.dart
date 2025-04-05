@@ -9,6 +9,7 @@ import 'luxury_app.dart';
 import 'search_page.dart';
 import 'data/organisms_data.dart';
 import 'price_tag.dart';
+import 'favorite_app.dart';
 
 void main() {
   runApp(const MyApp());
@@ -205,12 +206,35 @@ class MainHomePage extends StatelessWidget {
                 );
               },
             ),
-            _buildImageButton(
-              context,
-              'assets/images/unknown_bg.jpg',
-              '',
-              () {},
-            ),
+            _buildImageButton(context, 'assets/images/unknown_bg.jpg', '', () {
+              Navigator.push(
+                context,
+                PageRouteBuilder(
+                  pageBuilder:
+                      (context, animation, secondaryAnimation) =>
+                          const FavoriteApp(),
+                  transitionsBuilder: (
+                    context,
+                    animation,
+                    secondaryAnimation,
+                    child,
+                  ) {
+                    const begin = Offset(1.0, 0.0);
+                    const end = Offset.zero;
+                    const curve = Curves.ease;
+                    var tween = Tween(
+                      begin: begin,
+                      end: end,
+                    ).chain(CurveTween(curve: curve));
+                    var offsetAnimation = animation.drive(tween);
+                    return SlideTransition(
+                      position: offsetAnimation,
+                      child: child,
+                    );
+                  },
+                ),
+              );
+            }),
           ],
         ),
       ),

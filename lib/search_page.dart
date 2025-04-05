@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'main.dart';
-import 'industry_app.dart';
-import 'luxury_app.dart';
 import 'data/organisms_data.dart';
 import 'data/industry_data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
