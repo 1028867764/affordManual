@@ -589,7 +589,7 @@ class ProductGrid extends StatelessWidget {
 }
 
 class ProductDetailScreen extends StatefulWidget {
-  final Product product;
+  final dynamic product; // 改为 dynamic 或定义联合类型
 
   const ProductDetailScreen({super.key, required this.product});
 
