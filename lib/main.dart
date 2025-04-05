@@ -10,6 +10,9 @@ import 'search_page.dart';
 import 'data/organisms_data.dart';
 import 'price_tag.dart';
 import 'favorite_app.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+const Color kBilibiliPink = Color(0xFFFB7299);
 
 void main() {
   runApp(const MyApp());
@@ -206,35 +209,40 @@ class MainHomePage extends StatelessWidget {
                 );
               },
             ),
-            _buildImageButton(context, 'assets/images/unknown_bg.jpg', '', () {
-              Navigator.push(
-                context,
-                PageRouteBuilder(
-                  pageBuilder:
-                      (context, animation, secondaryAnimation) =>
-                          const FavoriteApp(),
-                  transitionsBuilder: (
-                    context,
-                    animation,
-                    secondaryAnimation,
-                    child,
-                  ) {
-                    const begin = Offset(1.0, 0.0);
-                    const end = Offset.zero;
-                    const curve = Curves.ease;
-                    var tween = Tween(
-                      begin: begin,
-                      end: end,
-                    ).chain(CurveTween(curve: curve));
-                    var offsetAnimation = animation.drive(tween);
-                    return SlideTransition(
-                      position: offsetAnimation,
-                      child: child,
-                    );
-                  },
-                ),
-              );
-            }),
+            _buildImageButton(
+              context,
+              'assets/images/favorite_bg.jpg',
+              '收藏夹',
+              () {
+                Navigator.push(
+                  context,
+                  PageRouteBuilder(
+                    pageBuilder:
+                        (context, animation, secondaryAnimation) =>
+                            const FavoriteApp(),
+                    transitionsBuilder: (
+                      context,
+                      animation,
+                      secondaryAnimation,
+                      child,
+                    ) {
+                      const begin = Offset(1.0, 0.0);
+                      const end = Offset.zero;
+                      const curve = Curves.ease;
+                      var tween = Tween(
+                        begin: begin,
+                        end: end,
+                      ).chain(CurveTween(curve: curve));
+                      var offsetAnimation = animation.drive(tween);
+                      return SlideTransition(
+                        position: offsetAnimation,
+                        child: child,
+                      );
+                    },
+                  ),
+                );
+              },
+            ),
           ],
         ),
       ),
@@ -296,14 +304,14 @@ class CategoryMenu extends StatelessWidget {
   final List<Category> categories;
   final int currentIndex;
   final Function(int) onCategorySelected;
-  final bool isOrangeTheme; // 新增参数
+  final bool isPinkTheme; // 新增参数
 
   const CategoryMenu({
     super.key,
     required this.categories,
     required this.currentIndex,
     required this.onCategorySelected,
-    required this.isOrangeTheme, // 接收主题状态
+    required this.isPinkTheme, // 接收主题状态
   });
 
   @override
@@ -331,8 +339,8 @@ class CategoryMenu extends StatelessWidget {
                           : FontWeight.normal,
                   color:
                       index == currentIndex
-                          ? (isOrangeTheme
-                              ? Colors.orange
+                          ? (isPinkTheme
+                              ? kBilibiliPink
                               : Colors.blue) // 根据主题切换颜色
                           : null,
                 ),
@@ -348,13 +356,13 @@ class CategoryMenu extends StatelessWidget {
 class ProductGrid extends StatelessWidget {
   final Category category;
   final Function(Product) onProductSelected;
-  final bool isOrangeTheme; // 新增参数
+  final bool isPinkTheme; // 新增参数
 
   const ProductGrid({
     super.key,
     required this.category,
     required this.onProductSelected,
-    required this.isOrangeTheme, // 接收主题状态
+    required this.isPinkTheme, // 接收主题状态
   });
 
   @override
@@ -423,8 +431,7 @@ class ProductGrid extends StatelessWidget {
               bottom: isSingleGroup ? (isLastParentProduct ? 10 : 0) : 10,
             ),
             decoration: BoxDecoration(
-              color:
-                  isOrangeTheme ? Colors.orange[50] : Colors.blue[50], // 切换背景色
+              color: isPinkTheme ? Colors.pink[50] : Colors.blue[50], // 切换背景色
               borderRadius:
                   isSingleGroup
                       ? BorderRadius.circular(12)
@@ -449,8 +456,8 @@ class ProductGrid extends StatelessWidget {
                             ),
                             decoration: BoxDecoration(
                               color:
-                                  isOrangeTheme
-                                      ? Colors.orange[300]
+                                  isPinkTheme
+                                      ? kBilibiliPink
                                       : Colors.blue[300], // 切换标签背景色
                               borderRadius: BorderRadius.only(
                                 topLeft: Radius.circular(12),
@@ -483,8 +490,8 @@ class ProductGrid extends StatelessWidget {
                                     ),
                                     decoration: BoxDecoration(
                                       color:
-                                          isOrangeTheme
-                                              ? Colors.orange[300]
+                                          isPinkTheme
+                                              ? kBilibiliPink
                                               : Colors.blue[300], // 切换标签背景色
                                       borderRadius: BorderRadius.only(
                                         topLeft: Radius.circular(12),
@@ -628,6 +635,41 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   ScrollController _scrollController = ScrollController();
   double _scrollPosition = 0.0;
   List<Map<String, dynamic>> _priceHistory = []; // 存储历史价格数据
+  // ... 保留其他现有状态变量 ...
+  bool _isFavorited = false; // 新增收藏状态
+  late final String _favoriteKey;
+
+  double _scrollOffset = 0.0;
+  double _buttonOpacity = 1.0; // 初始完全不透明
+
+  // 自定义五角星图标Widget
+  Widget _buildFavoriteButton() {
+    return Positioned(
+      top: 85,
+      right: 10,
+      child: AnimatedOpacity(
+        duration: Duration(milliseconds: 100),
+        opacity: _buttonOpacity,
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(100),
+            onTap: () {
+              _toggleFavorite(); // This will call the function
+            },
+            child: AnimatedSwitcher(
+              duration: Duration(milliseconds: 200),
+              child: Icon(
+                _isFavorited ? Icons.star_rounded : Icons.star_outline_rounded,
+                color: _isFavorited ? kBilibiliPink : Colors.grey[300],
+                size: 40,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 
   void _enlargeImage(String imageUrl) {
     _scrollPosition = _scrollController.position.pixels;
@@ -655,6 +697,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   @override
   void initState() {
     super.initState();
+    _favoriteKey = 'favorite_${widget.product.id}';
+    _loadFavoriteStatus();
+    _scrollController.addListener(_handleScroll);
     _loadPriceHistory(); // 加载历史价格数据
     Future.delayed(const Duration(milliseconds: 500), () {
       if (mounted) {
@@ -663,6 +708,21 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         });
       }
     });
+  }
+
+  Future<void> _loadFavoriteStatus() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _isFavorited = prefs.getBool(_favoriteKey) ?? false;
+    });
+  }
+
+  Future<void> _toggleFavorite() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _isFavorited = !_isFavorited;
+    });
+    await prefs.setBool(_favoriteKey, _isFavorited);
   }
 
   // 模拟从JSON文件加载历史价格数据
@@ -684,6 +744,14 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   void dispose() {
     _scrollController.dispose();
     super.dispose();
+  }
+
+  void _handleScroll() {
+    setState(() {
+      _scrollOffset = _scrollController.offset;
+      // 计算透明度：当滚动超过  px时开始淡出，到  px时完全透明
+      _buttonOpacity = 1.0 - (_scrollOffset.clamp(0, 500) / 500);
+    });
   }
 
   // 构建历史价格表格
@@ -935,55 +1003,61 @@ $otherNames
               )
               : _isLoading
               ? const Center(child: CircularProgressIndicator())
-              : SingleChildScrollView(
-                controller: _scrollController,
-                child: Column(
-                  children: [
-                    // 价格历史表格（无外边距）
-                    Padding(
-                      padding: EdgeInsets.zero,
-                      child: _buildPriceHistoryTable(),
+              : Stack(
+                // 使用Stack将收藏按钮覆盖在内容上方
+                children: [
+                  SingleChildScrollView(
+                    controller: _scrollController,
+                    child: Column(
+                      children: [
+                        // 价格历史表格（无外边距）
+                        Padding(
+                          padding: EdgeInsets.zero,
+                          child: _buildPriceHistoryTable(),
+                        ),
+                        Markdown(
+                          data: markdownContent,
+                          shrinkWrap: true,
+                          selectable: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          padding: const EdgeInsets.fromLTRB(10, 0, 10, 15),
+                          imageBuilder: (uri, title, alt) {
+                            return GestureDetector(
+                              onTap: () => _enlargeImage(uri.toString()),
+                              child: CachedNetworkImage(
+                                imageUrl: uri.toString(),
+                                placeholder:
+                                    (context, url) => Container(
+                                      color: Colors.grey[300],
+                                      width: 100,
+                                      height: 100,
+                                      child: const Icon(
+                                        Icons.image,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                errorWidget:
+                                    (context, url, error) => Container(
+                                      color: Colors.grey[300],
+                                      width: 100,
+                                      height: 100,
+                                      child: const Icon(
+                                        Icons.broken_image,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                width: 100,
+                                height: 100,
+                                fit: BoxFit.cover,
+                              ),
+                            );
+                          },
+                        ),
+                      ],
                     ),
-                    Markdown(
-                      data: markdownContent,
-                      shrinkWrap: true,
-                      selectable: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 15),
-                      imageBuilder: (uri, title, alt) {
-                        return GestureDetector(
-                          onTap: () => _enlargeImage(uri.toString()),
-                          child: CachedNetworkImage(
-                            imageUrl: uri.toString(),
-                            placeholder:
-                                (context, url) => Container(
-                                  color: Colors.grey[300],
-                                  width: 100,
-                                  height: 100,
-                                  child: const Icon(
-                                    Icons.image,
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                            errorWidget:
-                                (context, url, error) => Container(
-                                  color: Colors.grey[300],
-                                  width: 100,
-                                  height: 100,
-                                  child: const Icon(
-                                    Icons.broken_image,
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                            width: 100,
-                            height: 100,
-                            fit: BoxFit.cover,
-                          ),
-                        );
-                      },
-                    ),
-                  ],
-                ),
+                  ),
+                  _buildFavoriteButton(), // 添加收藏按钮
+                ],
               ),
     );
   }
@@ -999,13 +1073,13 @@ class BiologyApp extends StatefulWidget {
 class _BiologyAppState extends State<BiologyApp> {
   int currentCategoryIndex = 0;
   bool _isLoading = false;
-  bool _isOrangeTheme = false; // 新增状态变量，控制是否使用橙色主题
+  bool _isPinkTheme = false; // 新增状态变量，控制是否使用橙色主题
 
   void selectCategory(int index) {
     setState(() {
       _isLoading = true;
       currentCategoryIndex = index;
-      _isOrangeTheme = !_isOrangeTheme; // 切换主题颜色
+      _isPinkTheme = !_isPinkTheme; // 切换主题颜色
     });
 
     Future.delayed(const Duration(milliseconds: 500), () {
@@ -1115,7 +1189,7 @@ class _BiologyAppState extends State<BiologyApp> {
             categories: organisms,
             currentIndex: currentCategoryIndex,
             onCategorySelected: selectCategory,
-            isOrangeTheme: _isOrangeTheme, // 传递主题状态
+            isPinkTheme: _isPinkTheme, // 传递主题状态
           ),
           Expanded(
             child: Container(
@@ -1154,7 +1228,7 @@ class _BiologyAppState extends State<BiologyApp> {
                             ),
                           );
                         },
-                        isOrangeTheme: _isOrangeTheme, // 传递主题状态
+                        isPinkTheme: _isPinkTheme, // 传递主题状态
                       ),
             ),
           ),
