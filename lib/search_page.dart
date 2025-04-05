@@ -4,6 +4,7 @@ import 'industry_app.dart';
 import 'luxury_app.dart';
 import 'data/organisms_data.dart';
 import 'data/industry_data.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 List<Map<String, dynamic>> _getCombinedData() {
   final List<Map<String, dynamic>> combinedData = [];
@@ -38,14 +39,32 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   final TextEditingController _searchController = TextEditingController();
-  final List<String> _searchHistory = [];
+  List<String> _searchHistory = [];
   List<Map<String, dynamic>> _searchResults = [];
   bool _showResults = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSearchHistory();
+  }
 
   @override
   void dispose() {
     _searchController.dispose();
     super.dispose();
+  }
+
+  Future<void> _loadSearchHistory() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _searchHistory = prefs.getStringList('searchHistory') ?? [];
+    });
+  }
+
+  Future<void> _saveSearchHistory() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList('searchHistory', _searchHistory);
   }
 
   void _performSearch() {
@@ -57,12 +76,6 @@ class _SearchPageState extends State<SearchPage> {
         _searchResults.clear();
       });
       return;
-    }
-
-    if (!_searchHistory.contains(query)) {
-      setState(() {
-        _searchHistory.insert(0, query);
-      });
     }
 
     setState(() {
@@ -78,16 +91,31 @@ class _SearchPageState extends State<SearchPage> {
     });
   }
 
-  void _removeSearchItem(int index) {
+  Future<void> _addToSearchHistory(String query) async {
+    if (query.isEmpty || _searchHistory.contains(query)) return;
+
+    setState(() {
+      _searchHistory.insert(0, query);
+      // 限制历史记录数量，避免过多
+      if (_searchHistory.length > 20) {
+        _searchHistory = _searchHistory.sublist(0, 20);
+      }
+    });
+    await _saveSearchHistory();
+  }
+
+  Future<void> _removeSearchItem(int index) async {
     setState(() {
       _searchHistory.removeAt(index);
     });
+    await _saveSearchHistory();
   }
 
-  void _clearAllHistory() {
+  Future<void> _clearAllHistory() async {
     setState(() {
       _searchHistory.clear();
     });
+    await _saveSearchHistory();
   }
 
   void _fillSearchBox(String text) {
@@ -97,8 +125,21 @@ class _SearchPageState extends State<SearchPage> {
     });
   }
 
-  void _navigateToDetail(Map<String, dynamic> item) {
+  Future<void> _navigateToDetail(Map<String, dynamic> item) async {
     final names = item['name'] is List ? item['name'] : [item['name']];
+    final primaryName = names.isNotEmpty ? names[0].toString() : '未命名';
+
+    // 保存用户点击的商品名称（而不是搜索框的文本）
+    if (primaryName.isNotEmpty && !_searchHistory.contains(primaryName)) {
+      setState(() {
+        _searchHistory.insert(0, primaryName);
+        // 限制历史记录数量
+        if (_searchHistory.length > 20) {
+          _searchHistory = _searchHistory.sublist(0, 20);
+        }
+      });
+      await _saveSearchHistory();
+    }
 
     Navigator.push(
       context,
@@ -142,7 +183,7 @@ class _SearchPageState extends State<SearchPage> {
               suffixIcon: Icon(Icons.search, color: Colors.grey),
               hintText: '搜索...',
             ),
-            onChanged: (_) => _performSearch(),
+            onChanged: (_) => _performSearch(), // 输入时不添加到历史记录
             textInputAction: TextInputAction.search,
             onSubmitted: (_) => _performSearch(),
           ),
