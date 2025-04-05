@@ -1,867 +1,867 @@
 final Map<String, List<Map<String, dynamic>>> factories = {
   "橡胶": [
     {
-      "id": "1",
+      "id": "factories78_79_5",
       "name": ["异戊二烯", "Isoprene"],
     },
     {
-      "id": "2",
+      "id": "factories100_42_5",
       "name": ["苯乙烯", "Styrene"],
     },
     {
-      "id": "3",
+      "id": "factories106_99_0",
       "name": ["丁二烯", "Butadiene"],
     },
     {
-      "id": "4",
+      "id": "factoriesIsoprene_rubber",
       "name": ["异戊橡胶", "Isoprene rubber"],
     },
     {
-      "id": "5",
+      "id": "factories9003_55_8",
       "name": ["丁苯橡胶", "Styrene-butadiene rubber"],
     },
     {
-      "id": "6",
+      "id": "factoriesCis_butadiene_rubber",
       "name": ["顺丁橡胶", "Cis-butadiene rubber"],
     },
     {
-      "id": "7",
+      "id": "factoriesSBS_rubber",
       "name": ["SBS橡胶", "SBS rubber"],
     },
     {
-      "id": "8",
+      "id": "factoriesNitrile_rubber",
       "name": ["丁腈橡胶", "Nitrile rubber"],
     },
     {
-      "id": "9",
-      "name": ["20号胶", "No.20 rubber"],
+      "id": "factories20_rubber",
+      "name": ["20号胶", "20#rubber"],
     },
   ],
   "树脂": [
     {
-      "id": "10",
+      "id": "factories9002_88_4",
       "name": ["PE树脂", "PE resin"],
     },
     {
-      "id": "11",
+      "id": "factories9003_07_0",
       "name": ["PP树脂", "PP resin"],
     },
     {
-      "id": "12",
+      "id": "factories9002_86_2",
       "name": ["PVC树脂", "PVC resin"],
     },
     {
-      "id": "13",
+      "id": "factories9003_53_6",
       "name": ["PS树脂", "PS resin"],
     },
     {
-      "id": "14",
+      "id": "factories25037_45_0",
       "name": ["PC树脂", "PC resin"],
     },
     {
-      "id": "15",
+      "id": "factories80_05_7",
       "name": ["双酚A", "Bisphenol A"],
     },
     {
-      "id": "16",
+      "id": "factories9002_84_0",
       "name": ["聚四氟乙烯", "Polytetrafluoroethylene"],
     },
     {
-      "id": "17",
+      "id": "factories9003_56_9",
       "name": ["ABS树脂", "ABS resin"],
     },
     {
-      "id": "18",
+      "id": "factories107_13_1",
       "name": ["丙烯腈", "Acrylonitrile"],
     },
     {
-      "id": "19",
+      "id": "factories9011_14_7",
       "name": ["PMMA", "Polymethyl methacrylate"],
     },
     {
-      "id": "20",
+      "id": "factories24937_78_8",
       "name": ["EVA树脂", "EVA resin"],
     },
     {
-      "id": "21",
+      "id": "factories32131_17_2",
       "name": ["尼龙66", "Nylon 66"],
     },
     {
-      "id": "22",
+      "id": "factories124_09_4",
       "name": ["己二胺", "Hexamethylenediamine"],
     },
     {
-      "id": "23",
+      "id": "factories124_04_9",
       "name": ["己二酸", "Adipic acid"],
     },
     {
-      "id": "24",
+      "id": "factories25038_54_4",
       "name": ["尼龙6", "Nylon 6"],
     },
     {
-      "id": "25",
+      "id": "factories105_60_2",
       "name": ["己内酰胺", "Caprolactam"],
     },
     {
-      "id": "26",
+      "id": "factories25038_59_9",
       "name": ["PET", "Polyethylene terephthalate"],
     },
     {
-      "id": "27",
+      "id": "factories24968_12_5",
       "name": ["PBT", "Polybutylene terephthalate"],
     },
     {
-      "id": "28",
+      "id": "factories584_84_9",
       "name": ["TDI", "Toluene diisocyanate"],
     },
     {
-      "id": "29",
+      "id": "factories101_68_8",
       "name": ["MDI", "Methylene diphenyl diisocyanate"],
     },
     {
-      "id": "30",
+      "id": "factories25190_06_1",
       "name": ["聚四氢呋喃", "Polytetrahydrofuran"],
     },
     {
-      "id": "31",
+      "id": "factories25014_41_9",
       "name": ["聚丙烯腈", "Polyacrylonitrile"],
     },
     {
-      "id": "32",
+      "id": "factories50_00_0",
       "name": ["甲醛", "Formaldehyde"],
     },
     {
-      "id": "33",
+      "id": "factories108_95_2",
       "name": ["苯酚", "Phenol"],
     },
     {
-      "id": "34",
+      "id": "factories57_13_6",
       "name": ["尿素", "Urea"],
     },
     {
-      "id": "35",
+      "id": "factories108_78_1",
       "name": ["三聚氰胺", "Melamine"],
     },
     {
-      "id": "36",
+      "id": "factories9003_35_4",
       "name": ["酚醛树脂", "Phenolic resin"],
     },
     {
-      "id": "37",
+      "id": "factories9011_05_6",
       "name": ["脲醛树脂", "Urea-formaldehyde resin"],
     },
     {
-      "id": "38",
+      "id": "factories9003_08_1",
       "name": ["密胺树脂", "Melamine resin"],
     },
     {
-      "id": "39",
+      "id": "factories25068_38_6",
       "name": ["双酚A型环氧树脂", "Bisphenol A epoxy resin"],
     },
     {
-      "id": "40",
+      "id": "factories111_40_0",
       "name": ["二乙烯三胺", "Diethylenetriamine"],
     },
   ],
   "粘合": [
     {
-      "id": "41",
+      "id": "factories9004_65_3",
       "name": ["羟丙甲纤维素", "Hypromellose"],
     },
     {
-      "id": "42",
+      "id": "factories9004_32_4",
       "name": ["羧甲纤维素钠", "Sodium carboxymethyl cellulose"],
     },
     {
-      "id": "43",
+      "id": "factories1319_77_3",
       "name": ["甲基苯酚", "Methylphenol"],
     },
     {
-      "id": "44",
+      "id": "factoriesWhite_glue",
       "name": ["白乳胶", "White glue"],
     },
     {
-      "id": "45",
+      "id": "factories502_glue",
       "name": ["502胶水", "502 glue"],
     },
     {
-      "id": "46",
+      "id": "factoriesNeoprene_adhesive",
       "name": ["氯丁胶", "Neoprene adhesive"],
     },
     {
-      "id": "47",
+      "id": "factories126_99_8",
       "name": ["2-氯-1，3-丁二烯", "2-Chloro-1,3-butadiene"],
     },
     {
-      "id": "48",
+      "id": "factories108_88_3",
       "name": ["甲苯", "Toluene"],
     },
     {
-      "id": "49",
+      "id": "factories108_90_7",
       "name": ["氯苯", "Chlorobenzene"],
     },
   ],
   "制冷": [
     {
-      "id": "50",
+      "id": "factories7664_41_7",
       "name": ["氨", "Ammonia"],
     },
     {
-      "id": "51",
+      "id": "factories75_71_8",
       "name": ["氟利昂_12", "Freon-12"],
     },
     {
-      "id": "52",
+      "id": "factories75_45_6",
       "name": ["氟利昂_22", "Freon-22"],
     },
     {
-      "id": "53",
+      "id": "factories811_97_2",
       "name": ["氟利昂_134a", "Freon-134a"],
     },
     {
-      "id": "54",
+      "id": "factories287_92_3",
       "name": ["环戊烷", "Cyclopentane"],
     },
   ],
   "食品添加": [
     {
-      "id": "55",
+      "id": "factories123_94_4",
       "name": ["单硬脂酸甘油酯", "Glyceryl monostearate"],
     },
     {
-      "id": "56",
+      "id": "factoriesSucrose_fatty_acid_ester",
       "name": ["蔗糖脂肪酸酯", "Sucrose fatty acid ester"],
     },
     {
-      "id": "57",
+      "id": "factories25383_99_7",
       "name": ["硬脂酰乳酸钠", "Sodium stearoyl lactylate"],
     },
     {
-      "id": "58",
+      "id": "factories8002_43_5",
       "name": ["卵磷脂", "Lecithin"],
     },
     {
-      "id": "59",
+      "id": "factoriesNon_dairy_creamer_T90",
       "name": ["植脂末T90", "Non-dairy creamer T90"],
     },
     {
-      "id": "60",
+      "id": "factories9000_71_9",
       "name": ["酪蛋白", "Casein"],
     },
     {
-      "id": "61",
+      "id": "factories56_87_1",
       "name": ["L-赖氨酸", "L-Lysine"],
     },
     {
-      "id": "62",
+      "id": "factories90_80_2",
       "name": ["葡萄糖酸-δ-内酯", "Glucono-delta-lactone"],
     },
     {
-      "id": "63",
+      "id": "factories9000_07_1",
       "name": ["卡拉胶", "Carrageenan"],
     },
     {
-      "id": "64",
+      "id": "factories4940_11_8",
       "name": ["乙基麦芽酚", "Ethyl maltol"],
     },
   ],
   "木材·纸": [
     {
-      "id": "65",
+      "id": "factoriesWood_flour",
       "name": ["木粉", "Wood flour"],
     },
     {
-      "id": "66",
+      "id": "factoriesPlywood",
       "name": ["胶合板", "Plywood"],
     },
     {
-      "id": "67",
+      "id": "factoriesParticle_board",
       "name": ["刨花板", "Particle board"],
     },
     {
-      "id": "68",
+      "id": "factoriesFiberboard",
       "name": ["纤维板", "Fiberboard"],
     },
     {
-      "id": "69",
+      "id": "factoriesBleached_sulfate_softwood_pulp",
       "name": ["漂白硫酸盐针叶木浆", "Bleached sulfate softwood pulp"],
     },
     {
-      "id": "70",
+      "id": "factoriesBleached_sulfate_hardwood_pulp",
       "name": ["漂白硫酸盐阔叶木浆", "Bleached sulfate hardwood pulp"],
     },
     {
-      "id": "71",
+      "id": "factoriesFive_layer_AB_corrugated_paper",
       "name": ["五层AB瓦楞纸", "Five-layer AB corrugated paper"],
     },
     {
-      "id": "72",
+      "id": "factoriesFive_layer_BE_corrugated_paper",
       "name": ["五层BE瓦楞纸", "Five-layer BE corrugated paper"],
     },
   ],
   "建筑": [
     {
-      "id": "73",
+      "id": "factoriesIron_ore",
       "name": ["铁矿石", "Iron ore"],
     },
     {
-      "id": "74",
+      "id": "factoriesPig_iron",
       "name": ["生铁", "Pig iron"],
     },
     {
-      "id": "75",
+      "id": "factoriesStainless_steel_304",
       "name": ["不锈钢304", "Stainless steel 304"],
     },
     {
-      "id": "76",
+      "id": "factoriesScrap_iron",
       "name": ["废铁", "Scrap iron"],
     },
     {
-      "id": "77",
-      "name": ["1#铬", "No.1 chromium"],
+      "id": "factories7440_47_3",
+      "name": ["1#铬", "1#chromium"],
     },
     {
-      "id": "78",
-      "name": ["1#电解镍", "No.1 electrolytic nickel"],
+      "id": "factories7440_02_0",
+      "name": ["1#电解镍", "1#electrolytic nickel"],
     },
     {
-      "id": "79",
+      "id": "factories7429_90_5",
       "name": ["A00铝", "A00 aluminum"],
     },
     {
-      "id": "80",
+      "id": "factories6063_aluminum_alloy",
       "name": ["6063铝合金", "6063 aluminum alloy"],
     },
     {
-      "id": "81",
-      "name": ["1#铜", "No.1 copper"],
+      "id": "factories7440_50_8",
+      "name": ["1#铜", "1#copper"],
     },
     {
-      "id": "82",
-      "name": ["0#锌", "No.0 zinc"],
+      "id": "factories7440_66_6",
+      "name": ["0#锌", "0#zinc"],
     },
     {
-      "id": "83",
+      "id": "factories1305_78_8",
       "name": ["氧化钙", "Calcium oxide"],
     },
     {
-      "id": "84",
+      "id": "factories1344_28_1",
       "name": ["氧化铝", "Aluminum oxide"],
     },
     {
-      "id": "85",
+      "id": "factories12136_45_7",
       "name": ["氧化钾", "Potassium oxide"],
     },
     {
-      "id": "86",
+      "id": "factories1313_59_3",
       "name": ["氧化钠", "Sodium oxide"],
     },
     {
-      "id": "87",
+      "id": "factories13397_24_5",
       "name": ["生石膏", "Gypsum"],
     },
     {
-      "id": "88",
+      "id": "factories10101_41_4",
       "name": ["熟石膏", "Plaster of Paris"],
     },
     {
-      "id": "89",
+      "id": "factories7786_30_3",
       "name": ["氯化镁", "Magnesium chloride"],
     },
     {
-      "id": "90",
+      "id": "factories14807_96_6",
       "name": ["滑石", "Talc"],
     },
     {
-      "id": "91",
+      "id": "factoriesLimestone_gravel",
       "name": ["石灰岩碎石", "Limestone gravel"],
     },
     {
-      "id": "92",
+      "id": "factoriesLimestone_coarse_sand",
       "name": ["石灰岩粗砂", "Limestone coarse sand"],
     },
     {
-      "id": "93",
+      "id": "factoriesLimestone_fine_sand",
       "name": ["石灰岩细砂", "Limestone fine sand"],
     },
     {
-      "id": "94",
-      "name": ["2#石英", "No.2 quartz"],
+      "id": "factories14808_60_7",
+      "name": ["2#石英", "2#quartz"],
     },
     {
-      "id": "95",
+      "id": "factories1332_58_7",
       "name": ["高岭土", "Kaolin"],
     },
     {
-      "id": "96",
+      "id": "factories325_cement",
       "name": ["325水泥", "325 cement"],
     },
     {
-      "id": "97",
+      "id": "factories425_cement",
       "name": ["425水泥", "425 cement"],
     },
     {
-      "id": "98",
+      "id": "factories525_cement",
       "name": ["525水泥", "525 cement"],
     },
     {
-      "id": "99",
+      "id": "factoriesSoda_lime_glass",
       "name": ["钠钙玻璃", "Soda-lime glass"],
     },
     {
-      "id": "100",
+      "id": "factories10043_52_4",
       "name": ["氯化钙", "Calcium chloride"],
     },
     {
-      "id": "101",
+      "id": "factoriesStandard_red_brick",
       "name": ["标准红砖", "Standard red brick"],
     },
     {
-      "id": "102",
+      "id": "factories1310_73_2",
       "name": ["烧碱", "Caustic soda"],
     },
     {
-      "id": "103",
+      "id": "factories7757_82_6",
       "name": ["元明粉", "Glauber's salt"],
     },
     {
-      "id": "104",
+      "id": "factories497_19_8",
       "name": ["纯碱", "Soda ash"],
     },
     {
-      "id": "105",
+      "id": "factories1344_09_8",
       "name": ["硅酸钠", "Sodium silicate"],
     },
   ],
   "电动车": [
     {
-      "id": "106",
+      "id": "factoriesNeodymium_magnet",
       "name": ["钕铁硼", "Neodymium magnet"],
     },
     {
-      "id": "107",
+      "id": "factories7440_00_8",
       "name": ["钕", "Neodymium"],
     },
     {
-      "id": "108",
-      "name": ["1#锡", "No.1 tin"],
+      "id": "factories7440_31_5",
+      "name": ["1#锡", "1#tin"],
     },
     {
-      "id": "109",
-      "name": ["1#铅", "No.1 lead"],
+      "id": "factories7439_92_1",
+      "name": ["1#铅", "1#lead"],
     },
     {
-      "id": "110",
+      "id": "factories15365_14_7",
       "name": ["磷酸亚铁锂", "Lithium iron phosphate"],
     },
     {
-      "id": "111",
-      "name": ["1#钴", "No.1 cobalt"],
+      "id": "factories7440_48_4",
+      "name": ["1#钴", "1#cobalt"],
     },
     {
-      "id": "112",
-      "name": ["1#电解锰", "No.1 electrolytic manganese"],
+      "id": "factories7439_96_5",
+      "name": ["1#电解锰", "1#electrolytic manganese"],
     },
     {
-      "id": "113",
+      "id": "factories554_13_2",
       "name": ["碳酸锂", "Lithium carbonate"],
     },
     {
-      "id": "114",
+      "id": "factories21324_40_3",
       "name": ["六氟磷酸锂", "Lithium hexafluorophosphate"],
     },
     {
-      "id": "115",
+      "id": "factories25617_97_4",
       "name": ["氮化镓", "Gallium nitride"],
     },
   ],
   "能源": [
     {
-      "id": "116",
+      "id": "factories68476_85_7",
       "name": ["液化石油气", "Liquefied petroleum gas"],
     },
     {
-      "id": "117",
-      "name": ["92#汽油", "92# gasoline"],
+      "id": "factories92_gasoline",
+      "name": ["92#汽油", "92#gasoline"],
     },
     {
-      "id": "118",
-      "name": ["95#汽油", "95# gasoline"],
+      "id": "factories95_gasoline",
+      "name": ["95#汽油", "95#gasoline"],
     },
     {
-      "id": "119",
-      "name": ["98#汽油", "98# gasoline"],
+      "id": "factories98_gasoline",
+      "name": ["98#汽油", "98#gasoline"],
     },
     {
-      "id": "120",
-      "name": ["0#柴油", "0# diesel"],
+      "id": "factories0_diesel",
+      "name": ["0#柴油", "0#diesel"],
     },
     {
-      "id": "121",
+      "id": "factories8002_74_2",
       "name": ["石蜡", "Paraffin wax"],
     },
     {
-      "id": "122",
+      "id": "factories8052_42_4",
       "name": ["沥青", "Asphalt"],
     },
     {
-      "id": "123",
+      "id": "factoriesLondon_Brent_crude_oil",
       "name": ["伦敦brent原油", "London Brent crude oil"],
     },
     {
-      "id": "124",
+      "id": "factoriesNew_York_WTI_crude_oil",
       "name": ["纽约WTI原油", "New York WTI crude oil"],
     },
     {
-      "id": "125",
+      "id": "factories8006_14_2",
       "name": ["天然气", "Natural gas"],
     },
     {
-      "id": "126",
+      "id": "factories5500_kcal_thermal_coal",
       "name": ["5500大卡动力煤", "5500 kcal thermal coal"],
     },
   ],
   "表面活性": [
     {
-      "id": "127",
+      "id": "factoriesSodium_laureth_sulfate",
       "name": ["月桂醇聚醚硫酸酯钠", "Sodium laureth sulfate"],
     },
     {
-      "id": "128",
+      "id": "factories151_21_3",
       "name": ["月桂醇硫酸酯钠", "Sodium lauryl sulfate"],
     },
     {
-      "id": "129",
+      "id": "factories137_16_6",
       "name": ["月桂酰胺肌氨酸钠", "Sodium lauroyl sarcosinate"],
     },
     {
-      "id": "130",
+      "id": "factoriesSodium_lauroyl_glutamate",
       "name": ["月桂酰胺谷氨酸钠", "Sodium lauroyl glutamate"],
     },
     {
-      "id": "131",
+      "id": "factories4292_10_8",
       "name": ["月桂酰胺基丙基甜菜碱", "Lauramidopropyl betaine"],
     },
     {
-      "id": "132",
+      "id": "factories822_16_2",
       "name": ["硬脂酸钠", "Sodium stearate"],
     },
     {
-      "id": "133",
+      "id": "factories408_35_5",
       "name": ["棕榈酸钠", "Sodium palmitate"],
     },
     {
-      "id": "134",
+      "id": "factories25155_30_0",
       "name": ["直链十二烷基苯磺酸钠", "Linear alkylbenzene sulfonate"],
     },
     {
-      "id": "135",
+      "id": "factories61791_31_9",
       "name": ["椰油酰胺DEA", "Cocamide DEA"],
     },
     {
-      "id": "136",
+      "id": "factories68140_00_1",
       "name": ["椰油酰胺MEA", "Cocamide MEA"],
     },
     {
-      "id": "137",
+      "id": "factoriesCetrimonium_chloride",
       "name": ["鲸蜡硬脂基三甲基氯化铵", "Cetrimonium chloride"],
     },
     {
-      "id": "138",
+      "id": "factoriesAlkyl_polyglucoside",
       "name": ["直链烷基葡萄糖苷", "Alkyl polyglucoside"],
     },
   ],
   "助溶": [
     {
-      "id": "139",
+      "id": "factoriesCetearyl_alcohol",
       "name": ["鲸蜡硬脂醇", "Cetearyl alcohol"],
     },
     {
-      "id": "140",
+      "id": "factories56_81_5",
       "name": ["甘油", "Glycerin"],
     },
     {
-      "id": "141",
+      "id": "factories9006_65_9",
       "name": ["聚二甲基硅氧烷", "Dimethicone"],
     },
     {
-      "id": "142",
+      "id": "factories70131_67_8",
       "name": ["聚二甲基硅氧烷醇", "Dimethiconol"],
     },
     {
-      "id": "143",
+      "id": "factories115_10_6",
       "name": ["二甲醚", "Dimethyl ether"],
     },
     {
-      "id": "144",
+      "id": "factories64_17_5",
       "name": ["乙醇", "Ethanol"],
     },
     {
-      "id": "145",
+      "id": "factories57_55_6",
       "name": ["丙二醇", "Propylene glycol"],
     },
     {
-      "id": "146",
+      "id": "factories110_63_4",
       "name": ["丁二醇", "Butylene glycol"],
     },
     {
-      "id": "147",
+      "id": "factories67_63_0",
       "name": ["异丙醇", "Isopropyl alcohol"],
     },
     {
-      "id": "148",
+      "id": "factories657_84_1",
       "name": ["对甲苯磺酸钠", "Sodium p-toluenesulfonate"],
     },
     {
-      "id": "149",
+      "id": "factories1300_72_7",
       "name": ["二甲苯磺酸钠", "Sodium xylenesulfonate"],
     },
     {
-      "id": "150",
+      "id": "factories143_07_7",
       "name": ["月桂酸", "Lauric acid"],
     },
     {
-      "id": "151",
+      "id": "factories544_63_8",
       "name": ["肉豆蔻酸", "Myristic acid"],
     },
     {
-      "id": "152",
+      "id": "factories57_10_3",
       "name": ["棕榈酸", "Palmitic acid"],
     },
     {
-      "id": "153",
+      "id": "factories57_11_4",
       "name": ["硬脂酸", "Stearic acid"],
     },
     {
-      "id": "154",
+      "id": "factories112_80_1",
       "name": ["油酸", "Oleic acid"],
     },
     {
-      "id": "155",
+      "id": "factories60_33_3",
       "name": ["亚油酸", "Linoleic acid"],
     },
   ],
   "香味": [
     {
-      "id": "156",
+      "id": "factories99_49_0",
       "name": ["香芹酮", "Carvone"],
     },
     {
-      "id": "157",
+      "id": "factories89_78_1",
       "name": ["薄荷醇", "Menthol"],
     },
     {
-      "id": "158",
+      "id": "factories60_12_8",
       "name": ["β-苯乙醇", "β-Phenylethyl alcohol"],
     },
     {
-      "id": "159",
+      "id": "factories112_53_8",
       "name": ["月桂醇", "Lauryl alcohol"],
     },
     {
-      "id": "160",
+      "id": "factories78_70_6",
       "name": ["芳樟醇", "Linalool"],
     },
     {
-      "id": "161",
+      "id": "factories5392_40_5",
       "name": ["柠檬醛", "Citral"],
     },
     {
-      "id": "162",
+      "id": "factories106_25_2",
       "name": ["橙花醇", "Nerol"],
     },
     {
-      "id": "163",
+      "id": "factories106_24_1",
       "name": ["牻牛儿醇", "Geraniol"],
     },
     {
-      "id": "164",
+      "id": "factories97_53_0",
       "name": ["丁香油酚", "Eugenol"],
     },
     {
-      "id": "165",
+      "id": "factories16409_43_1",
       "name": ["玫瑰醚", "Rose oxide"],
     },
     {
-      "id": "166",
+      "id": "factories659_70_1",
       "name": ["异戊酸异戊酯", "Isoamyl isovalerate"],
     },
     {
-      "id": "167",
+      "id": "factories50_70_4",
       "name": ["山梨糖醇", "Sorbitol"],
     },
     {
-      "id": "168",
+      "id": "factories87_99_0",
       "name": ["木糖醇", "Xylitol"],
     },
     {
-      "id": "169",
+      "id": "factories128_44_9",
       "name": ["糖精钠", "Sodium saccharin"],
     },
   ],
   "颜色": [
     {
-      "id": "170",
+      "id": "factories10101_52_7",
       "name": ["硅酸锆", "Zirconium silicate"],
     },
     {
-      "id": "171",
+      "id": "factories1309_48_4",
       "name": ["氧化镁", "Magnesium oxide"],
     },
     {
-      "id": "172",
+      "id": "factories21645_51_2",
       "name": ["氢氧化铝", "Aluminum hydroxide"],
     },
     {
-      "id": "173",
+      "id": "factories7758_97_6",
       "name": ["铬酸铅", "Lead chromate"],
     },
     {
-      "id": "174",
+      "id": "factories57455_37_5",
       "name": ["群青蓝", "Ultramarine blue"],
     },
     {
-      "id": "175",
+      "id": "factories13463_67_7",
       "name": ["金红石型钛白粉", "Rutile titanium dioxide"],
     },
     {
-      "id": "176",
+      "id": "factories1333_86_4",
       "name": ["炭黑", "Carbon black"],
     },
     {
-      "id": "177",
+      "id": "factories7782_42_5",
       "name": ["石墨", "Graphite"],
     },
     {
-      "id": "178",
+      "id": "factoriesIron_oxide_pigment",
       "name": ["氧化铁系颜料", "Iron oxide pigment"],
     },
     {
-      "id": "179",
+      "id": "factoriesPutty_powder",
       "name": ["腻子粉", "Putty powder"],
     },
     {
-      "id": "180",
-      "name": ["CI_19140", "CI 19140"],
+      "id": "factoriesCI_19140",
+      "name": ["CI_19140", "CI_19140"],
     },
   ],
   "自来水": [
     {
-      "id": "181",
+      "id": "factories64365_11_3",
       "name": ["活性炭", "Activated carbon"],
     },
     {
-      "id": "182",
+      "id": "factories1327_41_9",
       "name": ["聚合氯化铝", "Polyaluminum chloride"],
     },
     {
-      "id": "183",
+      "id": "factoriesPolyaluminum_sulfate",
       "name": ["聚合硫酸铝", "Polyaluminum sulfate"],
     },
     {
-      "id": "184",
+      "id": "factoriesPolyferric_chloride",
       "name": ["聚合氯化铁", "Polyferric chloride"],
     },
     {
-      "id": "185",
+      "id": "factoriesPolyferric_sulfate",
       "name": ["聚合硫酸铁", "Polyferric sulfate"],
     },
     {
-      "id": "186",
+      "id": "factoriesPVC_pipe",
       "name": ["PVC管", "PVC pipe"],
     },
     {
-      "id": "187",
+      "id": "factoriesPPR_pipe",
       "name": ["PPR管", "PPR pipe"],
     },
   ],
   "其它": [
     {
-      "id": "188",
+      "id": "factoriesFlumethrin",
       "name": ["氟氯醚菊酯", "Flumethrin"],
     },
     {
-      "id": "189",
+      "id": "factories482_89_3",
       "name": ["靛蓝", "Indigo"],
     },
     {
-      "id": "190",
+      "id": "factories7775_14_6",
       "name": ["保险粉", "Sodium dithionite"],
     },
     {
-      "id": "191",
+      "id": "factories7722_64_7",
       "name": ["高锰酸钾", "Potassium permanganate"],
     },
     {
-      "id": "192",
+      "id": "factories144_62_7",
       "name": ["草酸", "Oxalic acid"],
     },
     {
-      "id": "193",
+      "id": "factories7704_34_9",
       "name": ["硫磺", "Sulfur"],
     },
     {
-      "id": "194",
+      "id": "factories7757_79_1",
       "name": ["硝酸钾", "Potassium nitrate"],
     },
     {
-      "id": "195",
+      "id": "factories122_99_6",
       "name": ["苯氧乙醇", "Phenoxyethanol"],
     },
     {
-      "id": "196",
+      "id": "factories532_32_1",
       "name": ["苯甲酸钠", "Sodium benzoate"],
     },
     {
-      "id": "197",
+      "id": "factories24634_61_5",
       "name": ["山梨酸钾", "Potassium sorbate"],
     },
     {
-      "id": "198",
+      "id": "factories77_92_9",
       "name": ["柠檬酸", "Citric acid"],
     },
     {
-      "id": "199",
+      "id": "factories1314_13_2",
       "name": ["氧化锌", "Zinc oxide"],
     },
     {
-      "id": "200",
+      "id": "factories13463_41_7",
       "name": ["吡硫鎓锌", "Zinc pyrithione"],
     },
     {
-      "id": "201",
+      "id": "factories7757_93_9",
       "name": ["磷酸氢钙", "Calcium hydrogen phosphate"],
     },
     {
-      "id": "202",
+      "id": "factories25322_68_3",
       "name": ["聚乙二醇", "Polyethylene glycol"],
     },
     {
-      "id": "203",
+      "id": "factories10163_15_2",
       "name": ["单氟磷酸钠", "Sodium monofluorophosphate"],
     },
     {
-      "id": "204",
+      "id": "factoriesHypochlorite",
       "name": ["次氯酸盐", "Hypochlorite"],
     },
     {
-      "id": "205",
+      "id": "factoriesAlkaline_protease",
       "name": ["碱性蛋白酶", "Alkaline protease"],
     },
     {
-      "id": "206",
+      "id": "factories139_33_3",
       "name": ["EDTA二钠", "Disodium EDTA"],
     },
     {
-      "id": "207",
+      "id": "factories64_02_8",
       "name": ["EDTA四钠", "Tetrasodium EDTA"],
     },
     {
-      "id": "208",
+      "id": "factoriesEthylene_glycol_distearate",
       "name": ["乙二醇二硬脂酸钠", "Ethylene glycol distearate"],
     },
     {
-      "id": "209",
+      "id": "factories81_13_0",
       "name": ["泛醇", "Panthenol"],
     },
   ],
