@@ -778,12 +778,20 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // 获取从第三个元素开始的所有名称，如果不足3个则返回空字符串
+    final otherNames =
+        widget.product.name.length > 2
+            ? '- ​**其它名称**: ${widget.product.name.sublist(2).join(', ')}\n'
+            : '';
+
     final markdownContent = """
 # 产品详情
 
 ## 基本信息
 - ​**产品ID**: ${widget.product.id}
-- ​**产品名称**: ${widget.product.name}
+- ​**产品名称**: ${widget.product.name[0]}
+- ​**英文名称**: ${widget.product.name.length > 1 ? widget.product.name[1] : '暂无'}
+$otherNames
 
 ## &emsp;产品描述
 &emsp;&emsp;这是一段示例描述。《零的焦点》则以一对夫妻的生活为切入点，展现了一幅日本战后社会的众生相。女主人公绫子看似拥有幸福美满的家庭，然而，丈夫的神秘失踪打破了这份平静。随着调查的深入，一系列惊人的真相逐渐浮出水面。原来，丈夫的过去涉及到一些不为人知的秘密，而这些秘密与当时日本社会的种种问题紧密相连。在这个过程中，作者揭示了战争给人们带来的创伤以及战后社会的混乱与迷茫。人们在追求物质生活的同时，往往忽略了内心的真实需求，导致道德观念的扭曲和人际关系的冷漠。通过对这起案件的描写，读者不仅能够感受到推理小说的紧张刺激，还能对社会现实进行深刻的反思。  
