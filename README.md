@@ -1,6 +1,6 @@
-# simple_counter_app
+# 平替经济学
 
-A new Flutter project.
+affordable economy
 
 ## Getting Started
 
