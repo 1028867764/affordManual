@@ -14,12 +14,38 @@ class FavoriteApp extends StatefulWidget {
 
 class _FavoriteAppState extends State<FavoriteApp> {
   List<Product> _favoriteProducts = [];
+  List<Product> _filteredProducts = [];
   bool _isLoading = true;
+  TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     _loadFavorites();
+    _searchController.addListener(_filterProducts);
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void _filterProducts() {
+    final searchText = _searchController.text.toLowerCase();
+    if (_isLoading || _favoriteProducts.isEmpty) return;
+
+    setState(() {
+      if (searchText.isEmpty) {
+        _filteredProducts = List.from(_favoriteProducts);
+      } else {
+        _filteredProducts =
+            _favoriteProducts.where((product) {
+              final description = product.description?.toLowerCase() ?? '';
+              return description.contains(searchText);
+            }).toList();
+      }
+    });
   }
 
   Future<void> _loadFavorites() async {
@@ -76,6 +102,7 @@ class _FavoriteAppState extends State<FavoriteApp> {
                 );
               },
             ).toList();
+        _filteredProducts = List.from(_favoriteProducts);
         _isLoading = false;
       });
     }
@@ -155,9 +182,8 @@ class _FavoriteAppState extends State<FavoriteApp> {
 
   @override
   Widget build(BuildContext context) {
-    // 每次页面构建时都检查是否需要刷新
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) {
+      if (mounted && _searchController.text.isEmpty) {
         _loadFavorites();
       }
     });
@@ -245,121 +271,157 @@ class _FavoriteAppState extends State<FavoriteApp> {
           const SizedBox(width: 10),
         ],
       ),
-      body:
-          _isLoading
-              ? const Center(child: CircularProgressIndicator())
-              : _favoriteProducts.isEmpty
-              ? const Center(
-                child: Text(
-                  '暂无收藏内容',
-                  style: TextStyle(fontSize: 16, color: Colors.grey),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: TextField(
+              controller: _searchController,
+              decoration: InputDecoration(
+                hintText: '搜索描述...',
+                prefixIcon: Icon(Icons.search),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.0),
                 ),
-              )
-              : ListView.builder(
-                itemCount: _favoriteProducts.length,
-                itemBuilder: (context, index) {
-                  final product = _favoriteProducts[index];
-                  // 获取从第3位开始的所有名称（如果存在）
-                  final otherNames =
-                      product.name.length > 2
-                          ? product.name.sublist(2).join(', ')
-                          : '暂无其它名称';
-                  return Card(
-                    margin: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 8,
-                    ),
-                    child: ListTile(
-                      title: Text(
-                        product.displayName, // 没有自定义名称时显示其他名称
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                        ),
+                contentPadding: EdgeInsets.symmetric(
+                  vertical: 12,
+                  horizontal: 16,
+                ),
+              ),
+              onChanged: (value) {
+                _filterProducts();
+              },
+            ),
+          ),
+          Expanded(
+            child:
+                _isLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : _filteredProducts.isEmpty
+                    ? Center(
+                      child: Text(
+                        _searchController.text.isEmpty ? '暂无收藏内容' : '没有找到匹配的描述',
+                        style: TextStyle(fontSize: 16, color: Colors.grey),
                       ),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            product.customName.isNotEmpty
-                                ? product.name[0]
-                                : otherNames,
-                            style: TextStyle(fontSize: 11),
+                    )
+                    : ListView.builder(
+                      itemCount: _filteredProducts.length,
+                      itemBuilder: (context, index) {
+                        final product = _filteredProducts[index];
+                        // 获取从第3位开始的所有名称（如果存在）
+                        final otherNames =
+                            product.name.length > 2
+                                ? product.name.sublist(2).join(', ')
+                                : '暂无其它名称';
+                        return Card(
+                          margin: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 8,
                           ),
-                          if (product.description?.isNotEmpty ?? false)
-                            Padding(
-                              padding: const EdgeInsets.only(top: 4),
-                              child: Text(
-                                product.description!,
-                                style: TextStyle(
-                                  fontSize: 11,
-                                  color: Colors.grey[600],
-                                ),
+                          child: ListTile(
+                            title: Text(
+                              product.displayName,
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
-                        ],
-                      ),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          IconButton(
-                            icon: const Icon(Icons.edit, size: 20),
-                            onPressed: () => _showEditDialog(context, product),
-                          ),
-                          IconButton(
-                            icon: const Icon(
-                              Icons.star_rounded,
-                              color: kBilibiliPink,
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  product.customName.isNotEmpty
+                                      ? product.name[0]
+                                      : otherNames,
+                                  style: TextStyle(fontSize: 11),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 4),
+                                  child: Text(
+                                    product.description,
+                                    style: TextStyle(
+                                      fontSize: 11,
+                                      color: Colors.grey[600],
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                            onPressed: () async {
-                              final prefs =
-                                  await SharedPreferences.getInstance();
-                              await prefs.setBool(
-                                'favorite_${product.id}',
-                                false,
-                              );
-                              await prefs.remove('custom_name_${product.id}');
-                              await prefs.remove('description_${product.id}');
-                              if (mounted) {
-                                _loadFavorites();
-                              }
-                            },
-                          ),
-                        ],
-                      ),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          PageRouteBuilder(
-                            pageBuilder:
-                                (context, animation, secondaryAnimation) =>
-                                    ProductDetailScreen(product: product),
-                            transitionsBuilder: (
-                              context,
-                              animation,
-                              secondaryAnimation,
-                              child,
-                            ) {
-                              const begin = Offset(1.0, 0.0);
-                              const end = Offset.zero;
-                              const curve = Curves.ease;
-                              var tween = Tween(
-                                begin: begin,
-                                end: end,
-                              ).chain(CurveTween(curve: curve));
-                              var offsetAnimation = animation.drive(tween);
-                              return SlideTransition(
-                                position: offsetAnimation,
-                                child: child,
+                            trailing: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                IconButton(
+                                  icon: const Icon(Icons.edit, size: 20),
+                                  onPressed:
+                                      () => _showEditDialog(context, product),
+                                ),
+                                IconButton(
+                                  icon: const Icon(
+                                    Icons.star_rounded,
+                                    color: kBilibiliPink,
+                                  ),
+                                  onPressed: () async {
+                                    final prefs =
+                                        await SharedPreferences.getInstance();
+                                    await prefs.setBool(
+                                      'favorite_${product.id}',
+                                      false,
+                                    );
+                                    await prefs.remove(
+                                      'custom_name_${product.id}',
+                                    );
+                                    await prefs.remove(
+                                      'description_${product.id}',
+                                    );
+                                    if (mounted) {
+                                      _loadFavorites();
+                                    }
+                                  },
+                                ),
+                              ],
+                            ),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                PageRouteBuilder(
+                                  pageBuilder:
+                                      (
+                                        context,
+                                        animation,
+                                        secondaryAnimation,
+                                      ) =>
+                                          ProductDetailScreen(product: product),
+                                  transitionsBuilder: (
+                                    context,
+                                    animation,
+                                    secondaryAnimation,
+                                    child,
+                                  ) {
+                                    const begin = Offset(1.0, 0.0);
+                                    const end = Offset.zero;
+                                    const curve = Curves.ease;
+                                    var tween = Tween(
+                                      begin: begin,
+                                      end: end,
+                                    ).chain(CurveTween(curve: curve));
+                                    var offsetAnimation = animation.drive(
+                                      tween,
+                                    );
+                                    return SlideTransition(
+                                      position: offsetAnimation,
+                                      child: child,
+                                    );
+                                  },
+                                ),
                               );
                             },
                           ),
                         );
                       },
                     ),
-                  );
-                },
-              ),
+          ),
+        ],
+      ),
     );
   }
 }
