@@ -124,7 +124,7 @@ class _FavoriteAppState extends State<FavoriteApp> {
     }
 
     final matchIndex = description.toLowerCase().indexOf(searchText);
-    final visibleStart = max(0, matchIndex - 1); // 确保匹配文本前有15个字符的上下文
+    final visibleStart = max(0, matchIndex - 1); // 确保匹配文本前有 个字符的上下文
     final visibleText = description.substring(
       visibleStart,
       min(description.length, visibleStart + 50), // 最多显示50个字符
@@ -406,7 +406,7 @@ class _FavoriteAppState extends State<FavoriteApp> {
                       isDense: true,
                       contentPadding: EdgeInsets.symmetric(
                         vertical: 4, // 更小的值
-                        horizontal: 12,
+                        horizontal: 8,
                       ),
                       constraints: BoxConstraints(
                         maxHeight: 36, // 直接限制最大高度
@@ -482,7 +482,7 @@ class _FavoriteAppState extends State<FavoriteApp> {
                                   style: TextStyle(fontSize: 11),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.only(top: 4),
+                                  padding: const EdgeInsets.only(top: 0),
                                   child: Container(
                                     constraints: BoxConstraints(
                                       maxWidth:
