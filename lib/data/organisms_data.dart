@@ -1,8 +1,16 @@
 class Product {
   final String id;
   final List<String> name; // 改为数组形式
+  final String customName;
+  final String description;
 
-  Product({required this.id, required this.name});
+  Product({
+    required this.id,
+    required this.name,
+    this.customName = '',
+    this.description = '',
+  });
+  String get displayName => customName.isNotEmpty ? customName : name[0];
 }
 
 class ParentProduct {

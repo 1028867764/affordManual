@@ -59,20 +59,107 @@ class _FavoriteAppState extends State<FavoriteApp> {
       );
     });
 
-    setState(() {
-      _favoriteProducts =
-          allProducts
-              .where((product) => productIds.contains(product.id))
-              .toList();
-      _isLoading = false;
-    });
+    if (mounted) {
+      setState(() {
+        _favoriteProducts =
+            allProducts.where((product) => productIds.contains(product.id)).map(
+              (product) {
+                final customName =
+                    prefs.getString('custom_name_${product.id}') ?? '';
+                final description =
+                    prefs.getString('description_${product.id}') ?? '';
+                return Product(
+                  id: product.id,
+                  name: product.name,
+                  customName: customName,
+                  description: description,
+                );
+              },
+            ).toList();
+        _isLoading = false;
+      });
+    }
+  }
+
+  Future<void> _showEditDialog(BuildContext context, Product product) async {
+    final originalName =
+        product.customName.isNotEmpty ? product.customName : product.name[0];
+    final originalDescription = product.description ?? '';
+    final nameController = TextEditingController(text: originalName);
+    final descriptionController = TextEditingController(
+      text: originalDescription,
+    );
+
+    await showDialog(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            title: const Text('编辑项目'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: nameController,
+                  decoration: const InputDecoration(
+                    labelText: '自定义名称',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: descriptionController,
+                  decoration: const InputDecoration(
+                    labelText: '简短描述',
+                    border: OutlineInputBorder(),
+                  ),
+                  maxLines: 3,
+                ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('取消'),
+              ),
+              TextButton(
+                onPressed: () async {
+                  final newName = nameController.text.trim();
+                  final newDescription = descriptionController.text.trim();
+                  final prefs = await SharedPreferences.getInstance();
+                  if (newName.isNotEmpty && newName != product.name[0]) {
+                    // 保存自定义名称
+                    await prefs.setString('custom_name_${product.id}', newName);
+                  } else {
+                    await prefs.remove('custom_name_${product.id}');
+                  }
+                  // 保存描述
+                  if (newDescription.isNotEmpty) {
+                    await prefs.setString(
+                      'description_${product.id}',
+                      newDescription,
+                    );
+                  } else {
+                    await prefs.remove('description_${product.id}');
+                  }
+                  if (mounted) {
+                    await _loadFavorites(); // 等待加载完成
+                    Navigator.pop(context);
+                  }
+                },
+                child: const Text('保存'),
+              ),
+            ],
+          ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     // 每次页面构建时都检查是否需要刷新
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _loadFavorites();
+      if (mounted) {
+        _loadFavorites();
+      }
     });
     return Scaffold(
       appBar: AppBar(
@@ -183,15 +270,62 @@ class _FavoriteAppState extends State<FavoriteApp> {
                       vertical: 8,
                     ),
                     child: ListTile(
-                      title: Text(product.name[0]),
-                      subtitle: Text(otherNames), // 显示其它名称
-                      trailing: IconButton(
-                        icon: const Icon(Icons.star, color: Colors.orange),
-                        onPressed: () async {
-                          final prefs = await SharedPreferences.getInstance();
-                          await prefs.setBool('favorite_${product.id}', false);
-                          _loadFavorites(); // Refresh the list
-                        },
+                      title: Text(
+                        product.displayName, // 没有自定义名称时显示其他名称
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            product.customName.isNotEmpty
+                                ? product.name[0]
+                                : otherNames,
+                            style: TextStyle(fontSize: 11),
+                          ),
+                          if (product.description?.isNotEmpty ?? false)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 4),
+                              child: Text(
+                                product.description!,
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  color: Colors.grey[600],
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.edit, size: 20),
+                            onPressed: () => _showEditDialog(context, product),
+                          ),
+                          IconButton(
+                            icon: const Icon(
+                              Icons.star_rounded,
+                              color: kBilibiliPink,
+                            ),
+                            onPressed: () async {
+                              final prefs =
+                                  await SharedPreferences.getInstance();
+                              await prefs.setBool(
+                                'favorite_${product.id}',
+                                false,
+                              );
+                              await prefs.remove('custom_name_${product.id}');
+                              await prefs.remove('description_${product.id}');
+                              if (mounted) {
+                                _loadFavorites();
+                              }
+                            },
+                          ),
+                        ],
                       ),
                       onTap: () {
                         Navigator.push(
