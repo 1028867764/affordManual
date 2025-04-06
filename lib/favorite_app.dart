@@ -81,9 +81,9 @@ class _FavoriteAppState extends State<FavoriteApp> {
             indexOfHighlight + highlight.length,
           ),
           style: TextStyle(
-            color: Colors.blue,
+            color: kBilibiliPink,
             fontWeight: FontWeight.bold,
-            backgroundColor: Colors.yellow.withOpacity(0.3),
+            // backgroundColor: Colors.yellow.withOpacity(0.3),
           ),
         ),
       );
@@ -207,60 +207,86 @@ class _FavoriteAppState extends State<FavoriteApp> {
     await showDialog(
       context: context,
       builder:
-          (context) => AlertDialog(
-            title: const Text('编辑项目'),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextField(
-                  controller: nameController,
-                  decoration: const InputDecoration(
-                    labelText: '自定义名称',
-                    border: OutlineInputBorder(),
-                  ),
+          (context) => Theme(
+            data: Theme.of(context).copyWith(
+              inputDecorationTheme: InputDecorationTheme(
+                labelStyle: const TextStyle(color: Colors.black87),
+                focusedBorder: const OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.black, width: 1.5),
                 ),
-                const SizedBox(height: 16),
-                TextField(
-                  controller: descriptionController,
-                  decoration: const InputDecoration(
-                    labelText: '简短描述',
-                    border: OutlineInputBorder(),
+                enabledBorder: const OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.black54),
+                ),
+              ),
+            ),
+            child: AlertDialog(
+              title: const Text('编辑项目', style: TextStyle(color: Colors.black)),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    controller: nameController,
+                    style: const TextStyle(color: Colors.black),
+                    decoration: const InputDecoration(
+                      labelText: '自定义名称',
+                      border: OutlineInputBorder(),
+                    ),
                   ),
-                  maxLines: 3,
+                  const SizedBox(height: 16),
+                  TextField(
+                    controller: descriptionController,
+                    style: const TextStyle(color: Colors.black),
+                    decoration: const InputDecoration(
+                      labelText: '简短描述',
+                      border: OutlineInputBorder(),
+                    ),
+                    maxLines: 3,
+                  ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  child: Text('取消', style: TextStyle(color: Colors.grey[600])),
+                  onPressed: () => Navigator.pop(context),
+                ),
+                TextButton(
+                  child: Text('保存', style: TextStyle(color: Colors.grey[600])),
+                  onPressed: () async {
+                    final newName = nameController.text.trim();
+                    final newDescription = descriptionController.text.trim();
+                    final prefs = await SharedPreferences.getInstance();
+
+                    if (newName.isNotEmpty && newName != product.name[0]) {
+                      await prefs.setString(
+                        'custom_name_${product.id}',
+                        newName,
+                      );
+                    } else {
+                      await prefs.remove('custom_name_${product.id}');
+                    }
+
+                    if (newDescription.isNotEmpty) {
+                      await prefs.setString(
+                        'description_${product.id}',
+                        newDescription,
+                      );
+                    } else {
+                      await prefs.remove('description_${product.id}');
+                    }
+
+                    if (mounted) {
+                      await _loadFavorites();
+                      Navigator.pop(context);
+                    }
+                  },
                 ),
               ],
+              backgroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                side: const BorderSide(color: Colors.black38, width: 1),
+                borderRadius: BorderRadius.circular(16),
+              ),
             ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('取消'),
-              ),
-              TextButton(
-                onPressed: () async {
-                  final newName = nameController.text.trim();
-                  final newDescription = descriptionController.text.trim();
-                  final prefs = await SharedPreferences.getInstance();
-                  if (newName.isNotEmpty && newName != product.name[0]) {
-                    await prefs.setString('custom_name_${product.id}', newName);
-                  } else {
-                    await prefs.remove('custom_name_${product.id}');
-                  }
-                  if (newDescription.isNotEmpty) {
-                    await prefs.setString(
-                      'description_${product.id}',
-                      newDescription,
-                    );
-                  } else {
-                    await prefs.remove('description_${product.id}');
-                  }
-                  if (mounted) {
-                    await _loadFavorites();
-                    Navigator.pop(context);
-                  }
-                },
-                child: const Text('保存'),
-              ),
-            ],
           ),
     );
   }
@@ -359,22 +385,34 @@ class _FavoriteAppState extends State<FavoriteApp> {
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 20.0,
+              vertical: 2.0, // 减小上下边距（原来是16）
+            ),
             child: Row(
               children: [
                 Expanded(
                   child: TextField(
                     controller: _searchController,
                     enabled: !_isSearchLocked,
+                    style: TextStyle(fontSize: 14), // 添加这一行，设置字号
                     decoration: InputDecoration(
-                      hintText: '搜索描述...',
-                      prefixIcon: Icon(Icons.search),
-                      border: OutlineInputBorder(
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black, width: 2.0),
                         borderRadius: BorderRadius.circular(8.0),
                       ),
+                      hintText: '搜索描述...',
+                      prefixIcon: Icon(Icons.search),
+                      isDense: true,
                       contentPadding: EdgeInsets.symmetric(
-                        vertical: 12,
-                        horizontal: 16,
+                        vertical: 4, // 更小的值
+                        horizontal: 12,
+                      ),
+                      constraints: BoxConstraints(
+                        maxHeight: 36, // 直接限制最大高度
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
                       ),
                     ),
                     onChanged: (value) {
@@ -384,7 +422,7 @@ class _FavoriteAppState extends State<FavoriteApp> {
                     },
                   ),
                 ),
-                SizedBox(width: 8),
+                SizedBox(width: 2),
                 IconButton(
                   icon: Icon(
                     _isSearchLocked ? Icons.lock : Icons.lock_open,
@@ -424,7 +462,7 @@ class _FavoriteAppState extends State<FavoriteApp> {
                         return Card(
                           margin: const EdgeInsets.symmetric(
                             horizontal: 16,
-                            vertical: 8,
+                            vertical: 5,
                           ),
                           child: ListTile(
                             title: Text(
