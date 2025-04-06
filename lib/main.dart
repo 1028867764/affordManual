@@ -749,8 +749,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   void _handleScroll() {
     setState(() {
       _scrollOffset = _scrollController.offset;
-      // 计算透明度：当滚动超过  px时开始淡出，到  px时完全透明
-      _buttonOpacity = 1.0 - (_scrollOffset.clamp(0, 500) / 500);
+      // 计算透明度：当滚动超过  px 时变为半透明（0.2），而不是完全透明（0）
+      _buttonOpacity = 1.0 - (_scrollOffset.clamp(0, 100) / 100) * 0.8;
     });
   }
 

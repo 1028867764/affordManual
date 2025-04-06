@@ -4,6 +4,7 @@ import 'data/organisms_data.dart';
 import 'main.dart';
 import 'data/industry_data.dart';
 import 'search_page.dart';
+import 'dart:math';
 
 class FavoriteApp extends StatefulWidget {
   const FavoriteApp({super.key});
@@ -17,6 +18,7 @@ class _FavoriteAppState extends State<FavoriteApp> {
   List<Product> _filteredProducts = [];
   bool _isLoading = true;
   TextEditingController _searchController = TextEditingController();
+  bool _isSearchLocked = false;
 
   @override
   void initState() {
@@ -32,6 +34,7 @@ class _FavoriteAppState extends State<FavoriteApp> {
   }
 
   void _filterProducts() {
+    if (_isSearchLocked) return;
     final searchText = _searchController.text.toLowerCase();
     if (_isLoading || _favoriteProducts.isEmpty) return;
 
@@ -48,22 +51,107 @@ class _FavoriteAppState extends State<FavoriteApp> {
     });
   }
 
+  // 高亮文本的方法
+  InlineSpan _buildHighlightedText(String text, String highlight) {
+    if (highlight.isEmpty || text.isEmpty) {
+      return TextSpan(text: text, style: TextStyle(color: Colors.grey[600]));
+    }
+
+    final List<TextSpan> spans = [];
+    int start = 0;
+    int indexOfHighlight;
+
+    while ((indexOfHighlight = text.toLowerCase().indexOf(highlight, start)) !=
+        -1) {
+      // 添加高亮前的文本
+      if (indexOfHighlight > start) {
+        spans.add(
+          TextSpan(
+            text: text.substring(start, indexOfHighlight),
+            style: TextStyle(color: Colors.grey[600]),
+          ),
+        );
+      }
+
+      // 添加高亮文本
+      spans.add(
+        TextSpan(
+          text: text.substring(
+            indexOfHighlight,
+            indexOfHighlight + highlight.length,
+          ),
+          style: TextStyle(
+            color: Colors.blue,
+            fontWeight: FontWeight.bold,
+            backgroundColor: Colors.yellow.withOpacity(0.3),
+          ),
+        ),
+      );
+
+      start = indexOfHighlight + highlight.length;
+    }
+
+    // 添加剩余文本
+    if (start < text.length) {
+      spans.add(
+        TextSpan(
+          text: text.substring(start),
+          style: TextStyle(color: Colors.grey[600]),
+        ),
+      );
+    }
+
+    return TextSpan(children: spans);
+  }
+
+  Widget _buildHighlightedDescription({
+    required String description,
+    required String searchText,
+  }) {
+    final defaultStyle = TextStyle(fontSize: 11, color: Colors.grey[600]);
+
+    if (description.isEmpty) {
+      return Text('暂无描述', style: defaultStyle);
+    }
+
+    if (searchText.isEmpty || !description.toLowerCase().contains(searchText)) {
+      return Text(
+        description,
+        style: defaultStyle,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+      );
+    }
+
+    final matchIndex = description.toLowerCase().indexOf(searchText);
+    final visibleStart = max(0, matchIndex - 1); // 确保匹配文本前有15个字符的上下文
+    final visibleText = description.substring(
+      visibleStart,
+      min(description.length, visibleStart + 50), // 最多显示50个字符
+    );
+
+    return Tooltip(
+      message: description, // 鼠标悬停时显示完整描述
+      child: RichText(
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        text: _buildHighlightedText(visibleText, searchText),
+      ),
+    );
+  }
+
   Future<void> _loadFavorites() async {
     final prefs = await SharedPreferences.getInstance();
     final allKeys = prefs.getKeys();
 
-    // Find all favorite keys and get their products
     final favoriteKeys = allKeys.where(
       (key) => key.startsWith('favorite_') && prefs.getBool(key) == true,
     );
 
-    // Convert keys to product IDs by removing 'favorite_' prefix
     final productIds =
         favoriteKeys.map((key) => key.replaceFirst('favorite_', '')).toList();
 
-    // Find all products in organisms data that match these IDs
     final allProducts = <Product>[];
-    // 1. 添加生物篇数据
     allProducts.addAll(
       organisms.expand(
         (category) => category.parentProductGroups.expand(
@@ -73,7 +161,6 @@ class _FavoriteAppState extends State<FavoriteApp> {
       ),
     );
 
-    // 2. 添加工业篇数据
     factories.forEach((categoryName, products) {
       allProducts.addAll(
         products.map(
@@ -154,12 +241,10 @@ class _FavoriteAppState extends State<FavoriteApp> {
                   final newDescription = descriptionController.text.trim();
                   final prefs = await SharedPreferences.getInstance();
                   if (newName.isNotEmpty && newName != product.name[0]) {
-                    // 保存自定义名称
                     await prefs.setString('custom_name_${product.id}', newName);
                   } else {
                     await prefs.remove('custom_name_${product.id}');
                   }
-                  // 保存描述
                   if (newDescription.isNotEmpty) {
                     await prefs.setString(
                       'description_${product.id}',
@@ -169,7 +254,7 @@ class _FavoriteAppState extends State<FavoriteApp> {
                     await prefs.remove('description_${product.id}');
                   }
                   if (mounted) {
-                    await _loadFavorites(); // 等待加载完成
+                    await _loadFavorites();
                     Navigator.pop(context);
                   }
                 },
@@ -275,22 +360,43 @@ class _FavoriteAppState extends State<FavoriteApp> {
         children: [
           Padding(
             padding: const EdgeInsets.all(16.0),
-            child: TextField(
-              controller: _searchController,
-              decoration: InputDecoration(
-                hintText: '搜索描述...',
-                prefixIcon: Icon(Icons.search),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8.0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _searchController,
+                    enabled: !_isSearchLocked,
+                    decoration: InputDecoration(
+                      hintText: '搜索描述...',
+                      prefixIcon: Icon(Icons.search),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      contentPadding: EdgeInsets.symmetric(
+                        vertical: 12,
+                        horizontal: 16,
+                      ),
+                    ),
+                    onChanged: (value) {
+                      if (!_isSearchLocked) {
+                        _filterProducts();
+                      }
+                    },
+                  ),
                 ),
-                contentPadding: EdgeInsets.symmetric(
-                  vertical: 12,
-                  horizontal: 16,
+                SizedBox(width: 8),
+                IconButton(
+                  icon: Icon(
+                    _isSearchLocked ? Icons.lock : Icons.lock_open,
+                    color: _isSearchLocked ? Colors.blue : Colors.grey,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _isSearchLocked = !_isSearchLocked;
+                    });
+                  },
                 ),
-              ),
-              onChanged: (value) {
-                _filterProducts();
-              },
+              ],
             ),
           ),
           Expanded(
@@ -308,11 +414,13 @@ class _FavoriteAppState extends State<FavoriteApp> {
                       itemCount: _filteredProducts.length,
                       itemBuilder: (context, index) {
                         final product = _filteredProducts[index];
-                        // 获取从第3位开始的所有名称（如果存在）
                         final otherNames =
                             product.name.length > 2
                                 ? product.name.sublist(2).join(', ')
                                 : '暂无其它名称';
+                        final searchText = _searchController.text.toLowerCase();
+                        final description = product.description ?? '';
+
                         return Card(
                           margin: const EdgeInsets.symmetric(
                             horizontal: 16,
@@ -337,11 +445,15 @@ class _FavoriteAppState extends State<FavoriteApp> {
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.only(top: 4),
-                                  child: Text(
-                                    product.description,
-                                    style: TextStyle(
-                                      fontSize: 11,
-                                      color: Colors.grey[600],
+                                  child: Container(
+                                    constraints: BoxConstraints(
+                                      maxWidth:
+                                          MediaQuery.of(context).size.width -
+                                          120,
+                                    ),
+                                    child: _buildHighlightedDescription(
+                                      description: description,
+                                      searchText: searchText,
                                     ),
                                   ),
                                 ),
