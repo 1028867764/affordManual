@@ -1408,7 +1408,7 @@ final List<Category> organisms = [
         ],
       ),
       ParentProductGroup(
-        id: "对虾科",
+        id: "十足目",
         parentProducts: [
           ParentProduct(
             id: "Penaeidae",
@@ -1423,7 +1423,7 @@ final List<Category> organisms = [
         ],
       ),
       ParentProductGroup(
-        id: "田螺科",
+        id: "主扭舌目",
         parentProducts: [
           ParentProduct(
             id: "Viviparidae",
