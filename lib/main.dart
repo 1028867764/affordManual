@@ -84,7 +84,7 @@ class MainHomePage extends StatelessWidget {
               height: 30,
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(8),
               ),
               child: const TextField(
                 style: TextStyle(fontSize: 14),

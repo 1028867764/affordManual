@@ -170,7 +170,7 @@ class _SearchPageState extends State<SearchPage> {
           height: 36,
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(18),
+            borderRadius: BorderRadius.circular(8),
           ),
           child: TextField(
             controller: _searchController,
