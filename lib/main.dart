@@ -919,7 +919,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             ? '- ​**其它名称**: ${widget.product.name.sublist(2).join(', ')}\n'
             : '';
 
-    final markdownContent = """
+    final markdownInfo = """
 
 #### ​**基本信息​**
 - ​**搜索路径**: $fieldPath>$categoryPath
@@ -927,7 +927,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 - ​**产品名称**: ${widget.product.name[0]}
 - ​**英文名称**: ${widget.product.name.length > 1 ? widget.product.name[1] : '暂无'}
 $otherNames
+""";
 
+    final markdownContent = """
 
 &emsp;&emsp;这是一段示例描述。《零的焦点》则以一对夫妻的生活为切入点，展现了一幅日本战后社会的众生相。女主人公绫子看似拥有幸福美满的家庭，然而，丈夫的神秘失踪打破了这份平静。随着调查的深入，一系列惊人的真相逐渐浮出水面。原来，丈夫的过去涉及到一些不为人知的秘密，而这些秘密与当时日本社会的种种问题紧密相连。在这个过程中，作者揭示了战争给人们带来的创伤以及战后社会的混乱与迷茫。人们在追求物质生活的同时，往往忽略了内心的真实需求，导致道德观念的扭曲和人际关系的冷漠。通过对这起案件的描写，读者不仅能够感受到推理小说的紧张刺激，还能对社会现实进行深刻的反思。  
 ## 产品图片
@@ -1057,6 +1059,13 @@ $otherNames
                         Padding(
                           padding: EdgeInsets.zero,
                           child: _buildPriceHistoryTable(),
+                        ),
+                        Markdown(
+                          data: markdownInfo,
+                          shrinkWrap: true,
+                          selectable: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
                         ),
                         Markdown(
                           data: markdownContent,
