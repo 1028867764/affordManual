@@ -8,6 +8,7 @@ import 'industry_app.dart';
 import 'luxury_app.dart';
 import 'search_page.dart';
 import 'data/organisms_data.dart';
+import 'data/industry_data.dart';
 import 'price_tag.dart';
 import 'favorite_app.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -642,6 +643,34 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   double _scrollOffset = 0.0;
   double _buttonOpacity = 1.0; // 初始完全不透明
 
+  // 在 _ProductDetailScreenState 中添加以下方法
+  String getCategoryPath(Product product) {
+    for (var category in organisms) {
+      for (var group in category.parentProductGroups) {
+        for (var parentProduct in group.parentProducts) {
+          for (var childProduct in parentProduct.childProducts) {
+            if (childProduct.id == product.id) {
+              return category.id; // 返回所属分类的 id
+            }
+          }
+        }
+      }
+    }
+    return '?';
+  }
+
+  // Add this method to _ProductDetailScreenState
+  String getFactoryCategoryPath(dynamic product) {
+    for (var category in factories.keys) {
+      for (var item in factories[category]!) {
+        if (item['id'] == product.id) {
+          return category; // Return the category name (e.g., "橡胶")
+        }
+      }
+    }
+    return '?';
+  }
+
   // 自定义五角星图标Widget
   Widget _buildFavoriteButton() {
     return Positioned(
@@ -870,6 +899,20 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final fieldPath =
+        widget.product.id.startsWith('organisms')
+            ? "生物篇"
+            : widget.product.id.startsWith('factories')
+            ? "工业篇"
+            : "未知";
+
+    final categoryPath =
+        widget.product.id.startsWith('organisms')
+            ? getCategoryPath(widget.product)
+            : widget.product.id.startsWith('factories')
+            ? getFactoryCategoryPath(widget.product)
+            : "未知";
+
     // 获取从第三个元素开始的所有名称，如果不足3个则返回空字符串
     final otherNames =
         widget.product.name.length > 2
@@ -877,15 +920,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             : '';
 
     final markdownContent = """
-# 产品详情
 
-## 基本信息
+#### ​**基本信息​**
+- ​**搜索路径**: $fieldPath>$categoryPath
 - ​**产品ID**: ${widget.product.id}
 - ​**产品名称**: ${widget.product.name[0]}
 - ​**英文名称**: ${widget.product.name.length > 1 ? widget.product.name[1] : '暂无'}
 $otherNames
 
-## &emsp;产品描述
+
 &emsp;&emsp;这是一段示例描述。《零的焦点》则以一对夫妻的生活为切入点，展现了一幅日本战后社会的众生相。女主人公绫子看似拥有幸福美满的家庭，然而，丈夫的神秘失踪打破了这份平静。随着调查的深入，一系列惊人的真相逐渐浮出水面。原来，丈夫的过去涉及到一些不为人知的秘密，而这些秘密与当时日本社会的种种问题紧密相连。在这个过程中，作者揭示了战争给人们带来的创伤以及战后社会的混乱与迷茫。人们在追求物质生活的同时，往往忽略了内心的真实需求，导致道德观念的扭曲和人际关系的冷漠。通过对这起案件的描写，读者不仅能够感受到推理小说的紧张刺激，还能对社会现实进行深刻的反思。  
 ## 产品图片
 ![示例图片](http://img.tukuppt.com/photo-small/19/94/23/706589110a5f2073682.jpg)
