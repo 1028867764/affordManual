@@ -1369,6 +1369,33 @@ final List<Category> organisms = [
     id: "其它动物",
     parentProductGroups: [
       ParentProductGroup(
+        id: "辐鳍鱼纲",
+        parentProducts: [
+          ParentProduct(
+            id: "Cichliformes",
+            name: ["慈鲷目"],
+            childProducts: [
+              Product(id: "organismsCichliformes1", name: ["罗非鱼", "Tilapia"]),
+            ],
+          ),
+        ],
+      ),
+      ParentProductGroup(
+        id: "辐鳍鱼纲",
+        parentProducts: [
+          ParentProduct(
+            id: "Cypriniformes",
+            name: ["鲤形目"],
+            childProducts: [
+              Product(
+                id: "organismsCypriniformes1",
+                name: ["草鱼", "Grass carp"],
+              ),
+            ],
+          ),
+        ],
+      ),
+      ParentProductGroup(
         id: "拟步行虫科",
         parentProducts: [
           ParentProduct(
