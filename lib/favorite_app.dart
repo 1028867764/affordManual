@@ -195,6 +195,66 @@ class _FavoriteAppState extends State<FavoriteApp> {
     }
   }
 
+  // 新增方法：显示清空确认弹窗
+  Future<void> _showClearAllConfirmation() async {
+    if (_favoriteProducts.isEmpty) return;
+
+    final result = await showDialog<bool>(
+      context: context,
+      builder:
+          (context) => Theme(
+            data: Theme.of(
+              context,
+            ).copyWith(dialogBackgroundColor: Colors.white),
+            child: AlertDialog(
+              title: const Text('确认操作'),
+              content: const Text('是否全部清空？'),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(false),
+                  child: Text('取消', style: TextStyle(color: Colors.grey[600])),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(true),
+                  child: Text('确定', style: TextStyle(color: Colors.grey[600])),
+                ),
+              ],
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+            ),
+          ),
+    );
+
+    if (result == true) {
+      await _clearAllFavorites();
+    }
+  }
+
+  // 新增方法：实际执行清空操作
+  Future<void> _clearAllFavorites() async {
+    final prefs = await SharedPreferences.getInstance();
+    final allKeys = prefs.getKeys();
+
+    // 移除所有收藏标记
+    for (final key in allKeys.where((key) => key.startsWith('favorite_'))) {
+      await prefs.remove(key);
+    }
+
+    // 移除所有自定义名称和描述
+    for (final product in _favoriteProducts) {
+      await prefs.remove('custom_name_${product.id}');
+      await prefs.remove('description_${product.id}');
+    }
+
+    if (mounted) {
+      setState(() {
+        _favoriteProducts.clear();
+        _filteredProducts.clear();
+      });
+    }
+  }
+
   Future<void> _showEditDialog(BuildContext context, Product product) async {
     final originalName =
         product.customName.isNotEmpty ? product.customName : product.name[0];
@@ -401,7 +461,7 @@ class _FavoriteAppState extends State<FavoriteApp> {
                         borderSide: BorderSide(color: Colors.black, width: 2.0),
                         borderRadius: BorderRadius.circular(8.0),
                       ),
-                      hintText: '搜索描述...',
+                      hintText: '条件筛选...',
                       prefixIcon: Icon(Icons.search),
                       isDense: true,
                       contentPadding: EdgeInsets.symmetric(
@@ -437,6 +497,20 @@ class _FavoriteAppState extends State<FavoriteApp> {
               ],
             ),
           ),
+          // 新增的“全部清空”按钮（仅在列表非空时显示）
+          if (_favoriteProducts.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.only(top: 0.0, right: 16.0),
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: TextButton.icon(
+                  icon: const Icon(Icons.delete_outline, size: 14),
+                  label: const Text('全部清空', style: TextStyle(fontSize: 12)),
+                  onPressed: _showClearAllConfirmation,
+                  style: TextButton.styleFrom(foregroundColor: Colors.grey),
+                ),
+              ),
+            ),
           Expanded(
             child:
                 _isLoading
