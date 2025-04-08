@@ -300,14 +300,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             : '';
 
     final markdownInfo = """
-
 ### &emsp;《​​**${widget.product.name[0]}​**》
-
 - ​英文名称: ${widget.product.name.length > 1 ? widget.product.name[1] : '暂无'}
 $otherNames
 - ​搜索路径: $fieldPath>>$categoryPath
 - ​产品ID: ${widget.product.id}
-
 """;
 
     final markdownContent = """
@@ -328,188 +325,198 @@ $otherNames
 &emsp;&emsp;案件发生在一个看似普通的夜晚，一位与小镇生活息息相关的人物被发现离奇死亡。随着调查的展开，各种线索逐渐浮出水面，但这些线索却如同夜空中的繁星，看似繁多却又各自独立，让人难以捉摸其中的关联。北村薰以其独特的叙事手法，将读者带入了一个充满悬念和神秘色彩的世界，让人们对这起案件充满了好奇和探索的欲望。 
     """;
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
+    return WillPopScope(
+      onWillPop: () async {
+        if (_enlargedImageUrl != null) {
+          _closeEnlargedImage();
+          return false;
+        }
+        return true;
+      },
+      child: Scaffold(
         backgroundColor: Colors.white,
-        leadingWidth: 100,
-        leading: Row(
-          children: [
-            const SizedBox(width: 10),
-            Material(
-              color: Colors.transparent,
-              borderRadius: BorderRadius.circular(24),
-              child: InkWell(
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          leadingWidth: 100,
+          leading: Row(
+            children: [
+              const SizedBox(width: 10),
+              Material(
+                color: Colors.transparent,
                 borderRadius: BorderRadius.circular(24),
-                onTap: () => Navigator.pop(context),
-                child: const Padding(
-                  padding: EdgeInsets.all(12),
-                  child: Icon(Icons.arrow_back),
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(24),
+                  onTap: () => Navigator.pop(context),
+                  child: const Padding(
+                    padding: EdgeInsets.all(12),
+                    child: Icon(Icons.arrow_back),
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(width: 10),
+              const SizedBox(width: 10),
+              Material(
+                color: Colors.transparent,
+                borderRadius: BorderRadius.circular(24),
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(24),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      PageRouteBuilder(
+                        pageBuilder:
+                            (context, animation, secondaryAnimation) =>
+                                const SearchPage(),
+                        transitionsBuilder: (
+                          context,
+                          animation,
+                          secondaryAnimation,
+                          child,
+                        ) {
+                          const begin = Offset(1.0, 0.0);
+                          const end = Offset.zero;
+                          const curve = Curves.ease;
+                          var tween = Tween(
+                            begin: begin,
+                            end: end,
+                          ).chain(CurveTween(curve: curve));
+                          var offsetAnimation = animation.drive(tween);
+                          return SlideTransition(
+                            position: offsetAnimation,
+                            child: child,
+                          );
+                        },
+                      ),
+                    );
+                  },
+                  child: const Padding(
+                    padding: EdgeInsets.all(12),
+                    child: Icon(Icons.search),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          title: Text(widget.product.name[0]),
+          actions: [
             Material(
               color: Colors.transparent,
               borderRadius: BorderRadius.circular(24),
               child: InkWell(
                 borderRadius: BorderRadius.circular(24),
                 onTap: () {
-                  Navigator.push(
+                  Navigator.pushAndRemoveUntil(
                     context,
-                    PageRouteBuilder(
-                      pageBuilder:
-                          (context, animation, secondaryAnimation) =>
-                              const SearchPage(),
-                      transitionsBuilder: (
-                        context,
-                        animation,
-                        secondaryAnimation,
-                        child,
-                      ) {
-                        const begin = Offset(1.0, 0.0);
-                        const end = Offset.zero;
-                        const curve = Curves.ease;
-                        var tween = Tween(
-                          begin: begin,
-                          end: end,
-                        ).chain(CurveTween(curve: curve));
-                        var offsetAnimation = animation.drive(tween);
-                        return SlideTransition(
-                          position: offsetAnimation,
-                          child: child,
-                        );
-                      },
+                    MaterialPageRoute(
+                      builder: (context) => const MainHomePage(),
                     ),
+                    (route) => false,
                   );
                 },
                 child: const Padding(
                   padding: EdgeInsets.all(12),
-                  child: Icon(Icons.search),
+                  child: Icon(Icons.home),
                 ),
               ),
             ),
+            const SizedBox(width: 10),
           ],
         ),
-        title: Text(widget.product.name[0]),
-        actions: [
-          Material(
-            color: Colors.transparent,
-            borderRadius: BorderRadius.circular(24),
-            child: InkWell(
-              borderRadius: BorderRadius.circular(24),
-              onTap: () {
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (context) => const MainHomePage()),
-                  (route) => false,
-                );
-              },
-              child: const Padding(
-                padding: EdgeInsets.all(12),
-                child: Icon(Icons.home),
-              ),
-            ),
-          ),
-          const SizedBox(width: 10),
-        ],
-      ),
-      body:
-          _enlargedImageUrl != null
-              ? GestureDetector(
-                onTap: _closeEnlargedImage,
-                child: Container(
-                  color: Colors.black,
-                  child: PhotoView(
-                    imageProvider: NetworkImage(_enlargedImageUrl!),
-                    minScale: PhotoViewComputedScale.contained * 0.5,
-                    maxScale: PhotoViewComputedScale.covered * 3.0,
-                    initialScale: PhotoViewComputedScale.contained,
-                    basePosition: Alignment.center,
-                    backgroundDecoration: BoxDecoration(color: Colors.black),
-                    gestureDetectorBehavior: HitTestBehavior.opaque,
-                    enableRotation: false,
-                    loadingBuilder:
-                        (context, event) =>
-                            Center(child: CircularProgressIndicator()),
-                    errorBuilder:
-                        (context, error, stackTrace) => Center(
-                          child: Icon(
-                            Icons.broken_image,
-                            color: Colors.white,
-                            size: 50,
+        body:
+            _enlargedImageUrl != null
+                ? GestureDetector(
+                  onTap: _closeEnlargedImage,
+                  child: Container(
+                    color: Colors.black,
+                    child: PhotoView(
+                      imageProvider: NetworkImage(_enlargedImageUrl!),
+                      minScale: PhotoViewComputedScale.contained * 0.5,
+                      maxScale: PhotoViewComputedScale.covered * 3.0,
+                      initialScale: PhotoViewComputedScale.contained,
+                      basePosition: Alignment.center,
+                      backgroundDecoration: BoxDecoration(color: Colors.black),
+                      gestureDetectorBehavior: HitTestBehavior.opaque,
+                      enableRotation: false,
+                      loadingBuilder:
+                          (context, event) =>
+                              Center(child: CircularProgressIndicator()),
+                      errorBuilder:
+                          (context, error, stackTrace) => Center(
+                            child: Icon(
+                              Icons.broken_image,
+                              color: Colors.white,
+                              size: 50,
+                            ),
                           ),
-                        ),
-                  ),
-                ),
-              )
-              : _isLoading
-              ? const Center(child: CircularProgressIndicator())
-              : Stack(
-                children: [
-                  SingleChildScrollView(
-                    controller: _scrollController,
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.zero,
-                          child: _buildPriceHistoryTable(),
-                        ),
-                        Markdown(
-                          data: markdownInfo,
-                          shrinkWrap: true,
-                          selectable: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
-                        ),
-                        Markdown(
-                          data: markdownContent,
-                          shrinkWrap: true,
-                          selectable: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          padding: const EdgeInsets.fromLTRB(10, 0, 10, 15),
-                          imageBuilder: (uri, title, alt) {
-                            return GestureDetector(
-                              onTap: () => _enlargeImage(uri.toString()),
-                              child: Center(
-                                // 关键：用 Center 包裹图片
-                                child: CachedNetworkImage(
-                                  imageUrl: uri.toString(),
-                                  placeholder:
-                                      (context, url) => Container(
-                                        color: Colors.grey[300],
-                                        width: 100,
-                                        height: 100,
-                                        child: const Icon(
-                                          Icons.image,
-                                          color: Colors.grey,
-                                        ),
-                                      ),
-                                  errorWidget:
-                                      (context, url, error) => Container(
-                                        color: Colors.grey[300],
-                                        width: 100,
-                                        height: 100,
-                                        child: const Icon(
-                                          Icons.broken_image,
-                                          color: Colors.grey,
-                                        ),
-                                      ),
-                                  width:
-                                      MediaQuery.of(context).size.width *
-                                      0.65, // 屏幕宽度
-                                  fit: BoxFit.scaleDown, // 保持比例缩放
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      ],
                     ),
                   ),
-                  _buildFavoriteButton(),
-                ],
-              ),
+                )
+                : _isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : Stack(
+                  children: [
+                    SingleChildScrollView(
+                      controller: _scrollController,
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.zero,
+                            child: _buildPriceHistoryTable(),
+                          ),
+                          Markdown(
+                            data: markdownInfo,
+                            shrinkWrap: true,
+                            selectable: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
+                          ),
+                          Markdown(
+                            data: markdownContent,
+                            shrinkWrap: true,
+                            selectable: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            padding: const EdgeInsets.fromLTRB(10, 0, 10, 15),
+                            imageBuilder: (uri, title, alt) {
+                              return GestureDetector(
+                                onTap: () => _enlargeImage(uri.toString()),
+                                child: Center(
+                                  child: CachedNetworkImage(
+                                    imageUrl: uri.toString(),
+                                    placeholder:
+                                        (context, url) => Container(
+                                          color: Colors.grey[300],
+                                          width: 100,
+                                          height: 100,
+                                          child: const Icon(
+                                            Icons.image,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                    errorWidget:
+                                        (context, url, error) => Container(
+                                          color: Colors.grey[300],
+                                          width: 100,
+                                          height: 100,
+                                          child: const Icon(
+                                            Icons.broken_image,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                    width:
+                                        MediaQuery.of(context).size.width *
+                                        0.65,
+                                    fit: BoxFit.scaleDown,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                    _buildFavoriteButton(),
+                  ],
+                ),
+      ),
     );
   }
 }
