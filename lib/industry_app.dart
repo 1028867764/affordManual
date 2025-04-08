@@ -5,6 +5,7 @@ import 'search_page.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'data/industry_data.dart';
 import 'data/organisms_data.dart';
+import 'product_detail_screen.dart';
 
 class IndustryApp extends StatefulWidget {
   const IndustryApp({super.key});

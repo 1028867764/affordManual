@@ -5,6 +5,7 @@ import 'main.dart';
 import 'data/industry_data.dart';
 import 'search_page.dart';
 import 'dart:math';
+import 'product_detail_screen.dart';
 
 class FavoriteApp extends StatefulWidget {
   const FavoriteApp({super.key});

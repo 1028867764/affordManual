@@ -3,6 +3,7 @@ import 'main.dart';
 import 'data/organisms_data.dart';
 import 'data/industry_data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'product_detail_screen.dart';
 
 List<Map<String, dynamic>> _getCombinedData() {
   final List<Map<String, dynamic>> combinedData = [];
