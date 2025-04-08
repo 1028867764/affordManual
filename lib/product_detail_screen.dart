@@ -300,7 +300,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             : '';
 
     final markdownInfo = """
-### &emsp;《​​**${widget.product.name[0]}​**》
+### &emsp;【​**${widget.product.name[0]}​**】
 - ​英文名称: ${widget.product.name.length > 1 ? widget.product.name[1] : '暂无'}
 $otherNames
 - ​搜索路径: $fieldPath>>$categoryPath
