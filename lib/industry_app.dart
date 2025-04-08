@@ -30,6 +30,10 @@ class _IndustryAppState extends State<IndustryApp> {
       selectedCategory = category;
       _isLoadingProducts = true;
       count++; // 每次点击左边菜单栏时增加计数器
+      // 检查 count 是否超过 10000，如果是则清零
+      if (count > 10000) {
+        count = 0;
+      }
     });
 
     // Simulate loading delay
