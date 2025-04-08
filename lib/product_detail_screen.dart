@@ -4,11 +4,11 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter/services.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:intl/intl.dart';
+import 'package:photo_view/photo_view.dart';
 import 'data/organisms_data.dart';
 import 'data/industry_data.dart';
 import 'price_tag.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'price_tag.dart';
 import 'main.dart';
 import 'search_page.dart';
 
@@ -184,7 +184,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           Container(
             padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
             decoration: BoxDecoration(
-              color: Colors.orange.shade100,
+              color: Colors.blue.shade50,
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(8),
                 topRight: Radius.circular(8),
@@ -196,7 +196,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  color: Colors.orange,
+                  color: Colors.blue,
                 ),
               ),
             ),
@@ -301,27 +301,29 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
     final markdownInfo = """
 
-#### ​**基本信息​**
-- ​**搜索路径**: $fieldPath>$categoryPath
-- ​**产品ID**: ${widget.product.id}
-- ​**产品名称**: ${widget.product.name[0]}
-- ​**英文名称**: ${widget.product.name.length > 1 ? widget.product.name[1] : '暂无'}
+### &emsp;《​​**${widget.product.name[0]}​**》
+
+- ​英文名称: ${widget.product.name.length > 1 ? widget.product.name[1] : '暂无'}
 $otherNames
+- ​搜索路径: $fieldPath>>$categoryPath
+- ​产品ID: ${widget.product.id}
+
 """;
 
     final markdownContent = """
-
-&emsp;&emsp;这是一段示例描述。《零的焦点》则以一对夫妻的生活为切入点，展现了一幅日本战后社会的众生相。女主人公绫子看似拥有幸福美满的家庭，然而，丈夫的神秘失踪打破了这份平静。随着调查的深入，一系列惊人的真相逐渐浮出水面。原来，丈夫的过去涉及到一些不为人知的秘密，而这些秘密与当时日本社会的种种问题紧密相连。在这个过程中，作者揭示了战争给人们带来的创伤以及战后社会的混乱与迷茫。人们在追求物质生活的同时，往往忽略了内心的真实需求，导致道德观念的扭曲和人际关系的冷漠。通过对这起案件的描写，读者不仅能够感受到推理小说的紧张刺激，还能对社会现实进行深刻的反思。  
-## 产品图片
 ![示例图片](http://img.tukuppt.com/photo-small/19/94/23/706589110a5f2073682.jpg)
-## &emsp;产品描述
+##### &emsp;第一节
+&emsp;&emsp;这是一段示例描述。《零的焦点》则以一对夫妻的生活为切入点，展现了一幅日本战后社会的众生相。女主人公绫子看似拥有幸福美满的家庭，然而，丈夫的神秘失踪打破了这份平静。随着调查的深入，一系列惊人的真相逐渐浮出水面。原来，丈夫的过去涉及到一些不为人知的秘密，而这些秘密与当时日本社会的种种问题紧密相连。在这个过程中，作者揭示了战争给人们带来的创伤以及战后社会的混乱与迷茫。人们在追求物质生活的同时，往往忽略了内心的真实需求，导致道德观念的扭曲和人际关系的冷漠。通过对这起案件的描写，读者不仅能够感受到推理小说的紧张刺激，还能对社会现实进行深刻的反思。  
+##### &emsp;第二节
+![示例图片](http://img.tukuppt.com/photo-small/19/94/23/706589110a5f2073682.jpg)
+
 &emsp;&emsp;《夜蝉》的故事发生在一个宁静而又略显封闭的小镇。小镇的生活节奏缓慢，人们过着平淡而又规律的日子，仿佛时间在这里停滞了一般。然而，一起突如其来的谋杀案打破了这份宁静，如同平静的湖面投入了一颗巨石。  
 &emsp;&emsp;案件发生在一个看似普通的夜晚，一位与小镇生活息息相关的人物被发现离奇死亡。随着调查的展开，各种线索逐渐浮出水面，但这些线索却如同夜空中的繁星，看似繁多却又各自独立，让人难以捉摸其中的关联。北村薰以其独特的叙事手法，将读者带入了一个充满悬念和神秘色彩的世界，让人们对这起案件充满了好奇和探索的欲望。
-## &emsp;产品描述
+##### &emsp;第三节
 &emsp;&emsp;这是一段示例描述。《零的焦点》则以一对夫妻的生活为切入点，展现了一幅日本战后社会的众生相。女主人公绫子看似拥有幸福美满的家庭，然而，丈夫的神秘失踪打破了这份平静。随着调查的深入，一系列惊人的真相逐渐浮出水面。原来，丈夫的过去涉及到一些不为人知的秘密，而这些秘密与当时日本社会的种种问题紧密相连。在这个过程中，作者揭示了战争给人们带来的创伤以及战后社会的混乱与迷茫。人们在追求物质生活的同时，往往忽略了内心的真实需求，导致道德观念的扭曲和人际关系的冷漠。通过对这起案件的描写，读者不仅能够感受到推理小说的紧张刺激，还能对社会现实进行深刻的反思。  
-## 产品图片
+##### &emsp;☢第四节
 ![示例图片](http://gd-hbimg.huaban.com/2288348e418d1372bab85e5266cae51b2d66503c6155b-KgiKde)
-## &emsp;产品描述
+
 &emsp;&emsp;《夜蝉》的故事发生在一个宁静而又略显封闭的小镇。小镇的生活节奏缓慢，人们过着平淡而又规律的日子，仿佛时间在这里停滞了一般。然而，一起突如其来的谋杀案打破了这份宁静，如同平静的湖面投入了一颗巨石。  
 &emsp;&emsp;案件发生在一个看似普通的夜晚，一位与小镇生活息息相关的人物被发现离奇死亡。随着调查的展开，各种线索逐渐浮出水面，但这些线索却如同夜空中的繁星，看似繁多却又各自独立，让人难以捉摸其中的关联。北村薰以其独特的叙事手法，将读者带入了一个充满悬念和神秘色彩的世界，让人们对这起案件充满了好奇和探索的欲望。 
     """;
@@ -417,14 +419,27 @@ $otherNames
               ? GestureDetector(
                 onTap: _closeEnlargedImage,
                 child: Container(
-                  color: Colors.black.withOpacity(0.9),
-                  child: Center(
-                    child: InteractiveViewer(
-                      panEnabled: true,
-                      minScale: 0.5,
-                      maxScale: 4.0,
-                      child: Image.network(_enlargedImageUrl!),
-                    ),
+                  color: Colors.black,
+                  child: PhotoView(
+                    imageProvider: NetworkImage(_enlargedImageUrl!),
+                    minScale: PhotoViewComputedScale.contained * 0.5,
+                    maxScale: PhotoViewComputedScale.covered * 3.0,
+                    initialScale: PhotoViewComputedScale.contained,
+                    basePosition: Alignment.center,
+                    backgroundDecoration: BoxDecoration(color: Colors.black),
+                    gestureDetectorBehavior: HitTestBehavior.opaque,
+                    enableRotation: false,
+                    loadingBuilder:
+                        (context, event) =>
+                            Center(child: CircularProgressIndicator()),
+                    errorBuilder:
+                        (context, error, stackTrace) => Center(
+                          child: Icon(
+                            Icons.broken_image,
+                            color: Colors.white,
+                            size: 50,
+                          ),
+                        ),
                   ),
                 ),
               )
@@ -456,31 +471,35 @@ $otherNames
                           imageBuilder: (uri, title, alt) {
                             return GestureDetector(
                               onTap: () => _enlargeImage(uri.toString()),
-                              child: CachedNetworkImage(
-                                imageUrl: uri.toString(),
-                                placeholder:
-                                    (context, url) => Container(
-                                      color: Colors.grey[300],
-                                      width: 100,
-                                      height: 100,
-                                      child: const Icon(
-                                        Icons.image,
-                                        color: Colors.grey,
+                              child: Center(
+                                // 关键：用 Center 包裹图片
+                                child: CachedNetworkImage(
+                                  imageUrl: uri.toString(),
+                                  placeholder:
+                                      (context, url) => Container(
+                                        color: Colors.grey[300],
+                                        width: 100,
+                                        height: 100,
+                                        child: const Icon(
+                                          Icons.image,
+                                          color: Colors.grey,
+                                        ),
                                       ),
-                                    ),
-                                errorWidget:
-                                    (context, url, error) => Container(
-                                      color: Colors.grey[300],
-                                      width: 100,
-                                      height: 100,
-                                      child: const Icon(
-                                        Icons.broken_image,
-                                        color: Colors.grey,
+                                  errorWidget:
+                                      (context, url, error) => Container(
+                                        color: Colors.grey[300],
+                                        width: 100,
+                                        height: 100,
+                                        child: const Icon(
+                                          Icons.broken_image,
+                                          color: Colors.grey,
+                                        ),
                                       ),
-                                    ),
-                                width: 100,
-                                height: 100,
-                                fit: BoxFit.cover,
+                                  width:
+                                      MediaQuery.of(context).size.width *
+                                      0.65, // 屏幕宽度
+                                  fit: BoxFit.scaleDown, // 保持比例缩放
+                                ),
                               ),
                             );
                           },
