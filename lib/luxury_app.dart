@@ -15,6 +15,7 @@ class _LuxuryAppState extends State<LuxuryApp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white, // 设置背景为纯白
       appBar: AppBar(
         title: const Text('土豪篇', style: TextStyle(fontWeight: FontWeight.bold)),
         backgroundColor: Colors.grey[200],

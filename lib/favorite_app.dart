@@ -359,7 +359,9 @@ class _FavoriteAppState extends State<FavoriteApp> {
       }
     });
     return Scaffold(
+      backgroundColor: Colors.white, // 设置背景为纯白
       appBar: AppBar(
+        backgroundColor: Colors.grey[200],
         leadingWidth: 100,
         leading: Row(
           children: [

@@ -47,7 +47,9 @@ class MainHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
+        backgroundColor: Colors.white,
         title: Center(
           child: GestureDetector(
             onTap: () {
@@ -85,13 +87,17 @@ class MainHomePage extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.black), // 添加黑色边框
               ),
               child: const TextField(
                 style: TextStyle(fontSize: 14),
                 enabled: false,
                 decoration: InputDecoration(
                   border: InputBorder.none,
-                  contentPadding: EdgeInsets.symmetric(horizontal: 16),
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: -3,
+                  ),
                   suffixIcon: Icon(Icons.search, color: Colors.grey),
                   hintText: '搜索...',
                 ),
@@ -947,7 +953,9 @@ $otherNames
     """;
 
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
+        backgroundColor: Colors.white,
         leadingWidth: 100,
         leading: Row(
           children: [

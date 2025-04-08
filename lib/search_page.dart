@@ -156,7 +156,9 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white, // 设置背景为纯白
       appBar: AppBar(
+        backgroundColor: Colors.white, // 设置背景为纯白
         leadingWidth: 43,
         leading: Padding(
           padding: const EdgeInsets.only(left: 3),
@@ -171,12 +173,13 @@ class _SearchPageState extends State<SearchPage> {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: Colors.black), // 添加黑色边框
           ),
           child: TextField(
             controller: _searchController,
             autofocus: true,
             decoration: const InputDecoration(
-              border: InputBorder.none,
+              border: InputBorder.none, // 移除默认边框
               contentPadding: EdgeInsets.symmetric(horizontal: 16),
               suffixIcon: Icon(Icons.search, color: Colors.grey),
               hintText: '搜索...',

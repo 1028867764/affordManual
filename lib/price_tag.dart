@@ -39,7 +39,9 @@ class _PriceTagState extends State<PriceTag> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white, // 设置背景为纯白
       appBar: AppBar(
+        backgroundColor: Colors.white, // 设置背景为纯白
         leadingWidth: 100,
         leading: Row(
           children: [
