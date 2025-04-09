@@ -174,7 +174,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
     return Container(
       width: MediaQuery.of(context).size.width * 0.9, // 屏幕宽度的 90%
-      margin: const EdgeInsets.symmetric(horizontal: 0),
+      margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 5),
       decoration: BoxDecoration(
         border: Border.all(color: Colors.blue.shade300),
         borderRadius: BorderRadius.circular(8),
@@ -568,7 +568,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                 horizontal: 0,
                               ).copyWith(
                                 top: 5, // 单独设置上边距
-                                bottom: 10, // 单独设置下边距
+                                bottom: 5, // 单独设置下边距
                               ),
                               decoration: BoxDecoration(
                                 color: Colors.orange[50],
@@ -591,12 +591,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                               shrinkWrap: true,
                               selectable: true,
                               physics: const NeverScrollableScrollPhysics(),
-                              padding: const EdgeInsets.fromLTRB(
-                                10,
-                                10,
-                                10,
-                                15,
-                              ),
+                              padding: const EdgeInsets.fromLTRB(10, 5, 10, 15),
                               imageBuilder: (uri, title, alt) {
                                 return GestureDetector(
                                   onTap: () => _enlargeImage(uri.toString()),
