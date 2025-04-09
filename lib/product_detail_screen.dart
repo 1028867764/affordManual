@@ -185,7 +185,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           Container(
             padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
             decoration: BoxDecoration(
-              color: Colors.blue.shade50,
+              color: Colors.blue[50],
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(8),
                 topRight: Radius.circular(8),
@@ -457,7 +457,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                               vertical: 5,
                             ),
                             decoration: BoxDecoration(
-                              color: Colors.orange[50], // 淡橙色背景
+                              color: Colors.blue[50],
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: SelectableText(
@@ -465,7 +465,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                               style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
-                                color: Color(0xFF994D00), // 锈橙色
+                                color: Colors.blue,
                               ),
                               textAlign: TextAlign.center, // 水平居中
                             ),
@@ -490,7 +490,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                       right: 5, // 单独设置右边距
                                     ),
                                     decoration: BoxDecoration(
-                                      color: Colors.orange[50],
+                                      color: Colors.blue[50],
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                     child: Column(
@@ -502,7 +502,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                           style: TextStyle(
                                             fontSize: 14,
                                             fontWeight: FontWeight.bold,
-                                            color: Color(0xFF994D00),
+                                            color: Colors.blue,
                                           ),
                                         ),
                                         const Spacer(),
@@ -529,7 +529,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                     ),
                                     height: 80,
                                     decoration: BoxDecoration(
-                                      color: Colors.orange[50],
+                                      color: Colors.blue[50],
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                     child: Column(
@@ -541,7 +541,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                           style: TextStyle(
                                             fontSize: 14,
                                             fontWeight: FontWeight.bold,
-                                            color: Color(0xFF994D00),
+                                            color: Colors.blue,
                                           ),
                                         ),
                                         const Spacer(),
@@ -571,7 +571,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                 bottom: 5, // 单独设置下边距
                               ),
                               decoration: BoxDecoration(
-                                color: Colors.orange[50],
+                                color: Colors.blue[50],
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: SelectableText(
