@@ -60,7 +60,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
   Widget _buildFavoriteButton() {
     return Positioned(
-      top: 85,
+      top: 30,
       right: 15,
       child: AnimatedOpacity(
         duration: Duration(milliseconds: 100),
@@ -162,7 +162,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   void _handleScroll() {
     setState(() {
       _scrollOffset = _scrollController.offset;
-      _buttonOpacity = 1.0 - (_scrollOffset.clamp(0, 100) / 100) * 0.8;
+      _buttonOpacity = 1.0 - (_scrollOffset.clamp(0, 100) / 100) * 0.7;
     });
   }
 
@@ -173,7 +173,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             .toList();
 
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
+      width: MediaQuery.of(context).size.width * 0.9, // 屏幕宽度的 90%
+      margin: const EdgeInsets.symmetric(horizontal: 0),
       decoration: BoxDecoration(
         border: Border.all(color: Colors.blue.shade300),
         borderRadius: BorderRadius.circular(8),
@@ -182,7 +183,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Container(
-            padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
+            padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
             decoration: BoxDecoration(
               color: Colors.blue.shade50,
               borderRadius: const BorderRadius.only(
@@ -191,10 +192,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               ),
             ),
             child: const Center(
-              child: Text(
+              child: SelectableText(
                 '历史价格',
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: 15,
                   fontWeight: FontWeight.bold,
                   color: Colors.blue,
                 ),
@@ -216,8 +217,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   latestData.map((item) {
                     return DataRow(
                       cells: [
-                        DataCell(Text(item['time'])),
-                        DataCell(Text(item['price'])),
+                        DataCell(SelectableText(item['time'])),
+                        DataCell(SelectableText(item['price'])),
                         DataCell(
                           InkWell(
                             onTap: () {
@@ -294,31 +295,18 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             ? getFactoryCategoryPath(widget.product)
             : "未知";
 
-    final otherNames =
-        widget.product.name.length > 2
-            ? '- ​**其它名称**: ${widget.product.name.sublist(2).join(', ')}\n'
-            : '';
-
-    final markdownInfo = """
-### &emsp;【​**${widget.product.name[0]}​**】
-- ​英文名称: ${widget.product.name.length > 1 ? widget.product.name[1] : '暂无'}
-$otherNames
-- ​搜索路径: $fieldPath>>$categoryPath
-- ​产品ID: ${widget.product.id}
-""";
-
     final markdownContent = """
 ![示例图片](http://img.tukuppt.com/photo-small/19/94/23/706589110a5f2073682.jpg)
-##### &emsp;第一节
-&emsp;&emsp;这是一段示例描述。《零的焦点》则以一对夫妻的生活为切入点，展现了一幅日本战后社会的众生相。女主人公绫子看似拥有幸福美满的家庭，然而，丈夫的神秘失踪打破了这份平静。随着调查的深入，一系列惊人的真相逐渐浮出水面。原来，丈夫的过去涉及到一些不为人知的秘密，而这些秘密与当时日本社会的种种问题紧密相连。在这个过程中，作者揭示了战争给人们带来的创伤以及战后社会的混乱与迷茫。人们在追求物质生活的同时，往往忽略了内心的真实需求，导致道德观念的扭曲和人际关系的冷漠。通过对这起案件的描写，读者不仅能够感受到推理小说的紧张刺激，还能对社会现实进行深刻的反思。  
-##### &emsp;第二节
+   
+&emsp;&emsp;这是一段示例描述。产品ID: ${widget.product.id}《零的焦点》则以一对夫妻的生活为切入点，展现了一幅日本战后社会的众生相。女主人公绫子看似拥有幸福美满的家庭，然而，丈夫的神秘失踪打破了这份平静。随着调查的深入，一系列惊人的真相逐渐浮出水面。原来，丈夫的过去涉及到一些不为人知的秘密，而这些秘密与当时日本社会的种种问题紧密相连。在这个过程中，作者揭示了战争给人们带来的创伤以及战后社会的混乱与迷茫。人们在追求物质生活的同时，往往忽略了内心的真实需求，导致道德观念的扭曲和人际关系的冷漠。通过对这起案件的描写，读者不仅能够感受到推理小说的紧张刺激，还能对社会现实进行深刻的反思。  
+#### &emsp;第一节
 ![示例图片](http://img.tukuppt.com/photo-small/19/94/23/706589110a5f2073682.jpg)
 
 &emsp;&emsp;《夜蝉》的故事发生在一个宁静而又略显封闭的小镇。小镇的生活节奏缓慢，人们过着平淡而又规律的日子，仿佛时间在这里停滞了一般。然而，一起突如其来的谋杀案打破了这份宁静，如同平静的湖面投入了一颗巨石。  
 &emsp;&emsp;案件发生在一个看似普通的夜晚，一位与小镇生活息息相关的人物被发现离奇死亡。随着调查的展开，各种线索逐渐浮出水面，但这些线索却如同夜空中的繁星，看似繁多却又各自独立，让人难以捉摸其中的关联。北村薰以其独特的叙事手法，将读者带入了一个充满悬念和神秘色彩的世界，让人们对这起案件充满了好奇和探索的欲望。
-##### &emsp;第三节
+#### &emsp;第二节
 &emsp;&emsp;这是一段示例描述。《零的焦点》则以一对夫妻的生活为切入点，展现了一幅日本战后社会的众生相。女主人公绫子看似拥有幸福美满的家庭，然而，丈夫的神秘失踪打破了这份平静。随着调查的深入，一系列惊人的真相逐渐浮出水面。原来，丈夫的过去涉及到一些不为人知的秘密，而这些秘密与当时日本社会的种种问题紧密相连。在这个过程中，作者揭示了战争给人们带来的创伤以及战后社会的混乱与迷茫。人们在追求物质生活的同时，往往忽略了内心的真实需求，导致道德观念的扭曲和人际关系的冷漠。通过对这起案件的描写，读者不仅能够感受到推理小说的紧张刺激，还能对社会现实进行深刻的反思。  
-##### &emsp;☢第四节
+#### &emsp;☢第三节
 ![示例图片](http://gd-hbimg.huaban.com/2288348e418d1372bab85e5266cae51b2d66503c6155b-KgiKde)
 
 &emsp;&emsp;《夜蝉》的故事发生在一个宁静而又略显封闭的小镇。小镇的生活节奏缓慢，人们过着平淡而又规律的日子，仿佛时间在这里停滞了一般。然而，一起突如其来的谋杀案打破了这份宁静，如同平静的湖面投入了一颗巨石。  
@@ -458,57 +446,192 @@ $otherNames
                       controller: _scrollController,
                       child: Column(
                         children: [
+                          // 产品名称
+                          Container(
+                            width:
+                                MediaQuery.of(context).size.width *
+                                0.9, // 屏幕宽度的 90%
+                            padding: const EdgeInsets.all(10),
+                            margin: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 5,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.orange[50], // 淡橙色背景
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: SelectableText(
+                              '【${widget.product.name[0]}】',
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF994D00), // 锈橙色
+                              ),
+                              textAlign: TextAlign.center, // 水平居中
+                            ),
+                          ),
+                          // 左右容器
+                          Container(
+                            color: Colors.transparent, // 透明背景
+                            width:
+                                MediaQuery.of(context).size.width *
+                                0.9, // 屏幕宽度的 90%
+                            child: Row(
+                              children: [
+                                // 左边容器 - 英文名称
+                                Expanded(
+                                  child: Container(
+                                    height: 80,
+                                    padding: const EdgeInsets.all(10),
+                                    margin: const EdgeInsets.symmetric(
+                                      vertical: 5,
+                                    ).copyWith(
+                                      left: 0, // 单独设置左边距
+                                      right: 5, // 单独设置右边距
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: Colors.orange[50],
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const SelectableText(
+                                          '英文名称',
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold,
+                                            color: Color(0xFF994D00),
+                                          ),
+                                        ),
+                                        const Spacer(),
+                                        SelectableText(
+                                          widget.product.name.length > 1
+                                              ? widget.product.name[1]
+                                              : '暂无',
+                                          style: const TextStyle(fontSize: 14),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+
+                                // 右边容器 - 搜索路径
+                                Expanded(
+                                  child: Container(
+                                    padding: const EdgeInsets.all(10),
+                                    margin: const EdgeInsets.symmetric(
+                                      vertical: 5,
+                                    ).copyWith(
+                                      left: 5, // 单独设置左边距
+                                      right: 0, // 单独设置右边距
+                                    ),
+                                    height: 80,
+                                    decoration: BoxDecoration(
+                                      color: Colors.orange[50],
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const SelectableText(
+                                          '搜索路径',
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold,
+                                            color: Color(0xFF994D00),
+                                          ),
+                                        ),
+                                        const Spacer(),
+                                        SelectableText(
+                                          '$fieldPath>>$categoryPath',
+                                          style: const TextStyle(fontSize: 14),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          // 其它名称
+                          if (widget.product.name.length >
+                              2) // name数组的第1个是中文名，第2个是英文名，后面的都是'其它名称'
+                            Container(
+                              width:
+                                  MediaQuery.of(context).size.width *
+                                  0.9, // 屏幕宽度的 90%
+                              padding: const EdgeInsets.all(10),
+                              margin: const EdgeInsets.symmetric(
+                                horizontal: 0,
+                              ).copyWith(
+                                top: 5, // 单独设置上边距
+                                bottom: 10, // 单独设置下边距
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.orange[50],
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: SelectableText(
+                                '其它名称: ${widget.product.name.sublist(2).join(', ')}',
+                                style: const TextStyle(fontSize: 14),
+                              ),
+                            ),
+                          // 历史价格
                           Padding(
                             padding: EdgeInsets.zero,
                             child: _buildPriceHistoryTable(),
                           ),
-                          Markdown(
-                            data: markdownInfo,
-                            shrinkWrap: true,
-                            selectable: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
-                          ),
-                          Markdown(
-                            data: markdownContent,
-                            shrinkWrap: true,
-                            selectable: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            padding: const EdgeInsets.fromLTRB(10, 0, 10, 15),
-                            imageBuilder: (uri, title, alt) {
-                              return GestureDetector(
-                                onTap: () => _enlargeImage(uri.toString()),
-                                child: Center(
-                                  child: CachedNetworkImage(
-                                    imageUrl: uri.toString(),
-                                    placeholder:
-                                        (context, url) => Container(
-                                          color: Colors.grey[300],
-                                          width: 100,
-                                          height: 100,
-                                          child: const Icon(
-                                            Icons.image,
-                                            color: Colors.grey,
+                          // 介绍文本
+                          Center(
+                            child: Markdown(
+                              data: markdownContent,
+                              shrinkWrap: true,
+                              selectable: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              padding: const EdgeInsets.fromLTRB(
+                                10,
+                                10,
+                                10,
+                                15,
+                              ),
+                              imageBuilder: (uri, title, alt) {
+                                return GestureDetector(
+                                  onTap: () => _enlargeImage(uri.toString()),
+                                  child: Center(
+                                    child: CachedNetworkImage(
+                                      imageUrl: uri.toString(),
+                                      placeholder:
+                                          (context, url) => Container(
+                                            color: Colors.grey[300],
+                                            width: 100,
+                                            height: 100,
+                                            child: const Icon(
+                                              Icons.image,
+                                              color: Colors.grey,
+                                            ),
                                           ),
-                                        ),
-                                    errorWidget:
-                                        (context, url, error) => Container(
-                                          color: Colors.grey[300],
-                                          width: 100,
-                                          height: 100,
-                                          child: const Icon(
-                                            Icons.broken_image,
-                                            color: Colors.grey,
+                                      errorWidget:
+                                          (context, url, error) => Container(
+                                            color: Colors.grey[300],
+                                            width: 100,
+                                            height: 100,
+                                            child: const Icon(
+                                              Icons.broken_image,
+                                              color: Colors.grey,
+                                            ),
                                           ),
-                                        ),
-                                    width:
-                                        MediaQuery.of(context).size.width *
-                                        0.65,
-                                    fit: BoxFit.scaleDown,
+                                      width:
+                                          MediaQuery.of(context).size.width *
+                                          0.6,
+                                      fit: BoxFit.scaleDown,
+                                    ),
                                   ),
-                                ),
-                              );
-                            },
+                                );
+                              },
+                            ),
                           ),
                         ],
                       ),
