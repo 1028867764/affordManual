@@ -1062,6 +1062,7 @@ final List<Category> organisms = [
             childProducts: [
               Product(id: "organismsCocos1", name: ["椰子油", "Coconut oil"]),
               Product(id: "organismsCocos2", name: ["椰子壳", "Coconut shell"]),
+              Product(id: "organismsCocos3", name: ["椰蓉", "Coconut flakes"]),
             ],
           ),
           ParentProduct(
@@ -1207,6 +1208,18 @@ final List<Category> organisms = [
             childProducts: [
               Product(id: "organismsColocasia1", name: ["芋头", "Taro"]),
               Product(id: "organismsColocasia2", name: ["芋叶柄", "Taro petiole"]),
+            ],
+          ),
+        ],
+      ),
+      ParentProductGroup(
+        id: "杜鹃花科",
+        parentProducts: [
+          ParentProduct(
+            id: "Vaccinium",
+            name: ["越橘属"],
+            childProducts: [
+              Product(id: "organismsVaccinium1", name: ["蓝莓", "Blueberry"]),
             ],
           ),
         ],

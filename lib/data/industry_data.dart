@@ -264,6 +264,14 @@ final Map<String, List<Map<String, dynamic>>> factories = {
       "id": "factories4940_11_8",
       "name": ["乙基麦芽酚", "Ethyl maltol"],
     },
+    {
+      "id": "factories868_14_4",
+      "name": ["酒石酸氢钾", "Potassium hydrogen tartrate"],
+    },
+    {
+      "id": "factories144_55_8",
+      "name": ["碳酸氢钠", "Sodium bicarbonate"],
+    },
   ],
   "木材·纸": [
     {

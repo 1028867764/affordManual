@@ -481,7 +481,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                 // 左边容器 - 英文名称
                                 Expanded(
                                   child: Container(
-                                    height: 80,
+                                    height: 120,
                                     padding: const EdgeInsets.all(10),
                                     margin: const EdgeInsets.symmetric(
                                       vertical: 5,
@@ -527,7 +527,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                       left: 5, // 单独设置左边距
                                       right: 0, // 单独设置右边距
                                     ),
-                                    height: 80,
+                                    height: 120,
                                     decoration: BoxDecoration(
                                       color: Colors.blue[50],
                                       borderRadius: BorderRadius.circular(8),
