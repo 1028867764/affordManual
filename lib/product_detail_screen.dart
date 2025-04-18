@@ -31,6 +31,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   late final String _favoriteKey;
   double _scrollOffset = 0.0;
   double _buttonOpacity = 1.0;
+  bool _showTitle = false; // 控制标题显示
+  bool _showSearchIcon = true; // 控制搜索图标显示
+  final double _scrollThreshold = 100; // 定义为类成员变量
 
   String getCategoryPath(Product product) {
     for (var category in organisms) {
@@ -163,6 +166,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     setState(() {
       _scrollOffset = _scrollController.offset;
       _buttonOpacity = 1.0 - (_scrollOffset.clamp(0, 100) / 100) * 0.7;
+      _showTitle = _scrollOffset > _scrollThreshold; // 控制标题显示
     });
   }
 
@@ -325,7 +329,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         backgroundColor: Colors.white,
         appBar: AppBar(
           backgroundColor: Colors.white,
-          leadingWidth: 100,
+          leadingWidth: _showTitle ? 56 : 100, // 动态调整leading宽度
           leading: Row(
             children: [
               const SizedBox(width: 10),
@@ -341,50 +345,58 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   ),
                 ),
               ),
-              const SizedBox(width: 10),
-              Material(
-                color: Colors.transparent,
-                borderRadius: BorderRadius.circular(24),
-                child: InkWell(
+              if (!_showTitle) const SizedBox(width: 10),
+              if (!_showTitle) // 条件渲染搜索图标
+                Material(
+                  color: Colors.transparent,
                   borderRadius: BorderRadius.circular(24),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      PageRouteBuilder(
-                        pageBuilder:
-                            (context, animation, secondaryAnimation) =>
-                                const SearchPage(),
-                        transitionsBuilder: (
-                          context,
-                          animation,
-                          secondaryAnimation,
-                          child,
-                        ) {
-                          const begin = Offset(1.0, 0.0);
-                          const end = Offset.zero;
-                          const curve = Curves.ease;
-                          var tween = Tween(
-                            begin: begin,
-                            end: end,
-                          ).chain(CurveTween(curve: curve));
-                          var offsetAnimation = animation.drive(tween);
-                          return SlideTransition(
-                            position: offsetAnimation,
-                            child: child,
-                          );
-                        },
-                      ),
-                    );
-                  },
-                  child: const Padding(
-                    padding: EdgeInsets.all(12),
-                    child: Icon(Icons.search),
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(24),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        PageRouteBuilder(
+                          pageBuilder:
+                              (context, animation, secondaryAnimation) =>
+                                  const SearchPage(),
+                          transitionsBuilder: (
+                            context,
+                            animation,
+                            secondaryAnimation,
+                            child,
+                          ) {
+                            const begin = Offset(1.0, 0.0);
+                            const end = Offset.zero;
+                            const curve = Curves.ease;
+                            var tween = Tween(
+                              begin: begin,
+                              end: end,
+                            ).chain(CurveTween(curve: curve));
+                            var offsetAnimation = animation.drive(tween);
+                            return SlideTransition(
+                              position: offsetAnimation,
+                              child: child,
+                            );
+                          },
+                        ),
+                      );
+                    },
+                    child: const Padding(
+                      padding: EdgeInsets.all(12),
+                      child: Icon(Icons.search),
+                    ),
                   ),
                 ),
-              ),
             ],
           ),
-          title: Text(widget.product.name[0]),
+          title: AnimatedOpacity(
+            opacity: _showTitle ? 1.0 : 0.0,
+            duration: Duration(milliseconds: 200),
+            child: Transform.translate(
+              offset: Offset(0, _showTitle ? 0 : 10),
+              child: Text(widget.product.name[0]),
+            ),
+          ),
           actions: [
             Material(
               color: Colors.transparent,
