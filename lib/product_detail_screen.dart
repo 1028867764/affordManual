@@ -31,9 +31,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   late final String _favoriteKey;
   double _scrollOffset = 0.0;
   double _buttonOpacity = 1.0;
-  bool _showTitle = false; // 控制标题显示
-  bool _showSearchIcon = true; // 控制搜索图标显示
-  final double _scrollThreshold = 100; // 定义为类成员变量
+  bool _showTitle = false;
+  bool _showSearchIcon = true;
+  final double _scrollThreshold = 100;
+  final DraggableScrollableController _sheetController =
+      DraggableScrollableController();
+  bool _titleShownByScroll = false; // 新增：标记标题是否由主内容滚动显示
+  bool _titleShownBySheet = false; // 新增：标记标题是否由抽屉滑动显示
 
   String getCategoryPath(Product product) {
     for (var category in organisms) {
@@ -118,12 +122,29 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     _favoriteKey = 'favorite_${widget.product.id}';
     _loadFavoriteStatus();
     _scrollController.addListener(_handleScroll);
+    _sheetController.addListener(_handleSheetScroll); // 添加监听器
     _loadPriceHistory();
     Future.delayed(const Duration(milliseconds: 500), () {
       if (mounted) {
         setState(() {
           _isLoading = false;
         });
+      }
+    });
+  }
+
+  // 处理底部抽屉滑动
+  void _handleSheetScroll() {
+    setState(() {
+      // 只有当标题不是由主内容滚动显示时才处理
+      if (!_titleShownByScroll) {
+        if (_sheetController.size > 0.9) {
+          _titleShownBySheet = true;
+          _showTitle = true;
+        } else {
+          _titleShownBySheet = false;
+          _showTitle = false;
+        }
       }
     });
   }
@@ -159,6 +180,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   @override
   void dispose() {
     _scrollController.dispose();
+    _sheetController.removeListener(_handleSheetScroll); // 移除监听器
+    _sheetController.dispose();
     super.dispose();
   }
 
@@ -166,7 +189,17 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     setState(() {
       _scrollOffset = _scrollController.offset;
       _buttonOpacity = 1.0 - (_scrollOffset.clamp(0, 100) / 100) * 0.7;
-      _showTitle = _scrollOffset > _scrollThreshold; // 控制标题显示
+      // 主内容滚动控制标题显示
+      if (_scrollOffset > _scrollThreshold) {
+        _titleShownByScroll = true;
+        _showTitle = true;
+      } else {
+        _titleShownByScroll = false;
+        // 只有当标题不是由抽屉滑动显示时才隐藏
+        if (!_titleShownBySheet) {
+          _showTitle = false;
+        }
+      }
     });
   }
 
@@ -177,7 +210,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             .toList();
 
     return Container(
-      width: MediaQuery.of(context).size.width * 0.9, // 屏幕宽度的 90%
+      width: MediaQuery.of(context).size.width * 0.9,
       margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 5),
       decoration: BoxDecoration(
         border: Border.all(color: Colors.blue.shade300),
@@ -329,7 +362,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         backgroundColor: Colors.white,
         appBar: AppBar(
           backgroundColor: Colors.white,
-          leadingWidth: _showTitle ? 56 : 100, // 动态调整leading宽度
+          leadingWidth: _showTitle ? 56 : 100,
           leading: Row(
             children: [
               const SizedBox(width: 10),
@@ -346,7 +379,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 ),
               ),
               if (!_showTitle) const SizedBox(width: 10),
-              if (!_showTitle) // 条件渲染搜索图标
+              if (!_showTitle)
                 Material(
                   color: Colors.transparent,
                   borderRadius: BorderRadius.circular(24),
@@ -454,15 +487,14 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 ? const Center(child: CircularProgressIndicator())
                 : Stack(
                   children: [
+                    // 主内容区域
                     SingleChildScrollView(
                       controller: _scrollController,
                       child: Column(
                         children: [
                           // 产品名称
                           Container(
-                            width:
-                                MediaQuery.of(context).size.width *
-                                0.9, // 屏幕宽度的 90%
+                            width: MediaQuery.of(context).size.width * 0.9,
                             padding: const EdgeInsets.all(10),
                             margin: const EdgeInsets.symmetric(
                               horizontal: 10,
@@ -479,15 +511,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                 fontWeight: FontWeight.bold,
                                 color: Colors.blue,
                               ),
-                              textAlign: TextAlign.center, // 水平居中
+                              textAlign: TextAlign.center,
                             ),
                           ),
                           // 左右容器
                           Container(
-                            color: Colors.transparent, // 透明背景
-                            width:
-                                MediaQuery.of(context).size.width *
-                                0.9, // 屏幕宽度的 90%
+                            color: Colors.transparent,
+                            width: MediaQuery.of(context).size.width * 0.9,
                             child: Row(
                               children: [
                                 // 左边容器 - 英文名称
@@ -497,10 +527,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                     padding: const EdgeInsets.all(10),
                                     margin: const EdgeInsets.symmetric(
                                       vertical: 5,
-                                    ).copyWith(
-                                      left: 0, // 单独设置左边距
-                                      right: 5, // 单独设置右边距
-                                    ),
+                                    ).copyWith(left: 0, right: 5),
                                     decoration: BoxDecoration(
                                       color: Colors.blue[50],
                                       borderRadius: BorderRadius.circular(8),
@@ -528,17 +555,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                     ),
                                   ),
                                 ),
-
                                 // 右边容器 - 搜索路径
                                 Expanded(
                                   child: Container(
                                     padding: const EdgeInsets.all(10),
                                     margin: const EdgeInsets.symmetric(
                                       vertical: 5,
-                                    ).copyWith(
-                                      left: 5, // 单独设置左边距
-                                      right: 0, // 单独设置右边距
-                                    ),
+                                    ).copyWith(left: 5, right: 0),
                                     height: 120,
                                     decoration: BoxDecoration(
                                       color: Colors.blue[50],
@@ -569,19 +592,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             ),
                           ),
                           // 其它名称
-                          if (widget.product.name.length >
-                              2) // name数组的第1个是中文名，第2个是英文名，后面的都是'其它名称'
+                          if (widget.product.name.length > 2)
                             Container(
-                              width:
-                                  MediaQuery.of(context).size.width *
-                                  0.9, // 屏幕宽度的 90%
+                              width: MediaQuery.of(context).size.width * 0.9,
                               padding: const EdgeInsets.all(10),
                               margin: const EdgeInsets.symmetric(
                                 horizontal: 0,
-                              ).copyWith(
-                                top: 5, // 单独设置上边距
-                                bottom: 5, // 单独设置下边距
-                              ),
+                              ).copyWith(top: 5, bottom: 5),
                               decoration: BoxDecoration(
                                 color: Colors.blue[50],
                                 borderRadius: BorderRadius.circular(8),
@@ -591,11 +608,18 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                 style: const TextStyle(fontSize: 14),
                               ),
                             ),
-                          // 历史价格
-                          Padding(
-                            padding: EdgeInsets.zero,
-                            child: _buildPriceHistoryTable(),
+                          // 提示文字 - 向上滑动查看详情
+                          Container(
+                            margin: EdgeInsets.only(top: 20, bottom: 10),
+                            child: Text(
+                              '↑ 向上滑动查看详情',
+                              style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 14,
+                              ),
+                            ),
                           ),
+
                           // 介绍文本
                           Center(
                             child: Markdown(
@@ -640,10 +664,110 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                               },
                             ),
                           ),
+                          // 留出空间给抽屉
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.4,
+                          ),
                         ],
                       ),
                     ),
                     _buildFavoriteButton(),
+
+                    // 可拖动抽屉
+                    DraggableScrollableSheet(
+                      controller: _sheetController,
+                      initialChildSize: 0.3,
+                      minChildSize: 0.3,
+                      maxChildSize: 1.0,
+                      snap: true,
+                      snapSizes: [0.3, 0.7, 1.0],
+                      builder: (
+                        BuildContext context,
+                        ScrollController scrollController,
+                      ) {
+                        //使用 GestureDetector 包裹整个 Column
+                        return GestureDetector(
+                          behavior: HitTestBehavior.opaque, // 确保手势能穿透
+                          onVerticalDragUpdate: (details) {
+                            // 手动控制拖拽逻辑（可选）
+                            _sheetController.jumpTo(
+                              _sheetController.size -
+                                  details.primaryDelta! /
+                                      MediaQuery.of(context).size.height,
+                            );
+                          },
+                          child: Material(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.vertical(
+                              top: Radius.circular(20),
+                            ),
+                            elevation: 8,
+                            child: Column(
+                              children: [
+                                Container(
+                                  height: 6,
+                                  width: 40,
+                                  margin: EdgeInsets.symmetric(vertical: 12),
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey[300],
+                                    borderRadius: BorderRadius.circular(3),
+                                  ),
+                                ),
+                                _buildPriceHistoryTable(),
+                                Expanded(
+                                  child: CustomScrollView(
+                                    controller: scrollController,
+                                    slivers: [
+                                      SliverPadding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                          10,
+                                          5,
+                                          10,
+                                          15,
+                                        ),
+                                        sliver: SliverList(
+                                          delegate: SliverChildBuilderDelegate(
+                                            (context, index) {
+                                              // 创建1-20的数字盒子
+                                              return Container(
+                                                height: 60,
+                                                margin: EdgeInsets.symmetric(
+                                                  vertical: 5,
+                                                ),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.blue[50],
+                                                  borderRadius:
+                                                      BorderRadius.circular(8),
+                                                  border: Border.all(
+                                                    color: Colors.grey[300]!,
+                                                  ),
+                                                ),
+                                                child: Center(
+                                                  child: Text(
+                                                    '${index + 1}',
+                                                    style: TextStyle(
+                                                      fontSize: 24,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Colors.blue,
+                                                    ),
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                            childCount: 20, // 生成20个盒子
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
                   ],
                 ),
       ),
