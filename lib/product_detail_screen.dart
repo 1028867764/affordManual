@@ -7,7 +7,6 @@ import 'package:intl/intl.dart';
 import 'package:photo_view/photo_view.dart';
 import 'data/organisms_data.dart';
 import 'data/industry_data.dart';
-import 'price_tag.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'main.dart';
 import 'search_page.dart';
@@ -138,13 +137,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     setState(() {
       // 只有当标题不是由主内容滚动显示时才处理
       if (!_titleShownByScroll) {
-        if (_sheetController.size > 0.9) {
-          _titleShownBySheet = true;
-          _showTitle = true;
-        } else {
-          _titleShownBySheet = false;
-          _showTitle = false;
-        }
+        _titleShownBySheet = _sheetController.size > 0.9;
+        _showTitle = _sheetController.size > 0.9;
       }
     });
   }
@@ -188,7 +182,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   void _handleScroll() {
     setState(() {
       _scrollOffset = _scrollController.offset;
-      _buttonOpacity = 1.0 - (_scrollOffset.clamp(0, 100) / 100) * 0.7;
+      // _buttonOpacity = 1.0 - (_scrollOffset.clamp(0, 100) / 100) * 0.7;  收藏按钮已经不需要变化透明度了
       // 主内容滚动控制标题显示
       if (_scrollOffset > _scrollThreshold) {
         _titleShownByScroll = true;
@@ -248,7 +242,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               columns: const [
                 DataColumn(label: SizedBox.shrink()),
                 DataColumn(label: SizedBox.shrink()),
-                DataColumn(label: SizedBox.shrink()),
               ],
               rows:
                   latestData.map((item) {
@@ -256,61 +249,24 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       cells: [
                         DataCell(SelectableText(item['time'])),
                         DataCell(SelectableText(item['price'])),
-                        DataCell(
-                          InkWell(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                PageRouteBuilder(
-                                  pageBuilder:
-                                      (
-                                        context,
-                                        animation,
-                                        secondaryAnimation,
-                                      ) => PriceTag(
-                                        time: item['time'],
-                                        price: item['price'],
-                                        productName: widget.product.name[0],
-                                        id: widget.product.id,
-                                      ),
-                                  transitionsBuilder: (
-                                    context,
-                                    animation,
-                                    secondaryAnimation,
-                                    child,
-                                  ) {
-                                    const begin = Offset(1.0, 0.0);
-                                    const end = Offset.zero;
-                                    const curve = Curves.ease;
-                                    var tween = Tween(
-                                      begin: begin,
-                                      end: end,
-                                    ).chain(CurveTween(curve: curve));
-                                    var offsetAnimation = animation.drive(
-                                      tween,
-                                    );
-                                    return SlideTransition(
-                                      position: offsetAnimation,
-                                      child: child,
-                                    );
-                                  },
-                                ),
-                              );
-                            },
-                            child: const Text(
-                              '详情',
-                              style: TextStyle(
-                                color: Colors.blue,
-                                decoration: TextDecoration.underline,
-                              ),
-                            ),
-                          ),
-                        ),
                       ],
                     );
                   }).toList(),
             ),
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPriceHistoryTableWithFavoriteButton() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 15.0), // 整体左右间距15
+      child: Row(
+        children: [
+          Expanded(child: _buildPriceHistoryTable()),
+          const SizedBox(width: 10), // 表和按钮之间的间距10
+          _buildFavoriteButton(),
         ],
       ),
     );
@@ -362,6 +318,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         backgroundColor: Colors.white,
         appBar: AppBar(
           backgroundColor: Colors.white,
+          elevation: 0, // 禁用阴影
+          scrolledUnderElevation: 0, // 关键！禁止滚动时 elevation 变化
+          surfaceTintColor: Colors.transparent, // 禁用 Material 3 的 tint 效果
           leadingWidth: _showTitle ? 56 : 100,
           leading: Row(
             children: [
@@ -671,7 +630,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         ],
                       ),
                     ),
-                    _buildFavoriteButton(),
 
                     // 可拖动抽屉
                     DraggableScrollableSheet(
@@ -713,7 +671,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                     borderRadius: BorderRadius.circular(3),
                                   ),
                                 ),
-                                _buildPriceHistoryTable(),
+                                _buildPriceHistoryTableWithFavoriteButton(), // 替换为新的组合组件
                                 Expanded(
                                   child: CustomScrollView(
                                     controller: scrollController,

@@ -9,7 +9,6 @@ import 'luxury_app.dart';
 import 'search_page.dart';
 import 'data/organisms_data.dart';
 import 'data/industry_data.dart';
-import 'price_tag.dart';
 import 'favorite_app.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'product_detail_screen.dart';
