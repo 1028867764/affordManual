@@ -64,34 +64,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     return '?';
   }
 
-  Widget _buildFavoriteButton() {
-    return Positioned(
-      top: 30,
-      right: 15,
-      child: AnimatedOpacity(
-        duration: Duration(milliseconds: 100),
-        opacity: _buttonOpacity,
-        child: Material(
-          color: Colors.transparent,
-          child: InkWell(
-            borderRadius: BorderRadius.circular(100),
-            onTap: () {
-              _toggleFavorite();
-            },
-            child: AnimatedSwitcher(
-              duration: Duration(milliseconds: 200),
-              child: Icon(
-                _isFavorited ? Icons.star_rounded : Icons.star_outline_rounded,
-                color: _isFavorited ? kBilibiliPink : Colors.grey[300],
-                size: 50,
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
   void _enlargeImage(String imageUrl) {
     _scrollPosition = _scrollController.position.pixels;
     setState(() {
@@ -259,14 +231,30 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     );
   }
 
-  Widget _buildPriceHistoryTableWithFavoriteButton() {
+  Widget _buildDragHead() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15.0), // 整体左右间距15
+      padding: const EdgeInsets.symmetric(horizontal: 15.0),
       child: Row(
         children: [
-          Expanded(child: _buildPriceHistoryTable()),
-          const SizedBox(width: 10), // 表和按钮之间的间距10
-          _buildFavoriteButton(),
+          Expanded(child: _buildPriceHistoryTable()), // 表格占满剩余空间
+          const SizedBox(width: 10),
+          Material(
+            color: Colors.transparent,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(100),
+              onTap: _toggleFavorite,
+              child: AnimatedSwitcher(
+                duration: Duration(milliseconds: 200),
+                child: Icon(
+                  _isFavorited
+                      ? Icons.star_rounded
+                      : Icons.star_outline_rounded,
+                  color: _isFavorited ? kBilibiliPink : Colors.grey[300],
+                  size: 50,
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -671,7 +659,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                     borderRadius: BorderRadius.circular(3),
                                   ),
                                 ),
-                                _buildPriceHistoryTableWithFavoriteButton(), // 替换为新的组合组件
+                                _buildDragHead(), // 替换为新的组合组件
                                 Expanded(
                                   child: CustomScrollView(
                                     controller: scrollController,
