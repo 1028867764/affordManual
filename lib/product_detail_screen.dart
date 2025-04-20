@@ -592,14 +592,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                   ) {
                     return <Widget>[
                       SliverAppBar(
+                        automaticallyImplyLeading: false,
                         expandedHeight: 80.0,
                         pinned: false,
                         flexibleSpace: Stack(
                           children: [
                             // 背景图片
                             Positioned.fill(
-                              child: Image.network(
-                                'http://img.tukuppt.com/photo-small/19/94/23/706589110a5f2073682.jpg',
+                              child: Image.asset(
+                                'assets/images/beach1.jpg',
                                 fit: BoxFit.cover,
                               ),
                             ),
