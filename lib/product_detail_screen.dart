@@ -29,7 +29,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
   bool _isFavorited = false;
   late final String _favoriteKey;
   late TabController _tabController;
-  final List<String> _tabs = ['详情', '报价', '相关'];
+  final List<String> _tabs = ['介绍', '报价', '讨论'];
   final ScrollController _scrollController = ScrollController();
   bool _isScrolled = false; // 是否滚动超过 50px
 
@@ -472,7 +472,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                   ),
                 ),
               ),
-              SizedBox(width: _isScrolled ? 5 : 10),
+              SizedBox(width: _isScrolled ? 10 : 10),
               if (!_isScrolled)
                 Material(
                   color: Colors.transparent,
@@ -592,7 +592,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                   ) {
                     return <Widget>[
                       SliverAppBar(
-                        expandedHeight: 60.0,
+                        expandedHeight: 80.0,
                         pinned: false,
                         flexibleSpace: Stack(
                           children: [
@@ -605,7 +605,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                             ),
                             // 标题
                             Positioned(
-                              bottom: 16,
+                              top: 0,
+                              bottom: 0,
                               left: 0,
                               right: 0,
                               child: Center(
@@ -616,15 +617,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                                       sigmaY: 5,
                                     ),
                                     child: Container(
-                                      color: Colors.yellow.withOpacity(0.5),
+                                      color: kBilibiliPink.withOpacity(0.8),
                                       padding: EdgeInsets.symmetric(
                                         vertical: 4,
                                       ),
                                       child: Text(
                                         widget.product.name[0],
                                         style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 15,
+                                          color: Colors.white,
+                                          fontSize: 20,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
@@ -640,7 +641,16 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                         pinned: true,
                         delegate: _StickyTabBarDelegate(
                           child: TabBar(
-                            labelColor: Colors.black,
+                            labelColor: Colors.blue, // 选中标签的文字颜色
+                            unselectedLabelColor: Colors.grey, // 未选中标签的文字颜色
+                            labelStyle: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ), // 选中标签的文字样式
+                            unselectedLabelStyle: TextStyle(
+                              fontWeight: FontWeight.normal,
+                            ), // 未选中标签的文字样式
+                            indicatorColor: Colors.blue, // 指示器颜色
+                            indicatorWeight: 4.0, // 指示器厚度
                             controller: _tabController,
                             tabs:
                                 _tabs
@@ -663,7 +673,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
         floatingActionButton: Stack(
           children: [
             Positioned(
-              right: 10, // 水平偏移量（根据需求调整）
+              right: 12, // 水平偏移量（根据需求调整）
               bottom: 16, // 垂直偏移量（根据需求调整）
               child: Material(
                 color: Colors.transparent,
@@ -671,8 +681,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                   borderRadius: BorderRadius.circular(100),
                   onTap: _toggleFavorite,
                   child: Container(
-                    width: 40,
-                    height: 40,
+                    width: 45,
+                    height: 45,
                     decoration: BoxDecoration(
                       color: Colors.white.withOpacity(0.9),
                       borderRadius: BorderRadius.circular(100),
@@ -690,8 +700,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                         _isFavorited
                             ? Icons.star_rounded
                             : Icons.star_outline_rounded,
-                        color: _isFavorited ? kBilibiliPink : Colors.grey[300],
-                        size: 30, // 适当缩小图标以适配小尺寸
+                        color: _isFavorited ? kBilibiliPink : Colors.grey[500],
+                        size: 40, // 适当缩小图标以适配小尺寸
                       ),
                     ),
                   ),
