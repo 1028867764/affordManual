@@ -617,17 +617,29 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                                       sigmaX: 5,
                                       sigmaY: 5,
                                     ),
-                                    child: Container(
-                                      color: kBilibiliPink.withOpacity(0.8),
-                                      padding: EdgeInsets.symmetric(
-                                        vertical: 4,
-                                      ),
-                                      child: Text(
-                                        widget.product.name[0],
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold,
+                                    child: IntrinsicWidth(
+                                      child: IntrinsicHeight(
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            color: kBilibiliPink.withOpacity(
+                                              0.7,
+                                            ),
+                                            borderRadius: BorderRadius.circular(
+                                              8,
+                                            ),
+                                          ),
+                                          padding: EdgeInsets.symmetric(
+                                            vertical: 0,
+                                            horizontal: 4,
+                                          ),
+                                          child: Text(
+                                            widget.product.name[0],
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
                                         ),
                                       ),
                                     ),
