@@ -10,6 +10,7 @@ import 'data/industry_data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'main.dart';
 import 'search_page.dart';
+import 'dart:ui';
 
 class ProductDetailScreen extends StatefulWidget {
   final dynamic product;
@@ -20,23 +21,27 @@ class ProductDetailScreen extends StatefulWidget {
   State<ProductDetailScreen> createState() => _ProductDetailScreenState();
 }
 
-class _ProductDetailScreenState extends State<ProductDetailScreen> {
+class _ProductDetailScreenState extends State<ProductDetailScreen>
+    with SingleTickerProviderStateMixin {
   bool _isLoading = true;
   String? _enlargedImageUrl;
-  ScrollController _scrollController = ScrollController();
-  double _scrollPosition = 0.0;
   List<Map<String, dynamic>> _priceHistory = [];
   bool _isFavorited = false;
   late final String _favoriteKey;
-  double _scrollOffset = 0.0;
-  double _buttonOpacity = 1.0;
-  bool _showTitle = false;
-  bool _showSearchIcon = true;
-  final double _scrollThreshold = 100;
-  final DraggableScrollableController _sheetController =
-      DraggableScrollableController();
-  bool _titleShownByScroll = false; // 新增：标记标题是否由主内容滚动显示
-  bool _titleShownBySheet = false; // 新增：标记标题是否由抽屉滑动显示
+  late TabController _tabController;
+  final List<String> _tabs = ['详情', '报价', '相关'];
+  final ScrollController _scrollController = ScrollController();
+  bool _isScrolled = false; // 是否滚动超过 50px
+
+  void _handleScroll() {
+    // 检查是否滚动超过 50 像素
+    final bool isScrolled = _scrollController.offset > 50;
+    if (isScrolled != _isScrolled) {
+      setState(() {
+        _isScrolled = isScrolled;
+      });
+    }
+  }
 
   String getCategoryPath(Product product) {
     for (var category in organisms) {
@@ -65,7 +70,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   }
 
   void _enlargeImage(String imageUrl) {
-    _scrollPosition = _scrollController.position.pixels;
     setState(() {
       _enlargedImageUrl = imageUrl;
     });
@@ -74,9 +78,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   void _closeEnlargedImage() {
     setState(() {
       _enlargedImageUrl = null;
-    });
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _scrollController.jumpTo(_scrollPosition);
     });
   }
 
@@ -92,25 +93,14 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     super.initState();
     _favoriteKey = 'favorite_${widget.product.id}';
     _loadFavoriteStatus();
-    _scrollController.addListener(_handleScroll);
-    _sheetController.addListener(_handleSheetScroll); // 添加监听器
+    _tabController = TabController(length: _tabs.length, vsync: this);
     _loadPriceHistory();
+    _scrollController.addListener(_handleScroll); // 添加滚动监听
     Future.delayed(const Duration(milliseconds: 500), () {
       if (mounted) {
         setState(() {
           _isLoading = false;
         });
-      }
-    });
-  }
-
-  // 处理底部抽屉滑动
-  void _handleSheetScroll() {
-    setState(() {
-      // 只有当标题不是由主内容滚动显示时才处理
-      if (!_titleShownByScroll) {
-        _titleShownBySheet = _sheetController.size > 0.9;
-        _showTitle = _sheetController.size > 0.9;
       }
     });
   }
@@ -145,28 +135,21 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
   @override
   void dispose() {
+    _tabController.dispose();
     _scrollController.dispose();
-    _sheetController.removeListener(_handleSheetScroll); // 移除监听器
-    _sheetController.dispose();
     super.dispose();
   }
 
-  void _handleScroll() {
-    setState(() {
-      _scrollOffset = _scrollController.offset;
-      // _buttonOpacity = 1.0 - (_scrollOffset.clamp(0, 100) / 100) * 0.7;  收藏按钮已经不需要变化透明度了
-      // 主内容滚动控制标题显示
-      if (_scrollOffset > _scrollThreshold) {
-        _titleShownByScroll = true;
-        _showTitle = true;
-      } else {
-        _titleShownByScroll = false;
-        // 只有当标题不是由抽屉滑动显示时才隐藏
-        if (!_titleShownBySheet) {
-          _showTitle = false;
-        }
-      }
-    });
+  Widget _buildBottomGap() {
+    return SizedBox(
+      height: 100,
+      child: Container(
+        color: Colors.white,
+        child: const Center(
+          child: Text('', style: TextStyle(color: Colors.white)),
+        ),
+      ),
+    );
   }
 
   Widget _buildPriceHistoryTable() {
@@ -231,37 +214,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     );
   }
 
-  Widget _buildDragHead() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15.0),
-      child: Row(
-        children: [
-          Expanded(child: _buildPriceHistoryTable()), // 表格占满剩余空间
-          const SizedBox(width: 10),
-          Material(
-            color: Colors.transparent,
-            child: InkWell(
-              borderRadius: BorderRadius.circular(100),
-              onTap: _toggleFavorite,
-              child: AnimatedSwitcher(
-                duration: Duration(milliseconds: 200),
-                child: Icon(
-                  _isFavorited
-                      ? Icons.star_rounded
-                      : Icons.star_outline_rounded,
-                  color: _isFavorited ? kBilibiliPink : Colors.grey[300],
-                  size: 50,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildDetailContent() {
     final fieldPath =
         widget.product.id.startsWith('organisms')
             ? "生物篇"
@@ -294,6 +247,200 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 &emsp;&emsp;案件发生在一个看似普通的夜晚，一位与小镇生活息息相关的人物被发现离奇死亡。随着调查的展开，各种线索逐渐浮出水面，但这些线索却如同夜空中的繁星，看似繁多却又各自独立，让人难以捉摸其中的关联。北村薰以其独特的叙事手法，将读者带入了一个充满悬念和神秘色彩的世界，让人们对这起案件充满了好奇和探索的欲望。 
     """;
 
+    return SingleChildScrollView(
+      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 16),
+      child: Column(
+        children: [
+          // 左右容器
+          Container(
+            color: Colors.transparent,
+            width: MediaQuery.of(context).size.width * 0.9,
+            child: Row(
+              children: [
+                // 左边容器 - 英文名称
+                Expanded(
+                  child: Container(
+                    height: 120,
+                    padding: const EdgeInsets.all(10),
+                    margin: const EdgeInsets.symmetric(
+                      vertical: 5,
+                    ).copyWith(left: 0, right: 5),
+                    decoration: BoxDecoration(
+                      color: Colors.blue[50],
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SelectableText(
+                          '英文名称',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blue,
+                          ),
+                        ),
+                        const Spacer(),
+                        SelectableText(
+                          widget.product.name.length > 1
+                              ? widget.product.name[1]
+                              : '暂无',
+                          style: const TextStyle(fontSize: 14),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                // 右边容器 - 搜索路径
+                Expanded(
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    margin: const EdgeInsets.symmetric(
+                      vertical: 5,
+                    ).copyWith(left: 5, right: 0),
+                    height: 120,
+                    decoration: BoxDecoration(
+                      color: Colors.blue[50],
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SelectableText(
+                          '搜索路径',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blue,
+                          ),
+                        ),
+                        const Spacer(),
+                        SelectableText(
+                          '$fieldPath>>$categoryPath',
+                          style: const TextStyle(fontSize: 14),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // 其它名称
+          if (widget.product.name.length > 2)
+            Container(
+              width: MediaQuery.of(context).size.width * 0.9,
+              padding: const EdgeInsets.all(10),
+              margin: const EdgeInsets.symmetric(
+                horizontal: 0,
+              ).copyWith(top: 5, bottom: 5),
+              decoration: BoxDecoration(
+                color: Colors.blue[50],
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: SelectableText(
+                '其它名称: ${widget.product.name.sublist(2).join(', ')}',
+                style: const TextStyle(fontSize: 14),
+              ),
+            ),
+          // 介绍文本
+          Markdown(
+            data: markdownContent,
+            shrinkWrap: true,
+            selectable: true,
+            physics: const NeverScrollableScrollPhysics(),
+            padding: const EdgeInsets.fromLTRB(10, 5, 10, 15),
+            imageBuilder: (uri, title, alt) {
+              return GestureDetector(
+                onTap: () => _enlargeImage(uri.toString()),
+                child: Center(
+                  child: CachedNetworkImage(
+                    imageUrl: uri.toString(),
+                    placeholder:
+                        (context, url) => Container(
+                          color: Colors.grey[300],
+                          width: 100,
+                          height: 100,
+                          child: const Icon(Icons.image, color: Colors.grey),
+                        ),
+                    errorWidget:
+                        (context, url, error) => Container(
+                          color: Colors.grey[300],
+                          width: 100,
+                          height: 100,
+                          child: const Icon(
+                            Icons.broken_image,
+                            color: Colors.grey,
+                          ),
+                        ),
+                    width: MediaQuery.of(context).size.width * 0.6,
+                    fit: BoxFit.scaleDown,
+                  ),
+                ),
+              );
+            },
+          ),
+          _buildBottomGap(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPriceContent() {
+    return SingleChildScrollView(
+      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 16),
+      child: Column(
+        children: [
+          Row(children: [Expanded(child: _buildPriceHistoryTable())]),
+          SizedBox(height: 20),
+          ListView.builder(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            itemCount: 20,
+            itemBuilder: (context, index) {
+              return Container(
+                height: 60,
+                margin: EdgeInsets.symmetric(vertical: 5),
+                decoration: BoxDecoration(
+                  color: Colors.blue[50],
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.grey[300]!),
+                ),
+                child: Center(
+                  child: Text(
+                    '${index + 1}',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blue,
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+          _buildBottomGap(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRelatedContent() {
+    return SingleChildScrollView(
+      padding: EdgeInsets.all(16),
+      child: Column(
+        children: [
+          Center(child: Text('相关产品内容')),
+
+          // Add bottom gap
+          _buildBottomGap(),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
         if (_enlargedImageUrl != null) {
@@ -306,10 +453,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         backgroundColor: Colors.white,
         appBar: AppBar(
           backgroundColor: Colors.white,
-          elevation: 0, // 禁用阴影
-          scrolledUnderElevation: 0, // 关键！禁止滚动时 elevation 变化
-          surfaceTintColor: Colors.transparent, // 禁用 Material 3 的 tint 效果
-          leadingWidth: _showTitle ? 56 : 100,
+          elevation: 0,
+          scrolledUnderElevation: 0,
+          surfaceTintColor: Colors.transparent,
+          leadingWidth: 100,
           leading: Row(
             children: [
               const SizedBox(width: 10),
@@ -325,8 +472,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   ),
                 ),
               ),
-              if (!_showTitle) const SizedBox(width: 10),
-              if (!_showTitle)
+              SizedBox(width: _isScrolled ? 5 : 10),
+              if (!_isScrolled)
                 Material(
                   color: Colors.transparent,
                   borderRadius: BorderRadius.circular(24),
@@ -367,15 +514,20 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     ),
                   ),
                 ),
+              AnimatedOpacity(
+                opacity: _isScrolled ? 1.0 : 0.0,
+                duration: const Duration(milliseconds: 200),
+                child: Align(
+                  alignment: Alignment.centerLeft, // 左对齐
+                  child: Text(
+                    _isScrolled
+                        ? widget.product.name[0]
+                        : widget.product.name[0],
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
             ],
-          ),
-          title: AnimatedOpacity(
-            opacity: _showTitle ? 1.0 : 0.0,
-            duration: Duration(milliseconds: 200),
-            child: Transform.translate(
-              offset: Offset(0, _showTitle ? 0 : 10),
-              child: Text(widget.product.name[0]),
-            ),
           ),
           actions: [
             Material(
@@ -432,291 +584,149 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 )
                 : _isLoading
                 ? const Center(child: CircularProgressIndicator())
-                : Stack(
-                  children: [
-                    // 主内容区域
-                    SingleChildScrollView(
-                      controller: _scrollController,
-                      child: Column(
-                        children: [
-                          // 产品名称
-                          Container(
-                            width: MediaQuery.of(context).size.width * 0.9,
-                            padding: const EdgeInsets.all(10),
-                            margin: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 5,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.blue[50],
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: SelectableText(
-                              '【${widget.product.name[0]}】',
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.blue,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                          // 左右容器
-                          Container(
-                            color: Colors.transparent,
-                            width: MediaQuery.of(context).size.width * 0.9,
-                            child: Row(
-                              children: [
-                                // 左边容器 - 英文名称
-                                Expanded(
-                                  child: Container(
-                                    height: 120,
-                                    padding: const EdgeInsets.all(10),
-                                    margin: const EdgeInsets.symmetric(
-                                      vertical: 5,
-                                    ).copyWith(left: 0, right: 5),
-                                    decoration: BoxDecoration(
-                                      color: Colors.blue[50],
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        const SelectableText(
-                                          '英文名称',
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.blue,
-                                          ),
-                                        ),
-                                        const Spacer(),
-                                        SelectableText(
-                                          widget.product.name.length > 1
-                                              ? widget.product.name[1]
-                                              : '暂无',
-                                          style: const TextStyle(fontSize: 14),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                // 右边容器 - 搜索路径
-                                Expanded(
-                                  child: Container(
-                                    padding: const EdgeInsets.all(10),
-                                    margin: const EdgeInsets.symmetric(
-                                      vertical: 5,
-                                    ).copyWith(left: 5, right: 0),
-                                    height: 120,
-                                    decoration: BoxDecoration(
-                                      color: Colors.blue[50],
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        const SelectableText(
-                                          '搜索路径',
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.blue,
-                                          ),
-                                        ),
-                                        const Spacer(),
-                                        SelectableText(
-                                          '$fieldPath>>$categoryPath',
-                                          style: const TextStyle(fontSize: 14),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          // 其它名称
-                          if (widget.product.name.length > 2)
-                            Container(
-                              width: MediaQuery.of(context).size.width * 0.9,
-                              padding: const EdgeInsets.all(10),
-                              margin: const EdgeInsets.symmetric(
-                                horizontal: 0,
-                              ).copyWith(top: 5, bottom: 5),
-                              decoration: BoxDecoration(
-                                color: Colors.blue[50],
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: SelectableText(
-                                '其它名称: ${widget.product.name.sublist(2).join(', ')}',
-                                style: const TextStyle(fontSize: 14),
+                : NestedScrollView(
+                  controller: _scrollController,
+                  headerSliverBuilder: (
+                    BuildContext context,
+                    bool innerBoxIsScrolled,
+                  ) {
+                    return <Widget>[
+                      SliverAppBar(
+                        expandedHeight: 60.0,
+                        pinned: false,
+                        flexibleSpace: Stack(
+                          children: [
+                            // 背景图片
+                            Positioned.fill(
+                              child: Image.network(
+                                'http://img.tukuppt.com/photo-small/19/94/23/706589110a5f2073682.jpg',
+                                fit: BoxFit.cover,
                               ),
                             ),
-                          // 提示文字 - 向上滑动查看详情
-                          Container(
-                            margin: EdgeInsets.only(top: 20, bottom: 10),
-                            child: Text(
-                              '↑ 向上滑动查看详情',
-                              style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 14,
-                              ),
-                            ),
-                          ),
-
-                          // 介绍文本
-                          Center(
-                            child: Markdown(
-                              data: markdownContent,
-                              shrinkWrap: true,
-                              selectable: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              padding: const EdgeInsets.fromLTRB(10, 5, 10, 15),
-                              imageBuilder: (uri, title, alt) {
-                                return GestureDetector(
-                                  onTap: () => _enlargeImage(uri.toString()),
-                                  child: Center(
-                                    child: CachedNetworkImage(
-                                      imageUrl: uri.toString(),
-                                      placeholder:
-                                          (context, url) => Container(
-                                            color: Colors.grey[300],
-                                            width: 100,
-                                            height: 100,
-                                            child: const Icon(
-                                              Icons.image,
-                                              color: Colors.grey,
-                                            ),
-                                          ),
-                                      errorWidget:
-                                          (context, url, error) => Container(
-                                            color: Colors.grey[300],
-                                            width: 100,
-                                            height: 100,
-                                            child: const Icon(
-                                              Icons.broken_image,
-                                              color: Colors.grey,
-                                            ),
-                                          ),
-                                      width:
-                                          MediaQuery.of(context).size.width *
-                                          0.6,
-                                      fit: BoxFit.scaleDown,
+                            // 标题
+                            Positioned(
+                              bottom: 16,
+                              left: 0,
+                              right: 0,
+                              child: Center(
+                                child: ClipRect(
+                                  child: BackdropFilter(
+                                    filter: ImageFilter.blur(
+                                      sigmaX: 5,
+                                      sigmaY: 5,
                                     ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                          // 留出空间给抽屉
-                          SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.4,
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    // 可拖动抽屉
-                    DraggableScrollableSheet(
-                      controller: _sheetController,
-                      initialChildSize: 0.3,
-                      minChildSize: 0.3,
-                      maxChildSize: 1.0,
-                      snap: true,
-                      snapSizes: [0.3, 0.7, 1.0],
-                      builder: (
-                        BuildContext context,
-                        ScrollController scrollController,
-                      ) {
-                        //使用 GestureDetector 包裹整个 Column
-                        return GestureDetector(
-                          behavior: HitTestBehavior.opaque, // 确保手势能穿透
-                          onVerticalDragUpdate: (details) {
-                            // 手动控制拖拽逻辑（可选）
-                            _sheetController.jumpTo(
-                              _sheetController.size -
-                                  details.primaryDelta! /
-                                      MediaQuery.of(context).size.height,
-                            );
-                          },
-                          child: Material(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.vertical(
-                              top: Radius.circular(20),
-                            ),
-                            elevation: 8,
-                            child: Column(
-                              children: [
-                                Container(
-                                  height: 6,
-                                  width: 40,
-                                  margin: EdgeInsets.symmetric(vertical: 12),
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey[300],
-                                    borderRadius: BorderRadius.circular(3),
-                                  ),
-                                ),
-                                _buildDragHead(), // 替换为新的组合组件
-                                Expanded(
-                                  child: CustomScrollView(
-                                    controller: scrollController,
-                                    slivers: [
-                                      SliverPadding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                          10,
-                                          5,
-                                          10,
-                                          15,
-                                        ),
-                                        sliver: SliverList(
-                                          delegate: SliverChildBuilderDelegate(
-                                            (context, index) {
-                                              // 创建1-20的数字盒子
-                                              return Container(
-                                                height: 60,
-                                                margin: EdgeInsets.symmetric(
-                                                  vertical: 5,
-                                                ),
-                                                decoration: BoxDecoration(
-                                                  color: Colors.blue[50],
-                                                  borderRadius:
-                                                      BorderRadius.circular(8),
-                                                  border: Border.all(
-                                                    color: Colors.grey[300]!,
-                                                  ),
-                                                ),
-                                                child: Center(
-                                                  child: Text(
-                                                    '${index + 1}',
-                                                    style: TextStyle(
-                                                      fontSize: 24,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Colors.blue,
-                                                    ),
-                                                  ),
-                                                ),
-                                              );
-                                            },
-                                            childCount: 20, // 生成20个盒子
-                                          ),
+                                    child: Container(
+                                      color: Colors.yellow.withOpacity(0.5),
+                                      padding: EdgeInsets.symmetric(
+                                        vertical: 4,
+                                      ),
+                                      child: Text(
+                                        widget.product.name[0],
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold,
                                         ),
                                       ),
-                                    ],
+                                    ),
                                   ),
                                 ),
-                              ],
+                              ),
                             ),
+                          ],
+                        ),
+                      ),
+                      SliverPersistentHeader(
+                        pinned: true,
+                        delegate: _StickyTabBarDelegate(
+                          child: TabBar(
+                            labelColor: Colors.black,
+                            controller: _tabController,
+                            tabs:
+                                _tabs
+                                    .map((String name) => Tab(text: name))
+                                    .toList(),
                           ),
-                        );
-                      },
-                    ),
-                  ],
+                        ),
+                      ),
+                    ];
+                  },
+                  body: TabBarView(
+                    controller: _tabController,
+                    children: [
+                      _buildDetailContent(),
+                      _buildPriceContent(),
+                      _buildRelatedContent(),
+                    ],
+                  ),
                 ),
+        floatingActionButton: Stack(
+          children: [
+            Positioned(
+              right: 10, // 水平偏移量（根据需求调整）
+              bottom: 16, // 垂直偏移量（根据需求调整）
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(100),
+                  onTap: _toggleFavorite,
+                  child: Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.9),
+                      borderRadius: BorderRadius.circular(100),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.3),
+                          spreadRadius: 2,
+                          blurRadius: 6,
+                          offset: const Offset(0, 3),
+                        ),
+                      ],
+                    ),
+                    child: Center(
+                      child: Icon(
+                        _isFavorited
+                            ? Icons.star_rounded
+                            : Icons.star_outline_rounded,
+                        color: _isFavorited ? kBilibiliPink : Colors.grey[300],
+                        size: 30, // 适当缩小图标以适配小尺寸
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
+  }
+}
+
+class _StickyTabBarDelegate extends SliverPersistentHeaderDelegate {
+  final TabBar child;
+
+  _StickyTabBarDelegate({required this.child});
+
+  @override
+  Widget build(
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) {
+    return Container(color: Colors.white, child: child);
+  }
+
+  @override
+  double get maxExtent => child.preferredSize.height;
+
+  @override
+  double get minExtent => child.preferredSize.height;
+
+  @override
+  bool shouldRebuild(_StickyTabBarDelegate oldDelegate) {
+    return child != oldDelegate.child;
   }
 }
