@@ -238,7 +238,30 @@ class PriceTagContent extends StatelessWidget {
                 item['comment'] ?? ' ', //comment为空值时候有一个'空格'
                 style: TextStyle(fontSize: 14),
               ),
-              SelectableText('外部链接', style: TextStyle(fontSize: 14)),
+              if ((item['outerLink'] as List<dynamic>? ?? []).isNotEmpty)
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 8),
+                    Text(
+                      '外部链接:',
+                      style: TextStyle(
+                        color: Colors.black87,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: 4), // 添加垂直间距
+                    ...(item['outerLink'] as List<dynamic>)
+                        .map(
+                          (link) => SelectableText(
+                            '🔑 ${link.toString()}', // 在这里添加🔑emoji
+                            style: TextStyle(fontSize: 14, color: Colors.blue),
+                          ),
+                        )
+                        .toList(),
+                  ],
+                ),
             ],
           ),
         );
@@ -267,7 +290,7 @@ Future<List<Map<String, dynamic>>> quotedPrice() async {
       "unit": "斤",
       "place": {"country": "中国", "province": "广东", "city": "深圳福田区"},
       "comment": "本店隐藏款已上线！加班时靠它续命，朋友聚会靠它救场",
-      "outerLink": ["https"],
+      "outerLink": ["https1", "https2"],
       "detail": "点击查看详情",
     },
     {
@@ -278,7 +301,7 @@ Future<List<Map<String, dynamic>>> quotedPrice() async {
       "place": {"country": "美国", "province": "加州", "city": "洛杉矶"},
       "comment":
           "当我第一次用它打王者，队友问：你是蓝方还是红方？我说：我是电量方！⚡因为它掉电真的很快，但我又不得不下载五杀战绩海报发朋友圈✨。建议它的壁纸直接做成‘充电中’——这才是永恒的真谛🔋。",
-      "outerLink": ["https"],
+      "outerLink": ["https1", "https2"],
       "detail": "点击查看详情",
     },
     {
@@ -288,7 +311,7 @@ Future<List<Map<String, dynamic>>> quotedPrice() async {
       "unit": "斤",
       "place": {"country": "日本", "province": "", "city": "東京都千代田区"},
       "comment": "本想躺赢，结果躺进ICU——别问我怎么知道的（别点链接🤮）",
-      "outerLink": ["https"],
+      "outerLink": ["https1", "https2"],
       "detail": "点击查看详情",
     },
     {
@@ -298,7 +321,7 @@ Future<List<Map<String, dynamic>>> quotedPrice() async {
       "unit": "斤",
       "place": {"country": "英国", "province": "", "city": "伦敦"},
       "comment": "外酥里嫩？不，是外焦里硬💀",
-      "outerLink": ["https"],
+      "outerLink": [],
       "detail": "点击查看详情",
     },
     {
@@ -308,7 +331,7 @@ Future<List<Map<String, dynamic>>> quotedPrice() async {
       "unit": "斤",
       "place": {"country": "国家", "province": "省/州", "city": ""},
       "comment": "警告！去过这里的人，回来都偷偷存私房钱了",
-      "outerLink": ["https"],
+      "outerLink": ["https1", "https2"],
       "detail": "点击查看详情",
     },
   ];
