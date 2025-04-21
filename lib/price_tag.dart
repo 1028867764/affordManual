@@ -250,13 +250,13 @@ class PriceTagContent extends StatelessWidget {
                 item['comment'] ?? ' ', //comment为空值时候有一个'空格'
                 style: TextStyle(fontSize: 14),
               ),
-              if ((item['outerLink'] as List<dynamic>? ?? []).isNotEmpty)
+              if ((item['qqChannelLink'] as List<dynamic>? ?? []).isNotEmpty)
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(height: 8),
                     Text(
-                      '外部链接:',
+                      '腾讯频道帖子:',
                       style: TextStyle(
                         color: Colors.black87,
                         fontSize: 12,
@@ -264,7 +264,7 @@ class PriceTagContent extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 4), // 添加垂直间距
-                    ...(item['outerLink'] as List<dynamic>)
+                    ...(item['qqChannelLink'] as List<dynamic>)
                         .map(
                           (link) => SelectableText(
                             '🔑 ${link.toString()}', // 在这里添加🔑emoji
@@ -303,54 +303,69 @@ class PriceTagContent extends StatelessWidget {
 Future<List<Map<String, dynamic>>> quotedPrice() async {
   final mockData = [
     {
+      "userId": "",
       "time": "2023-01-01",
       "price": "12.50",
       "currency": "dollar",
       "unit": "斤",
+      "isFirstHand": true,
       "place": {"country": "中国", "province": "广东", "city": "深圳市福田区"},
       "comment": "本店隐藏款已上线！加班时靠它续命，朋友聚会靠它救场",
-      "outerLink": ["https1", "https2"],
+      "qqChannelLink": ["https1", "https2"],
+      "douyinLink": ["https1", "https2"],
       "detail": "点击查看详情",
     },
     {
+      "userId": "",
       "time": "2023-02-15",
       "price": "13.20",
       "currency": "rmb",
       "unit": "吨",
+      "isFirstHand": true,
       "place": {"country": "美国", "province": "加州", "city": "洛杉矶"},
       "comment":
           "当我第一次用它打王者，队友问：你是蓝方还是红方？我说：我是电量方！⚡因为它掉电真的很快，但我又不得不下载五杀战绩海报发朋友圈✨。建议它的壁纸直接做成‘充电中’——这才是永恒的真谛🔋。",
-      "outerLink": ["https1", "https2"],
+      "qqChannelLink": ["https1", "https2"],
+      "douyinLink": ["https1", "https2"],
       "detail": "点击查看详情",
     },
     {
+      "userId": "",
       "time": "2023-03-30",
       "price": "11.80",
       "currency": "rmb",
       "unit": "斤",
+      "isFirstHand": true,
       "place": {"country": "日本", "province": "", "city": "東京都千代田区"},
       "comment": "本想躺赢，结果躺进ICU——别问我怎么知道的（别点链接🤮）",
-      "outerLink": ["https1", "https2"],
+      "qqChannelLink": ["https1", "https2"],
+      "douyinLink": ["https1", "https2"],
       "detail": "点击查看详情",
     },
     {
+      "userId": "",
       "time": "2023-05-10",
       "price": "9.80",
       "currency": "rmb",
       "unit": "斤",
+      "isFirstHand": true,
       "place": {"country": "英国", "province": "", "city": "伦敦"},
       "comment": "外酥里嫩？不，是外焦里硬💀",
-      "outerLink": [],
+      "qqChannelLink": [],
+      "douyinLink": ["https1", "https2"],
       "detail": "点击查看详情",
     },
     {
+      "userId": "",
       "time": "2023-06-05",
       "price": "15.25",
       "currency": "rmb",
       "unit": "斤",
+      "isFirstHand": true,
       "place": {"country": "国家", "province": "省/州", "city": ""},
       "comment": "警告！去过这里的人，回来都偷偷存私房钱了",
-      "outerLink": ["https1", "https2"],
+      "qqChannelLink": ["https1", "https2"],
+      "douyinLink": ["https1", "https2"],
       "detail": "点击查看详情",
     },
   ];
