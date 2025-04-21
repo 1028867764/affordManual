@@ -1,5 +1,51 @@
 import 'package:flutter/material.dart';
 
+// 新增：价格文本组件
+class PriceText extends StatelessWidget {
+  final String price;
+  final double bigSize;
+  final double smallSize;
+  final Color color;
+
+  const PriceText({
+    super.key,
+    required this.price,
+    required this.bigSize,
+    required this.smallSize,
+    this.color = Colors.blue,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final parts = price.split('.');
+    final beforeDecimal = parts[0];
+    final afterDecimal = parts.length > 1 ? '.${parts[1]}' : '';
+
+    return RichText(
+      text: TextSpan(
+        children: [
+          TextSpan(
+            text: beforeDecimal,
+            style: TextStyle(
+              fontSize: bigSize,
+              color: color,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          TextSpan(
+            text: afterDecimal,
+            style: TextStyle(
+              fontSize: smallSize,
+              color: color,
+              fontWeight: FontWeight.normal,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class PriceTagContent extends StatelessWidget {
   final List<Map<String, dynamic>> priceHistory;
   final Widget bottomGap;
@@ -9,68 +55,194 @@ class PriceTagContent extends StatelessWidget {
     super.key,
     required this.priceHistory,
     required this.bottomGap,
-    required this.productId,
+    required this.productId, //项目的id已从这里传入
   });
+  String _buildLocationDescription(Map<String, dynamic> item) {
+    final place = item['place'] as Map<String, dynamic>? ?? {};
+    final country = place['country']?.toString();
+    final province = place['province']?.toString();
 
-  Widget _buildPriceHistoryTable(BuildContext context) {
-    final latestData =
-        (priceHistory.toList()..sort((a, b) => b['time'].compareTo(a['time'])))
-            .take(2)
-            .toList();
+    if (country != null &&
+        country.isNotEmpty &&
+        province != null &&
+        province.isNotEmpty) {
+      return '$country·$province';
+    } else if (country != null && country.isNotEmpty) {
+      return country;
+    } else {
+      return '';
+    }
+  }
 
-    return Container(
-      width: MediaQuery.of(context).size.width * 0.9,
-      margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 5),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.blue.shade300),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(8),
-                topRight: Radius.circular(8),
-              ),
-            ),
-            child: const Center(
-              child: SelectableText(
-                '历史价格',
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.blue,
-                ),
-              ),
-            ),
+  // 工具函数：格式化时间
+  String formatDate(String? dateString) {
+    final dateTime = DateTime.tryParse(dateString ?? '');
+    if (dateTime != null) {
+      return '${dateTime.year}年\n${dateTime.month.toString().padLeft(2, '0')}/${dateTime.day.toString().padLeft(2, '0')}';
+    }
+    return '未知时间';
+  }
+
+  Widget _buildDynamicList() {
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: priceHistory.length,
+      itemBuilder: (context, index) {
+        final item = priceHistory[index];
+        final dateTime = DateTime.tryParse(item['time'] ?? '');
+        final locationDesc = _buildLocationDescription(item);
+
+        return Container(
+          padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
+          margin: const EdgeInsets.symmetric(vertical: 8),
+          decoration: BoxDecoration(
+            color: Colors.grey[100], // 背景色
+            borderRadius: BorderRadius.circular(8), // 圆角
+            border: Border.all(color: Colors.grey), // 边框
           ),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: DataTable(
-              dataRowHeight: 30,
-              headingRowHeight: 0,
-              columnSpacing: 20,
-              columns: const [
-                DataColumn(label: SizedBox.shrink()),
-                DataColumn(label: SizedBox.shrink()),
-              ],
-              rows:
-                  latestData.map((item) {
-                    return DataRow(
-                      cells: [
-                        DataCell(SelectableText(item['time'])),
-                        DataCell(SelectableText(item['price'])),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start, // 整体靠左
+            children: [
+              // 第一层
+              Row(
+                children: [
+                  //  中间的container内有Column（上下两个 Text）
+                  Container(
+                    padding: const EdgeInsets.all(8), // 内边距
+                    decoration: BoxDecoration(
+                      color: Colors.brown[100], // 浅棕色背景
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(10), // 左下圆角
+                        bottomRight: Radius.circular(10), // 右下圆角
+                      ),
+                      boxShadow: [
+                        // 添加阴影
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.7), // 阴影颜色
+                          offset: Offset(3, 0), // 向右偏移像素
+                          blurRadius: 1, // 模糊半径
+                          spreadRadius: 0, // 不扩展
+                        ),
                       ],
-                    );
-                  }).toList(),
-            ),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        if (dateTime != null)
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                '${dateTime.year}年',
+                                style: const TextStyle(
+                                  fontSize: 13,
+                                  color: Colors.black,
+                                ),
+                              ),
+                              Text(
+                                '${dateTime.month.toString().padLeft(2, '0')}/${dateTime.day.toString().padLeft(2, '0')}',
+                                style: const TextStyle(
+                                  fontSize: 13,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          )
+                        else
+                          Text(
+                            '未知时间',
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: Colors.grey,
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(width: 16),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Text(
+                            item['currency'] == 'rmb'
+                                ? '¥'
+                                : item['currency'] == 'dollar'
+                                ? '\$'
+                                : '未知币种',
+                            style: const TextStyle(
+                              fontSize: 14,
+                              color: Colors.blue,
+                            ),
+                          ),
+                          PriceText(
+                            price: item['price'] ?? '未知价格',
+                            bigSize: 28,
+                            smallSize: 12,
+                          ),
+                          Text(
+                            '/',
+                            style: const TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.normal,
+                              color: Colors.black,
+                            ),
+                          ),
+                          Text(
+                            item['unit'] ?? '未知单位',
+                            style: const TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.normal,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Text(
+                        "下排文字",
+                        style: TextStyle(fontSize: 12, color: Colors.grey),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+
+              SizedBox(height: 8), // 层间距
+              // 第二层：左边一个 Text，右边一个 Text
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween, // 左右分开
+                children: [
+                  Text(
+                    (item['place']?['city']?.toString().isNotEmpty ?? false)
+                        ? item['place']!['city'].toString()
+                        : '未知城市',
+                    style: TextStyle(
+                      color: Colors.black87,
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+
+                  if (locationDesc.isNotEmpty)
+                    Text(locationDesc, style: TextStyle(fontSize: 12)),
+                ],
+              ),
+
+              SizedBox(height: 8), // 层间距
+              // 第三层：一个靠左的 Text
+              SelectableText(
+                item['comment'] ?? ' ', //comment为空值时候有一个'空格'
+                style: TextStyle(fontSize: 14),
+              ),
+              SelectableText('外部链接', style: TextStyle(fontSize: 14)),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 
@@ -79,48 +251,67 @@ class PriceTagContent extends StatelessWidget {
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 16),
       child: Column(
-        children: [
-          Row(children: [Expanded(child: _buildPriceHistoryTable(context))]),
-          const SizedBox(height: 20),
-          ListView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: 20,
-            itemBuilder: (context, index) {
-              return Container(
-                height: 60,
-                margin: const EdgeInsets.symmetric(vertical: 5),
-                decoration: BoxDecoration(
-                  color: Colors.blue[50],
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.grey[300]!),
-                ),
-                child: Center(
-                  child: Text(
-                    '$productId${index + 1}',
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blue,
-                    ),
-                  ),
-                ),
-              );
-            },
-          ),
-          bottomGap,
-        ],
+        children: [const SizedBox(height: 20), _buildDynamicList(), bottomGap],
       ),
     );
   }
 }
 
+// 模拟数据函数
 Future<List<Map<String, dynamic>>> quotedPrice() async {
   final mockData = [
-    {"time": "2023-01-01", "price": "¥12.50", "detail": "点击查看详情"},
-    {"time": "2023-02-15", "price": "¥13.20", "detail": "点击查看详情"},
-    {"time": "2023-03-30", "price": "¥11.80", "detail": "点击查看详情"},
-    {"time": "2023-05-10", "price": "¥14.00", "detail": "点击查看详情"},
+    {
+      "time": "2023-01-01",
+      "price": "12.50",
+      "currency": "dollar",
+      "unit": "斤",
+      "place": {"country": "中国", "province": "广东", "city": "深圳福田区"},
+      "comment": "本店隐藏款已上线！加班时靠它续命，朋友聚会靠它救场",
+      "outerLink": ["https"],
+      "detail": "点击查看详情",
+    },
+    {
+      "time": "2023-02-15",
+      "price": "13.20",
+      "currency": "rmb",
+      "unit": "吨",
+      "place": {"country": "美国", "province": "加州", "city": "洛杉矶"},
+      "comment":
+          "当我第一次用它打王者，队友问：你是蓝方还是红方？我说：我是电量方！⚡因为它掉电真的很快，但我又不得不下载五杀战绩海报发朋友圈✨。建议它的壁纸直接做成‘充电中’——这才是永恒的真谛🔋。",
+      "outerLink": ["https"],
+      "detail": "点击查看详情",
+    },
+    {
+      "time": "2023-03-30",
+      "price": "11.80",
+      "currency": "rmb",
+      "unit": "斤",
+      "place": {"country": "日本", "province": "", "city": "東京都千代田区"},
+      "comment": "本想躺赢，结果躺进ICU——别问我怎么知道的（别点链接🤮）",
+      "outerLink": ["https"],
+      "detail": "点击查看详情",
+    },
+    {
+      "time": "2023-05-10",
+      "price": "9.80",
+      "currency": "rmb",
+      "unit": "斤",
+      "place": {"country": "英国", "province": "", "city": "伦敦"},
+      "comment": "外酥里嫩？不，是外焦里硬💀",
+      "outerLink": ["https"],
+      "detail": "点击查看详情",
+    },
+    {
+      "time": "2023-06-05",
+      "price": "15.25",
+      "currency": "rmb",
+      "unit": "斤",
+      "place": {"country": "国家", "province": "省/州", "city": ""},
+      "comment": "警告！去过这里的人，回来都偷偷存私房钱了",
+      "outerLink": ["https"],
+      "detail": "点击查看详情",
+    },
   ];
+
   return mockData;
 }
