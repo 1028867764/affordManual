@@ -97,7 +97,7 @@ class PriceTagContent extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
           margin: const EdgeInsets.symmetric(vertical: 8),
           decoration: BoxDecoration(
-            color: Colors.grey[100], // 背景色
+            color: Colors.white, // 背景色
             borderRadius: BorderRadius.circular(8), // 圆角
             border: Border.all(color: Colors.grey), // 边框
           ),
@@ -111,7 +111,14 @@ class PriceTagContent extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(8), // 内边距
                     decoration: BoxDecoration(
-                      color: Colors.brown[100], // 浅棕色背景
+                      gradient: LinearGradient(
+                        colors: [
+                          Colors.orange.withOpacity(0.5),
+                          Colors.amber.withOpacity(0.4),
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
                       borderRadius: BorderRadius.only(
                         bottomLeft: Radius.circular(10), // 左下圆角
                         bottomRight: Radius.circular(10), // 右下圆角
@@ -216,15 +223,20 @@ class PriceTagContent extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween, // 左右分开
                 children: [
-                  Text(
-                    (item['place']?['city']?.toString().isNotEmpty ?? false)
-                        ? item['place']!['city'].toString()
-                        : '未知城市',
-                    style: TextStyle(
-                      color: Colors.black87,
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  Row(
+                    children: [
+                      Text('🏠', style: TextStyle(fontSize: 12)),
+                      Text(
+                        (item['place']?['city']?.toString().isNotEmpty ?? false)
+                            ? item['place']!['city'].toString()
+                            : '未知城市',
+                        style: TextStyle(
+                          color: Colors.black87,
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   ),
 
                   if (locationDesc.isNotEmpty)
@@ -272,9 +284,16 @@ class PriceTagContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 16),
-      child: Column(
-        children: [const SizedBox(height: 20), _buildDynamicList(), bottomGap],
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 16),
+        color: Colors.grey[100], // 设置背景色为浅灰色
+        child: Column(
+          children: [
+            const SizedBox(height: 20),
+            _buildDynamicList(),
+            bottomGap,
+          ],
+        ),
       ),
     );
   }
@@ -288,7 +307,7 @@ Future<List<Map<String, dynamic>>> quotedPrice() async {
       "price": "12.50",
       "currency": "dollar",
       "unit": "斤",
-      "place": {"country": "中国", "province": "广东", "city": "深圳福田区"},
+      "place": {"country": "中国", "province": "广东", "city": "深圳市福田区"},
       "comment": "本店隐藏款已上线！加班时靠它续命，朋友聚会靠它救场",
       "outerLink": ["https1", "https2"],
       "detail": "点击查看详情",

@@ -13,6 +13,8 @@ import 'search_page.dart';
 import 'dart:ui';
 import 'price_tag.dart';
 
+const Color xianyuBlue = Color(0xFF00E5FF); // 闲鱼科技蓝
+
 class ProductDetailScreen extends StatefulWidget {
   final dynamic product;
 
@@ -136,15 +138,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
   }
 
   Widget _buildBottomGap() {
-    return SizedBox(
-      height: 100,
-      child: Container(
-        color: Colors.white,
-        child: const Center(
-          child: Text('', style: TextStyle(color: Colors.white)),
-        ),
-      ),
-    );
+    return SizedBox(height: 100);
   }
 
   Widget _buildDetailContent() {
@@ -199,7 +193,14 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                       vertical: 5,
                     ).copyWith(left: 0, right: 5),
                     decoration: BoxDecoration(
-                      color: Colors.blue[50],
+                      gradient: LinearGradient(
+                        colors: [
+                          xianyuBlue.withOpacity(0.2),
+                          xianyuBlue.withOpacity(0.2),
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Column(
@@ -233,7 +234,14 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                     ).copyWith(left: 5, right: 0),
                     height: 120,
                     decoration: BoxDecoration(
-                      color: Colors.blue[50],
+                      gradient: LinearGradient(
+                        colors: [
+                          xianyuBlue.withOpacity(0.2),
+                          xianyuBlue.withOpacity(0.2),
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Column(
@@ -268,7 +276,14 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                 horizontal: 0,
               ).copyWith(top: 5, bottom: 5),
               decoration: BoxDecoration(
-                color: Colors.blue[50],
+                gradient: LinearGradient(
+                  colors: [
+                    xianyuBlue.withOpacity(0.2),
+                    xianyuBlue.withOpacity(0.2),
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: SelectableText(
