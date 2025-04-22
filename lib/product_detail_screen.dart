@@ -12,6 +12,7 @@ import 'main.dart';
 import 'search_page.dart';
 import 'dart:ui';
 import 'price_tag.dart';
+import 'price_calendar.dart';
 
 const Color xianyuBlue = Color(0xFF00E5FF); // 闲鱼科技蓝
 
@@ -32,7 +33,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
   bool _isFavorited = false;
   late final String _favoriteKey;
   late TabController _tabController;
-  final List<String> _tabs = ['介绍', '报价', '讨论'];
+  final List<String> _tabs = ['介绍', '报价', '记账'];
   final ScrollController _scrollController = ScrollController();
   bool _isScrolled = false; // 是否滚动超过 50px
   bool _showBackToTop = false;
@@ -156,7 +157,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
   }
 
   Widget _buildBottomGap() {
-    return SizedBox(height: 100);
+    return SizedBox(height: 120);
   }
 
   Widget _buildDetailContent() {
@@ -374,17 +375,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
     );
   }
 
-  Widget _buildRelatedContent() {
-    return SingleChildScrollView(
-      padding: EdgeInsets.all(16),
-      child: Column(
-        children: [
-          Center(child: Text('相关产品内容')),
-
-          // Add bottom gap
-          _buildBottomGap(),
-        ],
-      ),
+  Widget _buildCalendarContent() {
+    return PriceCalendar(
+      bottomGap: _buildBottomGap(),
+      productId: widget.product.id,
     );
   }
 
@@ -628,7 +622,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                     children: [
                       _buildDetailContent(),
                       _buildPriceContent(),
-                      _buildRelatedContent(),
+                      _buildCalendarContent(),
                     ],
                   ),
                 ),
