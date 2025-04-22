@@ -195,7 +195,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
-                          xianyuBlue.withOpacity(0.2),
+                          cyberpunkGreen.withOpacity(0.2),
                           xianyuBlue.withOpacity(0.2),
                         ],
                         begin: Alignment.topLeft,
@@ -204,7 +204,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         const SelectableText(
                           '英文名称',
@@ -219,7 +219,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                           widget.product.name.length > 1
                               ? widget.product.name[1]
                               : '暂无',
-                          style: const TextStyle(fontSize: 14),
+                          style: const TextStyle(fontSize: 12),
                         ),
                       ],
                     ),
@@ -236,7 +236,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
-                          xianyuBlue.withOpacity(0.2),
+                          cyberpunkGreen.withOpacity(0.2),
                           xianyuBlue.withOpacity(0.2),
                         ],
                         begin: Alignment.topLeft,
@@ -245,7 +245,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         const SelectableText(
                           '搜索路径',
@@ -258,7 +258,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                         const Spacer(),
                         SelectableText(
                           '$fieldPath>>$categoryPath',
-                          style: const TextStyle(fontSize: 14),
+                          style: const TextStyle(fontSize: 12),
                         ),
                       ],
                     ),
@@ -271,7 +271,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
           if (widget.product.name.length > 2)
             Container(
               width: MediaQuery.of(context).size.width * 0.9,
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.all(7),
               margin: const EdgeInsets.symmetric(
                 horizontal: 0,
               ).copyWith(top: 5, bottom: 5),
@@ -279,16 +279,30 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                 gradient: LinearGradient(
                   colors: [
                     xianyuBlue.withOpacity(0.2),
-                    xianyuBlue.withOpacity(0.2),
+                    cyberpunkGreen.withOpacity(0.2),
                   ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: SelectableText(
-                '其它名称: ${widget.product.name.sublist(2).join(', ')}',
-                style: const TextStyle(fontSize: 14),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SelectableText(
+                    '其它名称',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blue,
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  SelectableText(
+                    '${widget.product.name.sublist(2).join(', ')}',
+                    style: const TextStyle(fontSize: 12),
+                  ),
+                ],
               ),
             ),
           // 介绍文本

@@ -12,7 +12,7 @@ class PriceText extends StatelessWidget {
     required this.price,
     required this.bigSize,
     required this.smallSize,
-    this.color = Colors.blue,
+    this.color = Colors.red,
   });
 
   @override
@@ -92,6 +92,39 @@ class PriceTagContent extends StatelessWidget {
         final item = priceHistory[index];
         final dateTime = DateTime.tryParse(item['time'] ?? '');
         final locationDesc = _buildLocationDescription(item);
+        // 获取 isSecondHand 的值，默认为 null
+        bool? isSecondHand = item['isSecondHand'] as bool?;
+
+        Widget? priceTypeText;
+        if (isSecondHand == true) {
+          priceTypeText = SizedBox(
+            height: 40, // 设置固定高度
+            width: 40, // 设置固定宽度（因为是圆形图片）
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(100), // 圆角
+              ),
+              child: Image.asset(
+                'assets/images/second_hand.png',
+                fit: BoxFit.cover,
+              ),
+            ),
+          );
+        } else if (isSecondHand == false) {
+          priceTypeText = SizedBox(
+            height: 40, // 设置固定高度
+            width: 40, // 设置固定宽度（因为是圆形图片）
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(100), // 圆角
+              ),
+              child: Image.asset(
+                'assets/images/first_hand.png',
+                fit: BoxFit.cover,
+              ),
+            ),
+          );
+        }
 
         return Container(
           padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
@@ -106,115 +139,139 @@ class PriceTagContent extends StatelessWidget {
             children: [
               // 第一层
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween, // 左右分开
                 children: [
-                  //  中间的container内有Column（上下两个 Text）
-                  Container(
-                    padding: const EdgeInsets.all(8), // 内边距
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          Colors.orange.withOpacity(0.5),
-                          Colors.amber.withOpacity(0.4),
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                      borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(10), // 左下圆角
-                        bottomRight: Radius.circular(10), // 右下圆角
-                      ),
-                      boxShadow: [
-                        // 添加阴影
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.7), // 阴影颜色
-                          offset: Offset(3, 0), // 向右偏移像素
-                          blurRadius: 1, // 模糊半径
-                          spreadRadius: 0, // 不扩展
+                  Expanded(
+                    flex: 6,
+                    child: Row(
+                      children: [
+                        //  中间的container内有Column（上下两个 Text）
+                        Container(
+                          padding: const EdgeInsets.all(8), // 内边距
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [
+                                Colors.orange.withOpacity(0.5),
+                                Colors.amber.withOpacity(0.4),
+                              ],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                            borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(10), // 左下圆角
+                              bottomRight: Radius.circular(10), // 右下圆角
+                            ),
+                            boxShadow: [
+                              // 添加阴影
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.7), // 阴影颜色
+                                offset: Offset(3, 0), // 向右偏移像素
+                                blurRadius: 1, // 模糊半径
+                                spreadRadius: 0, // 不扩展
+                              ),
+                            ],
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              if (dateTime != null)
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      '${dateTime.year}年',
+                                      style: const TextStyle(
+                                        fontSize: 13,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    Text(
+                                      '${dateTime.month.toString().padLeft(2, '0')}/${dateTime.day.toString().padLeft(2, '0')}',
+                                      style: const TextStyle(
+                                        fontSize: 13,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              else
+                                Text(
+                                  '未知时间',
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(width: 16),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Text(
+                                  item['currency'] == 'rmb'
+                                      ? '¥'
+                                      : item['currency'] == 'dollar'
+                                      ? '\$'
+                                      : '未知币种',
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.red,
+                                  ),
+                                ),
+                                PriceText(
+                                  price: item['price'] ?? '未知价格',
+                                  bigSize: 28,
+                                  smallSize: 12,
+                                ),
+                                Text(
+                                  '/',
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.normal,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                                Text(
+                                  item['unit'] ?? '未知单位',
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.normal,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Text('🌏️', style: TextStyle(fontSize: 12)),
+                                Text(
+                                  (item['place']?['city']
+                                              ?.toString()
+                                              .isNotEmpty ??
+                                          false)
+                                      ? item['place']!['city'].toString()
+                                      : '未知城市',
+                                  style: TextStyle(
+                                    color: Colors.black87,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
                       ],
                     ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        if (dateTime != null)
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                '${dateTime.year}年',
-                                style: const TextStyle(
-                                  fontSize: 13,
-                                  color: Colors.black,
-                                ),
-                              ),
-                              Text(
-                                '${dateTime.month.toString().padLeft(2, '0')}/${dateTime.day.toString().padLeft(2, '0')}',
-                                style: const TextStyle(
-                                  fontSize: 13,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          )
-                        else
-                          Text(
-                            '未知时间',
-                            style: const TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey,
-                            ),
-                          ),
-                      ],
-                    ),
                   ),
-                  SizedBox(width: 16),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Text(
-                            item['currency'] == 'rmb'
-                                ? '¥'
-                                : item['currency'] == 'dollar'
-                                ? '\$'
-                                : '未知币种',
-                            style: const TextStyle(
-                              fontSize: 14,
-                              color: Colors.blue,
-                            ),
-                          ),
-                          PriceText(
-                            price: item['price'] ?? '未知价格',
-                            bigSize: 28,
-                            smallSize: 12,
-                          ),
-                          Text(
-                            '/',
-                            style: const TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.normal,
-                              color: Colors.black,
-                            ),
-                          ),
-                          Text(
-                            item['unit'] ?? '未知单位',
-                            style: const TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.normal,
-                              color: Colors.black,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Text(
-                        "下排文字",
-                        style: TextStyle(fontSize: 12, color: Colors.grey),
-                      ),
-                    ],
-                  ),
+                  // 根据 isSecondHand 的值显示不同的文本，如果 isSecondHand 不是 true 或 false，则不显示
+                  if (priceTypeText != null) priceTypeText,
                 ],
               ),
 
@@ -225,15 +282,15 @@ class PriceTagContent extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      Text('🏠', style: TextStyle(fontSize: 12)),
+                      Text('🐧', style: TextStyle(fontSize: 12)),
                       Text(
-                        (item['place']?['city']?.toString().isNotEmpty ?? false)
-                            ? item['place']!['city'].toString()
-                            : '未知城市',
+                        (item['userId']?.toString().isNotEmpty ?? false)
+                            ? item['userId'].toString()
+                            : '未知用户',
                         style: TextStyle(
                           color: Colors.black87,
                           fontSize: 12,
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.normal,
                         ),
                       ),
                     ],
@@ -267,7 +324,7 @@ class PriceTagContent extends StatelessWidget {
                     ...(item['qqChannelLink'] as List<dynamic>)
                         .map(
                           (link) => SelectableText(
-                            '🔑 ${link.toString()}', // 在这里添加🔑emoji
+                            '🗝️ ${link.toString()}', // 在这里添加🗝️emoji
                             style: TextStyle(fontSize: 14, color: Colors.blue),
                           ),
                         )
@@ -303,12 +360,12 @@ class PriceTagContent extends StatelessWidget {
 Future<List<Map<String, dynamic>>> quotedPrice() async {
   final mockData = [
     {
-      "userId": "",
+      "userId": "qq111",
       "time": "2023-01-01",
       "price": "12.50",
       "currency": "dollar",
       "unit": "斤",
-      "isFirstHand": true,
+      "isSecondHand": false,
       "place": {"country": "中国", "province": "广东", "city": "深圳市福田区"},
       "comment": "本店隐藏款已上线！加班时靠它续命，朋友聚会靠它救场",
       "qqChannelLink": ["https1", "https2"],
@@ -316,12 +373,12 @@ Future<List<Map<String, dynamic>>> quotedPrice() async {
       "detail": "点击查看详情",
     },
     {
-      "userId": "",
+      "userId": "douyin222",
       "time": "2023-02-15",
       "price": "13.20",
       "currency": "rmb",
       "unit": "吨",
-      "isFirstHand": true,
+      "isSecondHand": true,
       "place": {"country": "美国", "province": "加州", "city": "洛杉矶"},
       "comment":
           "当我第一次用它打王者，队友问：你是蓝方还是红方？我说：我是电量方！⚡因为它掉电真的很快，但我又不得不下载五杀战绩海报发朋友圈✨。建议它的壁纸直接做成‘充电中’——这才是永恒的真谛🔋。",
@@ -330,12 +387,12 @@ Future<List<Map<String, dynamic>>> quotedPrice() async {
       "detail": "点击查看详情",
     },
     {
-      "userId": "",
+      "userId": "douyin333",
       "time": "2023-03-30",
       "price": "11.80",
       "currency": "rmb",
       "unit": "斤",
-      "isFirstHand": true,
+      "isSecondHand": false,
       "place": {"country": "日本", "province": "", "city": "東京都千代田区"},
       "comment": "本想躺赢，结果躺进ICU——别问我怎么知道的（别点链接🤮）",
       "qqChannelLink": ["https1", "https2"],
@@ -348,7 +405,7 @@ Future<List<Map<String, dynamic>>> quotedPrice() async {
       "price": "9.80",
       "currency": "rmb",
       "unit": "斤",
-      "isFirstHand": true,
+      "isSecondHand": true,
       "place": {"country": "英国", "province": "", "city": "伦敦"},
       "comment": "外酥里嫩？不，是外焦里硬💀",
       "qqChannelLink": [],
@@ -356,12 +413,12 @@ Future<List<Map<String, dynamic>>> quotedPrice() async {
       "detail": "点击查看详情",
     },
     {
-      "userId": "",
+      "userId": "wechat555",
       "time": "2023-06-05",
       "price": "15.25",
       "currency": "rmb",
       "unit": "斤",
-      "isFirstHand": true,
+      "isSecondHand": null,
       "place": {"country": "国家", "province": "省/州", "city": ""},
       "comment": "警告！去过这里的人，回来都偷偷存私房钱了",
       "qqChannelLink": ["https1", "https2"],
