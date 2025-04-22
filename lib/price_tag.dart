@@ -1,6 +1,89 @@
 import 'package:flutter/material.dart';
 
-// 新增：价格文本组件
+// 排序类型枚举
+enum SortType { newest, lowestPrice, highestPrice }
+
+// 新增：排序选择器组件
+class SortSelector extends StatefulWidget {
+  final ValueChanged<SortType> onSortChanged;
+
+  const SortSelector({super.key, required this.onSortChanged});
+
+  @override
+  State<SortSelector> createState() => _SortSelectorState();
+}
+
+class _SortSelectorState extends State<SortSelector> {
+  SortType _currentSort = SortType.newest;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 8.0),
+            child: Text('排序规则', style: TextStyle(fontSize: 12)),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.1),
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: Colors.grey, // 设置边界线颜色为灰色
+                width: 1.0,
+              ),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: IntrinsicWidth(
+              // 关键点：让Container的宽度跟随内容
+              child: Row(
+                mainAxisSize: MainAxisSize.min, // 关键点：让Row不占用所有宽度
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  _buildSortButton('最新', SortType.newest),
+                  _buildSortButton('最低', SortType.lowestPrice),
+                  _buildSortButton('最高', SortType.highestPrice),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSortButton(String text, SortType sortType) {
+    final isSelected = _currentSort == sortType;
+
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _currentSort = sortType;
+        });
+        widget.onSortChanged(sortType);
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 2),
+        decoration: BoxDecoration(
+          color: isSelected ? Colors.blue : Colors.transparent,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Text(
+          text,
+          style: TextStyle(
+            color: isSelected ? Colors.white : Colors.black,
+            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+            fontSize: 10,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// 价格文本组件
 class PriceText extends StatelessWidget {
   final String price;
   final double bigSize;
@@ -46,7 +129,7 @@ class PriceText extends StatelessWidget {
   }
 }
 
-class PriceTagContent extends StatelessWidget {
+class PriceTagContent extends StatefulWidget {
   final List<Map<String, dynamic>> priceHistory;
   final Widget bottomGap;
   final String? productId;
@@ -55,8 +138,66 @@ class PriceTagContent extends StatelessWidget {
     super.key,
     required this.priceHistory,
     required this.bottomGap,
-    required this.productId, //项目的id已从这里传入
+    required this.productId,
   });
+
+  @override
+  State<PriceTagContent> createState() => _PriceTagContentState();
+}
+
+class _PriceTagContentState extends State<PriceTagContent> {
+  late List<Map<String, dynamic>> _sortedPriceHistory;
+  SortType _currentSort = SortType.newest;
+
+  @override
+  void initState() {
+    super.initState();
+    _sortedPriceHistory = _sortPriceHistory(widget.priceHistory, _currentSort);
+  }
+
+  @override
+  void didUpdateWidget(PriceTagContent oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.priceHistory != widget.priceHistory) {
+      _sortedPriceHistory = _sortPriceHistory(
+        widget.priceHistory,
+        _currentSort,
+      );
+    }
+  }
+
+  List<Map<String, dynamic>> _sortPriceHistory(
+    List<Map<String, dynamic>> history,
+    SortType sortType,
+  ) {
+    final List<Map<String, dynamic>> sortedList = List.from(history);
+
+    sortedList.sort((a, b) {
+      final aTime = DateTime.tryParse(a['time'] ?? '') ?? DateTime(0);
+      final bTime = DateTime.tryParse(b['time'] ?? '') ?? DateTime(0);
+      final aPrice = double.tryParse(a['price']?.toString() ?? '0') ?? 0;
+      final bPrice = double.tryParse(b['price']?.toString() ?? '0') ?? 0;
+
+      switch (sortType) {
+        case SortType.newest:
+          return bTime.compareTo(aTime); // 最新日期在前
+        case SortType.lowestPrice:
+          return aPrice.compareTo(bPrice); // 价格最低在前
+        case SortType.highestPrice:
+          return bPrice.compareTo(aPrice); // 价格最高在前
+      }
+    });
+
+    return sortedList;
+  }
+
+  void _handleSortChanged(SortType sortType) {
+    setState(() {
+      _currentSort = sortType;
+      _sortedPriceHistory = _sortPriceHistory(_sortedPriceHistory, sortType);
+    });
+  }
+
   String _buildLocationDescription(Map<String, dynamic> item) {
     final place = item['place'] as Map<String, dynamic>? ?? {};
     final country = place['country']?.toString();
@@ -74,7 +215,6 @@ class PriceTagContent extends StatelessWidget {
     }
   }
 
-  // 工具函数：格式化时间
   String formatDate(String? dateString) {
     final dateTime = DateTime.tryParse(dateString ?? '');
     if (dateTime != null) {
@@ -87,22 +227,21 @@ class PriceTagContent extends StatelessWidget {
     return ListView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      itemCount: priceHistory.length,
+      itemCount: _sortedPriceHistory.length,
       itemBuilder: (context, index) {
-        final item = priceHistory[index];
+        final item = _sortedPriceHistory[index];
         final dateTime = DateTime.tryParse(item['time'] ?? '');
         final locationDesc = _buildLocationDescription(item);
-        // 获取 isSecondHand 的值，默认为 null
         bool? isSecondHand = item['isSecondHand'] as bool?;
 
         Widget? priceTypeText;
         if (isSecondHand == true) {
           priceTypeText = SizedBox(
-            height: 40, // 设置固定高度
-            width: 40, // 设置固定宽度（因为是圆形图片）
+            height: 40,
+            width: 40,
             child: Container(
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(100), // 圆角
+                borderRadius: BorderRadius.circular(100),
               ),
               child: Image.asset(
                 'assets/images/second_hand.png',
@@ -112,11 +251,11 @@ class PriceTagContent extends StatelessWidget {
           );
         } else if (isSecondHand == false) {
           priceTypeText = SizedBox(
-            height: 40, // 设置固定高度
-            width: 40, // 设置固定宽度（因为是圆形图片）
+            height: 40,
+            width: 40,
             child: Container(
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(100), // 圆角
+                borderRadius: BorderRadius.circular(100),
               ),
               child: Image.asset(
                 'assets/images/first_hand.png',
@@ -130,24 +269,22 @@ class PriceTagContent extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
           margin: const EdgeInsets.symmetric(vertical: 8),
           decoration: BoxDecoration(
-            color: Colors.white, // 背景色
-            borderRadius: BorderRadius.circular(8), // 圆角
-            border: Border.all(color: Colors.grey), // 边框
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: Colors.grey),
           ),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start, // 整体靠左
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // 第一层
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween, // 左右分开
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(
                     flex: 6,
                     child: Row(
                       children: [
-                        //  中间的container内有Column（上下两个 Text）
                         Container(
-                          padding: const EdgeInsets.all(8), // 内边距
+                          padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
                               colors: [
@@ -158,16 +295,15 @@ class PriceTagContent extends StatelessWidget {
                               end: Alignment.bottomRight,
                             ),
                             borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(10), // 左下圆角
-                              bottomRight: Radius.circular(10), // 右下圆角
+                              bottomLeft: Radius.circular(10),
+                              bottomRight: Radius.circular(10),
                             ),
                             boxShadow: [
-                              // 添加阴影
                               BoxShadow(
-                                color: Colors.grey.withOpacity(0.7), // 阴影颜色
-                                offset: Offset(3, 0), // 向右偏移像素
-                                blurRadius: 1, // 模糊半径
-                                spreadRadius: 0, // 不扩展
+                                color: Colors.grey.withOpacity(0.7),
+                                offset: Offset(3, 0),
+                                blurRadius: 1,
+                                spreadRadius: 0,
                               ),
                             ],
                           ),
@@ -270,15 +406,13 @@ class PriceTagContent extends StatelessWidget {
                       ],
                     ),
                   ),
-                  // 根据 isSecondHand 的值显示不同的文本，如果 isSecondHand 不是 true 或 false，则不显示
                   if (priceTypeText != null) priceTypeText,
                 ],
               ),
 
-              SizedBox(height: 8), // 层间距
-              // 第二层：左边一个 Text，右边一个 Text
+              SizedBox(height: 8),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween, // 左右分开
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Row(
                     children: [
@@ -301,17 +435,16 @@ class PriceTagContent extends StatelessWidget {
                 ],
               ),
 
-              SizedBox(height: 8), // 层间距
-              // 第三层：一个靠左的 Text
+              SizedBox(height: 12),
               SelectableText(
-                item['comment'] ?? ' ', //comment为空值时候有一个'空格'
+                item['comment'] ?? ' ',
                 style: TextStyle(fontSize: 14),
               ),
               if ((item['qqChannelLink'] as List<dynamic>? ?? []).isNotEmpty)
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(height: 8),
+                    SizedBox(height: 12),
                     Text(
                       '腾讯频道帖子:',
                       style: TextStyle(
@@ -320,11 +453,11 @@ class PriceTagContent extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: 4), // 添加垂直间距
+                    SizedBox(height: 4),
                     ...(item['qqChannelLink'] as List<dynamic>)
                         .map(
                           (link) => SelectableText(
-                            '🗝️ ${link.toString()}', // 在这里添加🗝️emoji
+                            '🗝️ ${link.toString()}',
                             style: TextStyle(fontSize: 14, color: Colors.blue),
                           ),
                         )
@@ -343,12 +476,13 @@ class PriceTagContent extends StatelessWidget {
     return SingleChildScrollView(
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 16),
-        color: Colors.grey[100], // 设置背景色为浅灰色
+        color: Colors.grey[100],
         child: Column(
           children: [
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
+            SortSelector(onSortChanged: _handleSortChanged),
             _buildDynamicList(),
-            bottomGap,
+            widget.bottomGap,
           ],
         ),
       ),
@@ -361,7 +495,7 @@ Future<List<Map<String, dynamic>>> quotedPrice() async {
   final mockData = [
     {
       "userId": "qq111",
-      "time": "2023-01-01",
+      "time": "2023-10-01",
       "price": "12.50",
       "currency": "dollar",
       "unit": "斤",
@@ -374,7 +508,7 @@ Future<List<Map<String, dynamic>>> quotedPrice() async {
     },
     {
       "userId": "douyin222",
-      "time": "2023-02-15",
+      "time": "2023-09-15",
       "price": "13.20",
       "currency": "rmb",
       "unit": "吨",
@@ -388,7 +522,7 @@ Future<List<Map<String, dynamic>>> quotedPrice() async {
     },
     {
       "userId": "douyin333",
-      "time": "2023-03-30",
+      "time": "2023-08-30",
       "price": "11.80",
       "currency": "rmb",
       "unit": "斤",
@@ -401,7 +535,7 @@ Future<List<Map<String, dynamic>>> quotedPrice() async {
     },
     {
       "userId": "",
-      "time": "2023-05-10",
+      "time": "2023-07-10",
       "price": "9.80",
       "currency": "rmb",
       "unit": "斤",

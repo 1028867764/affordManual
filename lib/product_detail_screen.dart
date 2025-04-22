@@ -35,6 +35,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
   final List<String> _tabs = ['介绍', '报价', '讨论'];
   final ScrollController _scrollController = ScrollController();
   bool _isScrolled = false; // 是否滚动超过 50px
+  bool _showBackToTop = false;
+  final double _backToTopThreshold = 129.9; // 显示返回顶部按钮的滚动阈值
 
   void _handleScroll() {
     // 检查是否滚动超过 50 像素
@@ -44,6 +46,22 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
         _isScrolled = isScrolled;
       });
     }
+    // 检查是否显示返回顶部按钮
+    final bool showBackToTop = _scrollController.offset > _backToTopThreshold;
+    if (showBackToTop != _showBackToTop) {
+      setState(() {
+        _showBackToTop = showBackToTop;
+      });
+    }
+  }
+
+  // 添加返回顶部方法
+  void _scrollToTop() {
+    _scrollController.animateTo(
+      0,
+      duration: const Duration(milliseconds: 500),
+      curve: Curves.easeInOut,
+    );
   }
 
   String getCategoryPath(Product product) {
@@ -617,8 +635,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
         floatingActionButton: Stack(
           children: [
             Positioned(
-              right: 12, // 水平偏移量（根据需求调整）
-              bottom: 16, // 垂直偏移量（根据需求调整）
+              right: 7, // 水平偏移量（根据需求调整）
+              bottom: 14, // 垂直偏移量（根据需求调整）
               child: Material(
                 color: Colors.transparent,
                 child: InkWell(
@@ -646,6 +664,46 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                             : Icons.star_outline_rounded,
                         color: _isFavorited ? kBilibiliPink : Colors.grey[500],
                         size: 40, // 适当缩小图标以适配小尺寸
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            // 添加返回顶部按钮
+            AnimatedPositioned(
+              duration: const Duration(milliseconds: 300),
+              right: 13,
+              bottom: _showBackToTop ? 80.0 : 80.0, // 当显示时上移，避免与收藏按钮重叠
+              child: AnimatedOpacity(
+                duration: const Duration(milliseconds: 300),
+                opacity: _showBackToTop ? 1.0 : 0.0,
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(100),
+                    onTap: _scrollToTop,
+                    child: Container(
+                      width: 35,
+                      height: 35,
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.5),
+                        borderRadius: BorderRadius.circular(100),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.3),
+                            spreadRadius: 2,
+                            blurRadius: 6,
+                            offset: const Offset(0, 3),
+                          ),
+                        ],
+                      ),
+                      child: const Center(
+                        child: Icon(
+                          Icons.arrow_upward,
+                          color: Colors.blue,
+                          size: 30,
+                        ),
                       ),
                     ),
                   ),
