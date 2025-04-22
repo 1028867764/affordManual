@@ -15,10 +15,6 @@ import 'product_detail_screen.dart';
 
 //B站粉红
 const Color kBilibiliPink = Color(0xFFFB7299);
-// 酷安绿
-const Color coolapkGreen = Color(0xFF2E8B57);
-// 赛博朋克绿
-const Color cyberpunkGreen = Color(0xFF00FFD1);
 
 void main() {
   runApp(const MyApp());

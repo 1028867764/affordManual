@@ -14,7 +14,12 @@ import 'dart:ui';
 import 'price_tag.dart';
 import 'price_calendar.dart';
 
-const Color xianyuBlue = Color(0xFF00E5FF); // 闲鱼科技蓝
+// 闲鱼科技蓝
+const Color xianyuBlue = Color(0xFF00E5FF);
+// 酷安绿
+const Color coolapkGreen = Color(0xFF2E8B57);
+// 赛博朋克绿
+const Color cyberpunkGreen = Color(0xFF00FFD1);
 
 class ProductDetailScreen extends StatefulWidget {
   final dynamic product;
@@ -379,6 +384,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
     return PriceCalendar(
       bottomGap: _buildBottomGap(),
       productId: widget.product.id,
+      productName: widget.product.name[0],
     );
   }
 
