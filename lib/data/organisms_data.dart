@@ -52,7 +52,20 @@ final List<Category> organisms = [
             childProducts: [
               Product(
                 id: "organismsMentha1",
-                name: ["椒样薄荷", "Peppermint", "1234567", "7654321"],
+                name: [
+                  "椒样薄荷",
+                  "Peppermint",
+                  "111",
+                  "qqqq",
+                  "1234567",
+                  "jjjjj",
+                  "7654321",
+                  "111",
+                  "qqqq",
+                  "1234567",
+                  "jjjjj",
+                  "7654321",
+                ],
               ),
               Product(id: "organismsMentha2", name: ["留兰香薄荷", "Spearmint"]),
             ],

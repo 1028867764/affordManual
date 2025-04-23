@@ -451,7 +451,7 @@ class _PriceCalendarState extends State<PriceCalendar> {
                       Text(
                         '$currencySymbol${price.toStringAsFixed(1)}',
                         style: const TextStyle(
-                          fontSize: 8,
+                          fontSize: 10,
                           color: Colors.orange,
                           fontWeight: FontWeight.bold,
                         ),
@@ -563,7 +563,7 @@ class _PriceCalendarState extends State<PriceCalendar> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(
+            SelectableText(
               _selectedDate == null
                   ? '请选择日期'
                   : '记录日期: ${DateFormat('yyyy-MM-dd').format(_selectedDate!)}',
@@ -573,14 +573,17 @@ class _PriceCalendarState extends State<PriceCalendar> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
+                SelectableText(
                   '${record?.price != null && record!.price != 0 ? '$currencySymbol${record!.price}' : ''} ${record?.unit?.isNotEmpty ?? false ? '/ ${record!.unit}' : ''}',
                   style: const TextStyle(fontSize: 12),
                 ),
               ],
             ),
             const SizedBox(height: 8),
-            Text(record?.note ?? '暂无备注', style: const TextStyle(fontSize: 12)),
+            SelectableText(
+              record?.note ?? '暂无备注',
+              style: const TextStyle(fontSize: 12),
+            ),
             const SizedBox(height: 12),
             ElevatedButton(
               onPressed: _selectedDate == null ? null : _showEditDialog,
@@ -621,7 +624,7 @@ class _PriceCalendarState extends State<PriceCalendar> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text(
+                    SelectableText(
                       displayName,
                       style: TextStyle(
                         fontSize: 14,
