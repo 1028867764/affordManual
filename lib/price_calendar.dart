@@ -11,6 +11,10 @@ class PriceRecord {
   final DateTime date;
   final String currency;
   final String customizedName;
+  final String country; // New field
+  final String province; // New field
+  final String city; // New field
+  final String outLink; // New field
 
   PriceRecord({
     required this.price,
@@ -19,6 +23,10 @@ class PriceRecord {
     required this.date,
     this.currency = 'rmb',
     this.customizedName = '',
+    this.country = '', // Default empty string
+    this.province = '', // Default empty string
+    this.city = '', // Default empty string
+    this.outLink = '', // Default empty string
   });
 
   Map<String, dynamic> toMap() {
@@ -29,6 +37,10 @@ class PriceRecord {
       'date': date.toIso8601String(),
       'currency': currency,
       'customizedName': customizedName,
+      'country': country, // Add to map
+      'province': province, // Add to map
+      'city': city, // Add to map
+      'outLink': outLink, // Add to map
     };
   }
 
@@ -40,6 +52,10 @@ class PriceRecord {
       date: DateTime.parse(map['date'] as String),
       currency: map['currency'] as String? ?? 'rmb',
       customizedName: map['customizedName'] as String? ?? '',
+      country: map['country'] as String? ?? '', // Load from map
+      province: map['province'] as String? ?? '', // Load from map
+      city: map['city'] as String? ?? '', // Load from map
+      outLink: map['outLink'] as String? ?? '', // Load from map
     );
   }
 }
@@ -73,6 +89,10 @@ class _PriceCalendarState extends State<PriceCalendar> {
   String _currency = 'rmb';
   String? _defaultCustomName;
   String get displayName => _defaultCustomName ?? widget.productName ?? '';
+  final TextEditingController _countryController = TextEditingController();
+  final TextEditingController _provinceController = TextEditingController();
+  final TextEditingController _cityController = TextEditingController();
+  final TextEditingController _outLinkController = TextEditingController();
 
   @override
   void initState() {
@@ -242,16 +262,9 @@ class _PriceCalendarState extends State<PriceCalendar> {
     }
 
     final unit = _unitController.text;
-    if (unit.isEmpty) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('请输入单位')));
-      return;
-    }
 
     String customName = _customizedNameController.text;
 
-    // 如果 customizedName 为空字符串，则使用 productName
     if (customName.isEmpty) {
       customName = widget.productName ?? '';
     }
@@ -273,8 +286,12 @@ class _PriceCalendarState extends State<PriceCalendar> {
           unit: unit,
           note: _noteController.text,
           date: dateKey,
-          currency: _currency, // 这里已经正确设置了 currency
+          currency: _currency,
           customizedName: customName,
+          country: _countryController.text, // New field
+          province: _provinceController.text, // New field
+          city: _cityController.text, // New field
+          outLink: _outLinkController.text, // New field
         );
       });
 
@@ -529,6 +546,42 @@ class _PriceCalendarState extends State<PriceCalendar> {
                   ),
                   maxLines: 2,
                 ),
+                const SizedBox(height: 12),
+                TextField(
+                  controller: _countryController,
+                  decoration: const InputDecoration(
+                    labelText: '国家',
+                    hintText: '输入国家',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                TextField(
+                  controller: _provinceController,
+                  decoration: const InputDecoration(
+                    labelText: '省份/州',
+                    hintText: '输入省份或州',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                TextField(
+                  controller: _cityController,
+                  decoration: const InputDecoration(
+                    labelText: '城市',
+                    hintText: '输入城市',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                TextField(
+                  controller: _outLinkController,
+                  decoration: const InputDecoration(
+                    labelText: '外部链接',
+                    hintText: '输入外部链接',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
               ],
             ),
           ),
@@ -556,39 +609,202 @@ class _PriceCalendarState extends State<PriceCalendar> {
     final record = _selectedDate != null ? _records[_selectedDate] : null;
     final displayName = _defaultCustomName ?? widget.productName ?? '';
     final currencySymbol = _currency == 'rmb' ? '¥' : '\$';
+    // 格式化日期为年份和月/日
+    String? formattedDate;
+    if (_selectedDate != null) {
+      final year = _selectedDate!.year.toString();
+      final monthDay = DateFormat('M/d').format(_selectedDate!);
+      formattedDate = '$year\n$monthDay'; // 使用换行符分隔
+    }
 
-    return Card(
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            Colors.yellow.shade50,
+            Colors.yellow.shade50,
+            Colors.yellow.shade50,
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(8),
+      ),
       child: Padding(
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            SelectableText(
-              _selectedDate == null
-                  ? '请选择日期'
-                  : '记录日期: ${DateFormat('yyyy-MM-dd').format(_selectedDate!)}',
-              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween, // 控制外层容器之间的间距
               children: [
-                SelectableText(
-                  '${record?.price != null && record!.price != 0 ? '$currencySymbol${record!.price}' : ''} ${record?.unit?.isNotEmpty ?? false ? '/ ${record!.unit}' : ''}',
-                  style: const TextStyle(fontSize: 12),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start, // 控制内部 Row 的排列方式
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            Colors.orange.withOpacity(0.5),
+                            Colors.amber.withOpacity(0.4),
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(10),
+                          bottomRight: Radius.circular(10),
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.7),
+                            offset: Offset(3, 0),
+                            blurRadius: 1,
+                            spreadRadius: 0,
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          // 年份部分
+                          Text(
+                            _selectedDate == null
+                                ? ''
+                                : '${_selectedDate!.year}年',
+                            style: const TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                          // 月/日部分
+                          Text(
+                            _selectedDate == null
+                                ? ''
+                                : DateFormat('M/d').format(_selectedDate!),
+                            style: const TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(width: 16),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            SelectableText(
+                              '${record?.price != null ? currencySymbol : ''} ',
+                              style: const TextStyle(
+                                fontSize: 12,
+                                color: Colors.red,
+                              ),
+                            ),
+                            SelectableText(
+                              record?.price != null ? '${record!.price}' : '',
+                              style: const TextStyle(
+                                fontSize: 18,
+                                color: Colors.red,
+                              ),
+                            ),
+                            SelectableText(
+                              record?.unit?.isNotEmpty ?? false
+                                  ? '/ ${record!.unit}'
+                                  : '',
+                              style: const TextStyle(fontSize: 12),
+                            ),
+                          ],
+                        ),
+                        SelectableText(
+                          record?.price != null
+                              ? record?.city.isEmpty ?? false
+                                  ? '未知城市'
+                                  : record!.city
+                              : '',
+                          style: TextStyle(fontSize: 12),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                ElevatedButton(
+                  onPressed: _selectedDate == null ? null : _showEditDialog,
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.grey, // 文字颜色
+                    backgroundColor: Colors.grey.shade100, // 背景色
+                  ),
+                  child: Column(
+                    mainAxisAlignment:
+                        MainAxisAlignment.spaceBetween, // 控制容器之间的间距
+                    children: const [
+                      Icon(Icons.create), // 使用笔形图标
+                      SizedBox(width: 0), // 图标和文字之间的间距
+                      Text('修改', style: TextStyle(fontSize: 12)),
+                    ],
+                  ),
                 ),
               ],
             ),
-            const SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween, // 控制容器之间的间距
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  margin: const EdgeInsets.symmetric(
+                    vertical: 5,
+                  ).copyWith(left: 0, right: 5),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        cyberpunkGreen.withOpacity(0.2),
+                        xianyuBlue.withOpacity(0.2),
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: SelectableText(
+                    displayName,
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blue,
+                    ),
+                  ),
+                ),
+                if (record == null) Text(''),
+                if (record != null)
+                  SelectableText(
+                    (record.country.isNotEmpty && record.province.isNotEmpty)
+                        ? '${record.country}·${record.province}'
+                        : (record.country.isNotEmpty && record.province.isEmpty)
+                        ? record.country
+                        : (record.country.isEmpty && record.province.isNotEmpty)
+                        ? record.province
+                        : '',
+                    style: const TextStyle(fontSize: 12),
+                  ),
+              ],
+            ),
             SelectableText(
               record?.note ?? '暂无备注',
               style: const TextStyle(fontSize: 12),
             ),
-            const SizedBox(height: 12),
-            ElevatedButton(
-              onPressed: _selectedDate == null ? null : _showEditDialog,
-              child: const Text('修改'),
-            ),
+            if (record?.price != null &&
+                record!.outLink.isNotEmpty) // 检查 outLink 是否非空
+              SelectableText('外部链接：', style: const TextStyle(fontSize: 12)),
+            if (record?.price != null &&
+                record!.outLink.isNotEmpty) // 检查 outLink 是否非空
+              SelectableText(
+                '🗝️${record.outLink}',
+                style: const TextStyle(fontSize: 12, color: Colors.blue),
+              ),
           ],
         ),
       ),
