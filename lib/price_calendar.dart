@@ -80,6 +80,8 @@ class _PriceCalendarState extends State<PriceCalendar> {
   late DateTime _currentMonth;
   DateTime? _selectedDate;
   final Map<DateTime, PriceRecord> _records = {};
+  SharedPreferences? _prefs;
+  static const String _lastSelectedDateKey = 'last_selected_date';
 
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _unitController = TextEditingController();
@@ -97,30 +99,51 @@ class _PriceCalendarState extends State<PriceCalendar> {
   @override
   void initState() {
     super.initState();
+    _initializeCalendar();
+  }
+
+  Future<void> _initializeCalendar() async {
     final now = DateTime.now();
     _currentMonth = DateTime(now.year, now.month);
     _selectedDate = now;
 
-    _priceController.text = '';
-    _unitController.text = '';
-    _noteController.text = '';
-    _customizedNameController.text = '';
-    _currency = 'rmb';
+    // 初始化 SharedPreferences
+    _prefs = await SharedPreferences.getInstance();
 
-    _loadRecords().then((_) {
-      if (_selectedDate != null && _records.containsKey(_selectedDate)) {
-        final record = _records[_selectedDate];
-        setState(() {
-          _priceController.text = record?.price.toString() ?? '';
-          _unitController.text = record?.unit ?? '';
-          _noteController.text = record?.note ?? '';
-          _customizedNameController.text =
-              record?.customizedName ?? _defaultCustomName ?? '';
-          _currency = record?.currency ?? 'rmb';
-        });
+    // 加载记录
+    await _loadRecords();
+
+    // 加载默认自定义名称
+    await _loadDefaultCustomName();
+
+    // 从 SharedPreferences 读取上次选择的日期
+    final lastSelectedDateStr = _prefs?.getString(_lastSelectedDateKey);
+    DateTime? lastSelectedDate;
+
+    if (lastSelectedDateStr != null) {
+      try {
+        lastSelectedDate = DateFormat('yyyy-MM-dd').parse(lastSelectedDateStr);
+      } catch (e) {
+        // 如果解析失败，忽略
+        print('Failed to parse last selected date: $e');
+      }
+    }
+
+    // 判断是否需要点击今天的日期或上次的日期
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (lastSelectedDate == null) {
+        // 如果没有保存的日期，默认点击今天
+        _onDateSelected(now);
+      } else if (lastSelectedDate.year != now.year ||
+          lastSelectedDate.month != now.month ||
+          lastSelectedDate.day != now.day) {
+        // 如果上次选择的日期不是今天，点击上次的日期
+        _onDateSelected(lastSelectedDate);
+      } else {
+        // 如果上次选择的日期是今天，点击今天的日期（实际上已经选中）
+        _onDateSelected(now);
       }
     });
-    _loadDefaultCustomName();
   }
 
   Future<void> _loadDefaultCustomName() async {
@@ -248,6 +271,11 @@ class _PriceCalendarState extends State<PriceCalendar> {
           record?.customizedName ?? _defaultCustomName ?? '';
       _currency = record?.currency ?? 'rmb';
     });
+    // 保存选择的日期到 SharedPreferences
+    _prefs?.setString(
+      _lastSelectedDateKey,
+      DateFormat('yyyy-MM-dd').format(dateKey),
+    );
   }
 
   Future<void> _saveRecord() async {
@@ -329,61 +357,6 @@ class _PriceCalendarState extends State<PriceCalendar> {
         context,
       ).showSnackBar(SnackBar(content: Text('清除失败: $e')));
     }
-  }
-
-  Widget _buildCurrencySwitch() {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.grey[200],
-        borderRadius: BorderRadius.circular(20),
-      ),
-      padding: const EdgeInsets.all(2),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          GestureDetector(
-            onTap: () {
-              setState(() {
-                _currency = 'rmb';
-              });
-            },
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              decoration: BoxDecoration(
-                color: _currency == 'rmb' ? Colors.blue : Colors.transparent,
-                borderRadius: BorderRadius.circular(18),
-              ),
-              child: Text(
-                '人民币',
-                style: TextStyle(
-                  color: _currency == 'rmb' ? Colors.white : Colors.black,
-                ),
-              ),
-            ),
-          ),
-          GestureDetector(
-            onTap: () {
-              setState(() {
-                _currency = 'dollar';
-              });
-            },
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              decoration: BoxDecoration(
-                color: _currency == 'dollar' ? Colors.blue : Colors.transparent,
-                borderRadius: BorderRadius.circular(18),
-              ),
-              child: Text(
-                '美元',
-                style: TextStyle(
-                  color: _currency == 'dollar' ? Colors.white : Colors.black,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
   }
 
   Widget _buildCalendar() {
@@ -493,113 +466,162 @@ class _PriceCalendarState extends State<PriceCalendar> {
   }
 
   Future<void> _showEditDialog() async {
+    // 确保在构建对话框之前，控制器已经设置了已有值
+    if (_selectedDate != null) {
+      final record = _records[_selectedDate];
+      _countryController.text = record?.country ?? '';
+      _provinceController.text = record?.province ?? '';
+      _cityController.text = record?.city ?? '';
+      _outLinkController.text = record?.outLink ?? '';
+    }
+
     return showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(
-            _selectedDate == null
-                ? '添加记录'
-                : '编辑 ${DateFormat('yyyy-MM-dd').format(_selectedDate!)} 记录',
-          ),
-          content: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                _buildCurrencySwitch(),
-                const SizedBox(height: 16),
-                TextField(
-                  controller: _priceController,
-                  decoration: const InputDecoration(
-                    labelText: '价格',
-                    hintText: '输入价格',
-                    border: OutlineInputBorder(),
-                  ),
-                  keyboardType: TextInputType.number,
+        // 使用 StatefulBuilder 包裹对话框内容
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return AlertDialog(
+              title: Text(
+                _selectedDate == null
+                    ? '添加记录'
+                    : '${DateFormat('yyyy-MM-dd').format(_selectedDate!)}',
+              ),
+              content: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // 使用 RadioListTile 实现的货币选择器
+                    Row(
+                      children: [
+                        Row(
+                          children: [
+                            Radio<String>(
+                              value: 'rmb',
+                              groupValue: _currency,
+                              onChanged: (String? value) {
+                                setState(() {
+                                  _currency = value!;
+                                });
+                              },
+                            ),
+                            const Text('人民币'),
+                          ],
+                        ),
+                        const SizedBox(width: 16), // 添加间距
+                        Row(
+                          children: [
+                            Radio<String>(
+                              value: 'dollar',
+                              groupValue: _currency,
+                              onChanged: (String? value) {
+                                setState(() {
+                                  _currency = value!;
+                                });
+                              },
+                            ),
+                            const Text('美元'),
+                          ],
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    TextField(
+                      controller: _priceController,
+                      decoration: const InputDecoration(
+                        labelText: '价格',
+                        hintText: '输入价格',
+                        border: OutlineInputBorder(),
+                      ),
+                      keyboardType: TextInputType.number,
+                    ),
+                    const SizedBox(height: 12),
+                    TextField(
+                      controller: _unitController,
+                      decoration: const InputDecoration(
+                        labelText: '单位',
+                        hintText: '输入单位（如：斤、kg等）',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    TextField(
+                      controller: _customizedNameController,
+                      decoration: InputDecoration(
+                        labelText: '自定义名称',
+                        hintText:
+                            displayName.isNotEmpty
+                                ? displayName
+                                : '输入自定义名称（可选）',
+                        border: const OutlineInputBorder(),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    TextField(
+                      controller: _noteController,
+                      decoration: const InputDecoration(
+                        labelText: '备注',
+                        hintText: '输入备注信息',
+                        border: OutlineInputBorder(),
+                      ),
+                      maxLines: 2,
+                    ),
+                    const SizedBox(height: 12),
+                    TextField(
+                      controller: _countryController,
+                      decoration: const InputDecoration(
+                        labelText: '国家',
+                        hintText: '输入国家',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    TextField(
+                      controller: _provinceController,
+                      decoration: const InputDecoration(
+                        labelText: '省份/州',
+                        hintText: '输入省份或州',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    TextField(
+                      controller: _cityController,
+                      decoration: const InputDecoration(
+                        labelText: '城市',
+                        hintText: '输入城市',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    TextField(
+                      controller: _outLinkController,
+                      decoration: const InputDecoration(
+                        labelText: '外部链接',
+                        hintText: '输入外部链接',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 12),
-                TextField(
-                  controller: _unitController,
-                  decoration: const InputDecoration(
-                    labelText: '单位',
-                    hintText: '输入单位（如：斤、kg等）',
-                    border: OutlineInputBorder(),
-                  ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('取消'),
                 ),
-                const SizedBox(height: 12),
-                TextField(
-                  controller: _customizedNameController,
-                  decoration: InputDecoration(
-                    labelText: '自定义名称',
-                    hintText:
-                        displayName.isNotEmpty ? displayName : '输入自定义名称（可选）',
-                    border: const OutlineInputBorder(),
-                  ),
-                ),
-                const SizedBox(height: 12),
-                TextField(
-                  controller: _noteController,
-                  decoration: const InputDecoration(
-                    labelText: '备注',
-                    hintText: '输入备注信息',
-                    border: OutlineInputBorder(),
-                  ),
-                  maxLines: 2,
-                ),
-                const SizedBox(height: 12),
-                TextField(
-                  controller: _countryController,
-                  decoration: const InputDecoration(
-                    labelText: '国家',
-                    hintText: '输入国家',
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-                const SizedBox(height: 12),
-                TextField(
-                  controller: _provinceController,
-                  decoration: const InputDecoration(
-                    labelText: '省份/州',
-                    hintText: '输入省份或州',
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-                const SizedBox(height: 12),
-                TextField(
-                  controller: _cityController,
-                  decoration: const InputDecoration(
-                    labelText: '城市',
-                    hintText: '输入城市',
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-                const SizedBox(height: 12),
-                TextField(
-                  controller: _outLinkController,
-                  decoration: const InputDecoration(
-                    labelText: '外部链接',
-                    hintText: '输入外部链接',
-                    border: OutlineInputBorder(),
-                  ),
+                TextButton(
+                  onPressed: () {
+                    _saveRecord();
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('保存'),
                 ),
               ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('取消'),
-            ),
-            TextButton(
-              onPressed: () {
-                _saveRecord();
-                Navigator.of(context).pop();
-              },
-              child: const Text('保存'),
-            ),
-          ],
+            );
+          },
         );
       },
     );
@@ -753,30 +775,42 @@ class _PriceCalendarState extends State<PriceCalendar> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween, // 控制容器之间的间距
               children: [
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  margin: const EdgeInsets.symmetric(
-                    vertical: 5,
-                  ).copyWith(left: 0, right: 5),
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        cyberpunkGreen.withOpacity(0.2),
-                        xianyuBlue.withOpacity(0.2),
-                      ],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
+                Row(
+                  children: [
+                    Text('🛒', style: TextStyle(fontSize: 12)),
+                    Container(
+                      padding: const EdgeInsets.all(1),
+                      margin: const EdgeInsets.symmetric(
+                        vertical: 5,
+                      ).copyWith(left: 0, right: 0),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            cyberpunkGreen.withOpacity(0.2),
+                            xianyuBlue.withOpacity(0.2),
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        borderRadius: BorderRadius.circular(0),
+                        border: Border.all(
+                          color: Colors.blue, // 设置边框颜色为蓝色
+                          width: 1.0, // 设置边框宽度
+                        ),
+                      ),
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(maxWidth: 180),
+                        child: SelectableText(
+                          displayName,
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blue,
+                          ),
+                        ),
+                      ),
                     ),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: SelectableText(
-                    displayName,
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blue,
-                    ),
-                  ),
+                  ],
                 ),
                 if (record == null) Text(''),
                 if (record != null)
@@ -793,9 +827,14 @@ class _PriceCalendarState extends State<PriceCalendar> {
               ],
             ),
             SelectableText(
-              record?.note ?? '暂无备注',
+              record == null || (record.note?.isEmpty ?? true)
+                  ? '暂无备注'
+                  : record.note,
               style: const TextStyle(fontSize: 12),
             ),
+            if (record?.price != null &&
+                record!.outLink.isNotEmpty) // 检查 outLink 是否非空
+              SizedBox(height: 10),
             if (record?.price != null &&
                 record!.outLink.isNotEmpty) // 检查 outLink 是否非空
               SelectableText('外部链接：', style: const TextStyle(fontSize: 12)),
@@ -821,36 +860,45 @@ class _PriceCalendarState extends State<PriceCalendar> {
             mainAxisAlignment:
                 MainAxisAlignment.spaceBetween, // 控制水平对齐方式，将组件放到最右边
             children: [
-              Container(
-                padding: const EdgeInsets.all(10),
-                margin: const EdgeInsets.symmetric(
-                  vertical: 5,
-                ).copyWith(left: 0, right: 5),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      cyberpunkGreen.withOpacity(0.2),
-                      xianyuBlue.withOpacity(0.2),
-                    ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SelectableText(
-                      displayName,
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.blue,
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text('🛒', style: TextStyle(fontSize: 14)),
+                  Container(
+                    padding: const EdgeInsets.all(2),
+                    margin: const EdgeInsets.symmetric(
+                      vertical: 5,
+                    ).copyWith(left: 0, right: 5),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          cyberpunkGreen.withOpacity(0.2),
+                          xianyuBlue.withOpacity(0.2),
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                        color: Colors.blue, // 设置边框颜色为蓝色
+                        width: 1.0, // 设置边框宽度
                       ),
                     ),
-                  ],
-                ),
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(maxWidth: 200),
+                      child: SelectableText(
+                        displayName,
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blue,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
+
               Column(
                 //  mainAxisAlignment: MainAxisAlignment.start, // 控制竖直方向的对齐方式
                 mainAxisSize: MainAxisSize.min, // 确保Column的高度仅为子组件的高度
