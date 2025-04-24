@@ -203,7 +203,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
       child: Column(
         children: [
           Container(
-            color: Colors.black.withOpacity(0.85),
+            color: Colors.white,
             child: Column(
               children: [
                 SizedBox(height: 10),
@@ -230,8 +230,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                               decoration: BoxDecoration(
                                 gradient: LinearGradient(
                                   colors: [
-                                    cyberpunkGreen.withOpacity(1.0),
-                                    xianyuBlue.withOpacity(1.0),
+                                    cyberpunkGreen.withOpacity(0.2),
+                                    xianyuBlue.withOpacity(0.2),
                                   ],
                                   begin: Alignment.topLeft,
                                   end: Alignment.bottomRight,
@@ -267,8 +267,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                                 decoration: BoxDecoration(
                                   gradient: LinearGradient(
                                     colors: [
-                                      cyberpunkGreen.withOpacity(1.0),
-                                      xianyuBlue.withOpacity(1.0),
+                                      cyberpunkGreen.withOpacity(0.2),
+                                      xianyuBlue.withOpacity(0.2),
                                     ],
                                     begin: Alignment.topLeft,
                                     end: Alignment.bottomRight,
@@ -308,8 +308,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                               decoration: BoxDecoration(
                                 gradient: LinearGradient(
                                   colors: [
-                                    cyberpunkGreen.withOpacity(1.0),
-                                    xianyuBlue.withOpacity(1.0),
+                                    cyberpunkGreen.withOpacity(0.2),
+                                    xianyuBlue.withOpacity(0.2),
                                   ],
                                   begin: Alignment.topLeft,
                                   end: Alignment.bottomRight,
@@ -345,8 +345,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                                 decoration: BoxDecoration(
                                   gradient: LinearGradient(
                                     colors: [
-                                      cyberpunkGreen.withOpacity(1.0),
-                                      xianyuBlue.withOpacity(1.0),
+                                      cyberpunkGreen.withOpacity(0.2),
+                                      xianyuBlue.withOpacity(0.2),
                                     ],
                                     begin: Alignment.topLeft,
                                     end: Alignment.bottomRight,
@@ -388,8 +388,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                               decoration: BoxDecoration(
                                 gradient: LinearGradient(
                                   colors: [
-                                    cyberpunkGreen.withOpacity(1.0),
-                                    xianyuBlue.withOpacity(1.0),
+                                    cyberpunkGreen.withOpacity(0.2),
+                                    xianyuBlue.withOpacity(0.2),
                                   ],
                                   begin: Alignment.topLeft,
                                   end: Alignment.bottomRight,
@@ -425,8 +425,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                                 decoration: BoxDecoration(
                                   gradient: LinearGradient(
                                     colors: [
-                                      cyberpunkGreen.withOpacity(1.0),
-                                      xianyuBlue.withOpacity(1.0),
+                                      cyberpunkGreen.withOpacity(0.2),
+                                      xianyuBlue.withOpacity(0.2),
                                     ],
                                     begin: Alignment.topLeft,
                                     end: Alignment.bottomRight,

@@ -439,10 +439,22 @@ class ProductGrid extends StatelessWidget {
               bottom: isSingleGroup ? (isLastParentProduct ? 10 : 0) : 10,
             ),
             decoration: BoxDecoration(
-              color:
-                  isPinkTheme
-                      ? Color(0xFFF66B80).withOpacity(0.2)
-                      : Colors.blue[50], // 切换背景色
+              gradient: LinearGradient(
+                colors:
+                    isPinkTheme
+                        ? [
+                          Colors.pink.shade100,
+                          Colors.pink.shade50,
+                          Colors.red.shade50,
+                        ]
+                        : [
+                          Colors.blue.shade100,
+                          Colors.blue.shade50,
+                          Colors.green.shade50,
+                        ], // 切换背景色
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
               borderRadius:
                   isSingleGroup
                       ? BorderRadius.circular(12)
