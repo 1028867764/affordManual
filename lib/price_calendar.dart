@@ -995,19 +995,26 @@ class _PriceCalendarState extends State<PriceCalendar> {
                 //  mainAxisAlignment: MainAxisAlignment.start, // 控制竖直方向的对齐方式
                 mainAxisSize: MainAxisSize.min, // 确保Column的高度仅为子组件的高度
                 children: [
-                  Container(
-                    margin: EdgeInsets.zero, // 设置为0，表示没有外边距
-                    child: IconButton(
-                      icon: const Icon(Icons.backup, color: Colors.blue),
-                      onPressed: _backupRecords,
-                      tooltip: '备份数据',
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.zero, // 设置为0，表示没有外边距
-                    child: Text(
-                      '备份',
-                      style: TextStyle(fontSize: 10, color: Colors.blue),
+                  InkWell(
+                    onTap: () {
+                      _backupRecords();
+                    },
+                    child: Container(
+                      margin: EdgeInsets.symmetric(vertical: 2, horizontal: 5),
+                      child: Column(
+                        children: [
+                          Center(child: Icon(Icons.backup, color: Colors.blue)),
+                          Center(
+                            child: Text(
+                              '备份',
+                              style: TextStyle(
+                                color: Colors.blue,
+                                fontSize: 10,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],

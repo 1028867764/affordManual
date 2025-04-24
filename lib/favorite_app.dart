@@ -52,6 +52,13 @@ class _FavoriteAppState extends State<FavoriteApp> {
     });
   }
 
+  Future<void> _backupRecords() async {
+    // Placeholder for backup functionality
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('备份功能将在后续版本中添加')));
+  }
+
   // 高亮文本的方法
   InlineSpan _buildHighlightedText(String text, String highlight) {
     if (highlight.isEmpty || text.isEmpty) {
@@ -433,15 +440,11 @@ class _FavoriteAppState extends State<FavoriteApp> {
             child: InkWell(
               borderRadius: BorderRadius.circular(24),
               onTap: () {
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (context) => const MainHomePage()),
-                  (route) => false,
-                );
+                _backupRecords();
               },
               child: const Padding(
                 padding: EdgeInsets.all(12),
-                child: Icon(Icons.home),
+                child: Icon(Icons.backup),
               ),
             ),
           ),
