@@ -162,7 +162,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
   }
 
   Widget _buildBottomGap() {
-    return SizedBox(height: 120);
+    return SizedBox(height: 180);
   }
 
   Widget _buildDetailContent() {
@@ -199,281 +199,316 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
     """;
 
     return SingleChildScrollView(
-      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 16),
+      padding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
       child: Column(
         children: [
-          SizedBox(height: 10),
-          //柜式布局
-          Column(
-            children: [
-              // 第一行
-              IntrinsicHeight(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.stretch, // 让子部件拉伸填满高度
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.symmetric(
-                        horizontal: 2,
-                        vertical: 2,
-                      ),
-                      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            cyberpunkGreen.withOpacity(0.2),
-                            xianyuBlue.withOpacity(0.2),
+          Container(
+            color: Colors.black.withOpacity(0.85),
+            child: Column(
+              children: [
+                SizedBox(height: 10),
+                //柜式布局
+                Container(
+                  padding: EdgeInsets.symmetric(vertical: 0, horizontal: 16),
+                  child: Column(
+                    children: [
+                      // 第一行
+                      IntrinsicHeight(
+                        child: Row(
+                          crossAxisAlignment:
+                              CrossAxisAlignment.stretch, // 让子部件拉伸填满高度
+                          children: [
+                            Container(
+                              margin: const EdgeInsets.symmetric(
+                                horizontal: 2,
+                                vertical: 2,
+                              ),
+                              padding: EdgeInsets.symmetric(
+                                vertical: 5,
+                                horizontal: 5,
+                              ),
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: [
+                                    cyberpunkGreen.withOpacity(1.0),
+                                    xianyuBlue.withOpacity(1.0),
+                                  ],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                ),
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(8), // 左上角
+                                  topRight: Radius.circular(0), // 右上角
+                                  bottomLeft: Radius.circular(0), // 左下角
+                                  bottomRight: Radius.circular(0), // 右下角
+                                ),
+                              ),
+                              child: const Center(
+                                child: SelectableText(
+                                  '搜索路径',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.blue,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: Container(
+                                margin: const EdgeInsets.symmetric(
+                                  horizontal: 2,
+                                  vertical: 2,
+                                ),
+                                padding: EdgeInsets.symmetric(
+                                  vertical: 5,
+                                  horizontal: 5,
+                                ),
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      cyberpunkGreen.withOpacity(1.0),
+                                      xianyuBlue.withOpacity(1.0),
+                                    ],
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                  ),
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(0), // 左上角
+                                    topRight: Radius.circular(8), // 右上角
+                                    bottomLeft: Radius.circular(0), // 左下角
+                                    bottomRight: Radius.circular(0), // 右下角
+                                  ),
+                                ),
+                                child: Center(
+                                  child: SelectableText(
+                                    '$fieldPath>>$categoryPath',
+                                    style: const TextStyle(fontSize: 12),
+                                  ),
+                                ),
+                              ),
+                            ),
                           ],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(8), // 左上角
-                          topRight: Radius.circular(0), // 右上角
-                          bottomLeft: Radius.circular(0), // 左下角
-                          bottomRight: Radius.circular(0), // 右下角
                         ),
                       ),
-                      child: const Center(
-                        child: SelectableText(
-                          '搜索路径',
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.blue,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(
-                          horizontal: 2,
-                          vertical: 2,
-                        ),
-                        padding: EdgeInsets.symmetric(
-                          vertical: 5,
-                          horizontal: 5,
-                        ),
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              cyberpunkGreen.withOpacity(0.2),
-                              xianyuBlue.withOpacity(0.2),
-                            ],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                          ),
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(0), // 左上角
-                            topRight: Radius.circular(8), // 右上角
-                            bottomLeft: Radius.circular(0), // 左下角
-                            bottomRight: Radius.circular(0), // 右下角
-                          ),
-                        ),
-                        child: Center(
-                          child: SelectableText(
-                            '$fieldPath>>$categoryPath',
-                            style: const TextStyle(fontSize: 12),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              // 第二行
-              IntrinsicHeight(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.symmetric(
-                        horizontal: 2,
-                        vertical: 2,
-                      ),
-                      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            cyberpunkGreen.withOpacity(0.2),
-                            xianyuBlue.withOpacity(0.2),
+                      // 第二行
+                      IntrinsicHeight(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Container(
+                              margin: const EdgeInsets.symmetric(
+                                horizontal: 2,
+                                vertical: 2,
+                              ),
+                              padding: EdgeInsets.symmetric(
+                                vertical: 5,
+                                horizontal: 5,
+                              ),
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: [
+                                    cyberpunkGreen.withOpacity(1.0),
+                                    xianyuBlue.withOpacity(1.0),
+                                  ],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                ),
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(0), // 左上角
+                                  topRight: Radius.circular(0), // 右上角
+                                  bottomLeft: Radius.circular(0), // 左下角
+                                  bottomRight: Radius.circular(0), // 右下角
+                                ),
+                              ),
+                              child: const Center(
+                                child: SelectableText(
+                                  '英文名称',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.blue,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: Container(
+                                margin: const EdgeInsets.symmetric(
+                                  horizontal: 2,
+                                  vertical: 2,
+                                ),
+                                padding: EdgeInsets.symmetric(
+                                  vertical: 5,
+                                  horizontal: 5,
+                                ),
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      cyberpunkGreen.withOpacity(1.0),
+                                      xianyuBlue.withOpacity(1.0),
+                                    ],
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                  ),
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(0), // 左上角
+                                    topRight: Radius.circular(0), // 右上角
+                                    bottomLeft: Radius.circular(0), // 左下角
+                                    bottomRight: Radius.circular(0), // 右下角
+                                  ),
+                                ),
+                                child: Center(
+                                  child: SelectableText(
+                                    widget.product.name.length > 1
+                                        ? widget.product.name[1]
+                                        : '暂无',
+                                    style: const TextStyle(fontSize: 12),
+                                  ),
+                                ),
+                              ),
+                            ),
                           ],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(0), // 左上角
-                          topRight: Radius.circular(0), // 右上角
-                          bottomLeft: Radius.circular(0), // 左下角
-                          bottomRight: Radius.circular(0), // 右下角
                         ),
                       ),
-                      child: const Center(
-                        child: SelectableText(
-                          '英文名称',
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.blue,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(
-                          horizontal: 2,
-                          vertical: 2,
-                        ),
-                        padding: EdgeInsets.symmetric(
-                          vertical: 5,
-                          horizontal: 5,
-                        ),
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              cyberpunkGreen.withOpacity(0.2),
-                              xianyuBlue.withOpacity(0.2),
-                            ],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                          ),
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(0), // 左上角
-                            topRight: Radius.circular(0), // 右上角
-                            bottomLeft: Radius.circular(0), // 左下角
-                            bottomRight: Radius.circular(0), // 右下角
-                          ),
-                        ),
-                        child: Center(
-                          child: SelectableText(
-                            widget.product.name.length > 1
-                                ? widget.product.name[1]
-                                : '暂无',
-                            style: const TextStyle(fontSize: 12),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              // 第三行
-              IntrinsicHeight(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.symmetric(
-                        horizontal: 2,
-                        vertical: 2,
-                      ),
-                      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            cyberpunkGreen.withOpacity(0.2),
-                            xianyuBlue.withOpacity(0.2),
+                      // 第三行
+                      IntrinsicHeight(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Container(
+                              margin: const EdgeInsets.symmetric(
+                                horizontal: 2,
+                                vertical: 2,
+                              ),
+                              padding: EdgeInsets.symmetric(
+                                vertical: 5,
+                                horizontal: 5,
+                              ),
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: [
+                                    cyberpunkGreen.withOpacity(1.0),
+                                    xianyuBlue.withOpacity(1.0),
+                                  ],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                ),
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(0), // 左上角
+                                  topRight: Radius.circular(0), // 右上角
+                                  bottomLeft: Radius.circular(8), // 左下角
+                                  bottomRight: Radius.circular(0), // 右下角
+                                ),
+                              ),
+                              child: const Center(
+                                child: SelectableText(
+                                  '其它名称',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.blue,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: Container(
+                                margin: const EdgeInsets.symmetric(
+                                  horizontal: 2,
+                                  vertical: 2,
+                                ),
+                                padding: EdgeInsets.symmetric(
+                                  vertical: 5,
+                                  horizontal: 5,
+                                ),
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      cyberpunkGreen.withOpacity(1.0),
+                                      xianyuBlue.withOpacity(1.0),
+                                    ],
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                  ),
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(0), // 左上角
+                                    topRight: Radius.circular(0), // 右上角
+                                    bottomLeft: Radius.circular(0), // 左下角
+                                    bottomRight: Radius.circular(8), // 右下角
+                                  ),
+                                ),
+                                child: Center(
+                                  child: SelectableText(
+                                    widget.product.name.length > 2
+                                        ? '${widget.product.name.sublist(2).join(', ')}'
+                                        : '暂无',
+                                    style: const TextStyle(fontSize: 12),
+                                  ),
+                                ),
+                              ),
+                            ),
                           ],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(0), // 左上角
-                          topRight: Radius.circular(0), // 右上角
-                          bottomLeft: Radius.circular(8), // 左下角
-                          bottomRight: Radius.circular(0), // 右下角
                         ),
                       ),
-                      child: const Center(
-                        child: SelectableText(
-                          '其它名称',
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.blue,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(
-                          horizontal: 2,
-                          vertical: 2,
-                        ),
-                        padding: EdgeInsets.symmetric(
-                          vertical: 5,
-                          horizontal: 5,
-                        ),
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              cyberpunkGreen.withOpacity(0.2),
-                              xianyuBlue.withOpacity(0.2),
-                            ],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                          ),
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(0), // 左上角
-                            topRight: Radius.circular(0), // 右上角
-                            bottomLeft: Radius.circular(0), // 左下角
-                            bottomRight: Radius.circular(8), // 右下角
-                          ),
-                        ),
-                        child: Center(
-                          child: SelectableText(
-                            widget.product.name.length > 2
-                                ? '${widget.product.name.sublist(2).join(', ')}'
-                                : '暂无',
-                            style: const TextStyle(fontSize: 12),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 15),
-          // 介绍文本
-          Markdown(
-            data: markdownContent,
-            shrinkWrap: true,
-            selectable: true,
-            physics: const NeverScrollableScrollPhysics(),
-            padding: const EdgeInsets.fromLTRB(10, 5, 10, 15),
-            imageBuilder: (uri, title, alt) {
-              return GestureDetector(
-                onTap: () => _enlargeImage(uri.toString()),
-                child: Center(
-                  child: CachedNetworkImage(
-                    imageUrl: uri.toString(),
-                    placeholder:
-                        (context, url) => Container(
-                          color: Colors.grey[300],
-                          width: 100,
-                          height: 100,
-                          child: const Icon(Icons.image, color: Colors.grey),
-                        ),
-                    errorWidget:
-                        (context, url, error) => Container(
-                          color: Colors.grey[300],
-                          width: 100,
-                          height: 100,
-                          child: const Icon(
-                            Icons.broken_image,
-                            color: Colors.grey,
-                          ),
-                        ),
-                    width: MediaQuery.of(context).size.width * 0.6,
-                    fit: BoxFit.scaleDown,
+                    ],
                   ),
                 ),
-              );
-            },
+                SizedBox(height: 15),
+
+                Container(
+                  padding: EdgeInsets.fromLTRB(16, 20, 16, 0),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(16), // 左上角
+                      topRight: Radius.circular(16), // 右上角
+                      bottomLeft: Radius.circular(0), // 左下角
+                      bottomRight: Radius.circular(0), // 右下角
+                    ),
+                  ),
+                  child: Markdown(
+                    data: markdownContent,
+                    shrinkWrap: true,
+                    selectable: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    padding: const EdgeInsets.fromLTRB(10, 5, 10, 15),
+                    imageBuilder: (uri, title, alt) {
+                      return GestureDetector(
+                        onTap: () => _enlargeImage(uri.toString()),
+                        child: Center(
+                          child: CachedNetworkImage(
+                            imageUrl: uri.toString(),
+                            placeholder:
+                                (context, url) => Container(
+                                  color: Colors.grey[300],
+                                  width: 100,
+                                  height: 100,
+                                  child: const Icon(
+                                    Icons.image,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                            errorWidget:
+                                (context, url, error) => Container(
+                                  color: Colors.grey[300],
+                                  width: 100,
+                                  height: 100,
+                                  child: const Icon(
+                                    Icons.broken_image,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                            width: MediaQuery.of(context).size.width * 0.6,
+                            fit: BoxFit.scaleDown,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
           ),
           _buildBottomGap(),
         ],
