@@ -445,12 +445,12 @@ class ProductGrid extends StatelessWidget {
                         ? [
                           Colors.pink.shade100,
                           Colors.pink.shade50,
-                          Colors.red.shade50,
+                          //     Colors.red.shade50,
                         ]
                         : [
                           Colors.blue.shade100,
                           Colors.blue.shade50,
-                          Colors.green.shade50,
+                          //         Colors.green.shade50,
                         ], // 切换背景色
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
