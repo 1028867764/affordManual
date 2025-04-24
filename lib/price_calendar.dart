@@ -481,218 +481,235 @@ class _PriceCalendarState extends State<PriceCalendar> {
         // 使用 StatefulBuilder 包裹对话框内容
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setState) {
-            return AlertDialog(
-              title: Center(
-                child: Text(
-                  _selectedDate == null
-                      ? '添加记录'
-                      : '${DateFormat('yyyy-MM-dd').format(_selectedDate!)}',
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
+            return Theme(
+              data: ThemeData(
+                dialogTheme: DialogThemeData(
+                  backgroundColor: Colors.white, // 设置对话框背景色
+                ),
+              ),
+              child: AlertDialog(
+                title: Center(
+                  child: Text(
+                    _selectedDate == null
+                        ? '添加记录'
+                        : '${DateFormat('yyyy-MM-dd').format(_selectedDate!)}',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-              ),
-              content: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const SizedBox(height: 12),
-                    TextField(
-                      controller: _customizedNameController,
-                      decoration: InputDecoration(
-                        labelText: '自定义名称',
-                        hintText: '输入自定义名称（可选）',
-                        border: const OutlineInputBorder(),
-                        labelStyle: TextStyle(fontSize: 12),
-                      ),
-                      style: TextStyle(fontSize: 12),
-                      maxLines: null, // 不限制最大行数
-                      keyboardType: TextInputType.multiline, // 支持多行文本输入
-                    ),
-                    const SizedBox(height: 12),
-                    Center(
-                      child: Text(
-                        '价格',
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
+                content: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const SizedBox(height: 12),
+                      TextField(
+                        controller: _customizedNameController,
+                        decoration: InputDecoration(
+                          labelText: '自定义名称',
+                          hintText: '输入自定义名称（可选）',
+                          border: const OutlineInputBorder(),
+                          labelStyle: TextStyle(fontSize: 12),
                         ),
+                        style: TextStyle(fontSize: 12),
+                        maxLines: null, // 不限制最大行数
+                        keyboardType: TextInputType.multiline, // 支持多行文本输入
                       ),
-                    ),
-                    const SizedBox(height: 12),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: TextField(
-                            controller: _priceController,
-                            decoration: const InputDecoration(
-                              labelText: '价格',
-                              hintText: '输入价格',
-                              border: OutlineInputBorder(),
-                              labelStyle: TextStyle(fontSize: 12),
-                            ),
-                            keyboardType: TextInputType.number,
-                            style: TextStyle(fontSize: 12),
+                      const SizedBox(height: 12),
+                      Center(
+                        child: Text(
+                          '价格',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: TextField(
-                            controller: _unitController,
-                            decoration: const InputDecoration(
-                              labelText: '单位',
-                              hintText: '输入单位（如：斤、kg等）',
-                              border: OutlineInputBorder(),
-                              labelStyle: TextStyle(fontSize: 12),
+                      ),
+                      const SizedBox(height: 12),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TextField(
+                              controller: _priceController,
+                              decoration: const InputDecoration(
+                                labelText: '价格',
+                                hintText: '输入价格',
+                                border: OutlineInputBorder(),
+                                labelStyle: TextStyle(fontSize: 12),
+                              ),
+                              keyboardType: TextInputType.number,
+                              style: TextStyle(fontSize: 12),
                             ),
-                            style: TextStyle(fontSize: 12),
                           ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 12),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Row(
-                          children: [
-                            Radio<String>(
-                              value: 'rmb',
-                              groupValue: _currency,
-                              onChanged: (String? value) {
-                                setState(() {
-                                  _currency = value!;
-                                });
-                              },
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: TextField(
+                              controller: _unitController,
+                              decoration: const InputDecoration(
+                                labelText: '单位',
+                                hintText: '输入单位（如：斤、kg等）',
+                                border: OutlineInputBorder(),
+                                labelStyle: TextStyle(fontSize: 12),
+                              ),
+                              style: TextStyle(fontSize: 12),
                             ),
-                            const Text('人民币'),
-                          ],
-                        ),
-                        const SizedBox(width: 16), // 添加间距
-                        Row(
-                          children: [
-                            Radio<String>(
-                              value: 'dollar',
-                              groupValue: _currency,
-                              onChanged: (String? value) {
-                                setState(() {
-                                  _currency = value!;
-                                });
-                              },
-                            ),
-                            const Text('美元'),
-                          ],
-                        ),
-                      ],
-                    ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Row(
+                            children: [
+                              Radio<String>(
+                                value: 'rmb',
+                                groupValue: _currency,
+                                onChanged: (String? value) {
+                                  setState(() {
+                                    _currency = value!;
+                                  });
+                                },
+                              ),
+                              const Text('人民币'),
+                            ],
+                          ),
+                          const SizedBox(width: 16), // 添加间距
+                          Row(
+                            children: [
+                              Radio<String>(
+                                value: 'dollar',
+                                groupValue: _currency,
+                                onChanged: (String? value) {
+                                  setState(() {
+                                    _currency = value!;
+                                  });
+                                },
+                              ),
+                              const Text('美元'),
+                            ],
+                          ),
+                        ],
+                      ),
 
-                    const SizedBox(height: 12),
-                    Center(
-                      child: Text(
-                        '地址',
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
+                      const SizedBox(height: 12),
+                      Center(
+                        child: Text(
+                          '地址',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 12),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: TextField(
-                            controller: _countryController,
-                            decoration: const InputDecoration(
-                              labelText: '国家',
-                              hintText: '输入国家',
-                              border: OutlineInputBorder(),
-                              labelStyle: TextStyle(fontSize: 12),
+                      const SizedBox(height: 12),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TextField(
+                              controller: _countryController,
+                              decoration: const InputDecoration(
+                                labelText: '国家',
+                                hintText: '输入国家',
+                                border: OutlineInputBorder(),
+                                labelStyle: TextStyle(fontSize: 12),
+                              ),
+                              style: TextStyle(fontSize: 12),
                             ),
-                            style: TextStyle(fontSize: 12),
                           ),
-                        ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: TextField(
-                            controller: _provinceController,
-                            decoration: const InputDecoration(
-                              labelText: '省份/州',
-                              hintText: '输入省份或州',
-                              border: OutlineInputBorder(),
-                              labelStyle: TextStyle(fontSize: 12),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: TextField(
+                              controller: _provinceController,
+                              decoration: const InputDecoration(
+                                labelText: '省份/州',
+                                hintText: '输入省份或州',
+                                border: OutlineInputBorder(),
+                                labelStyle: TextStyle(fontSize: 12),
+                              ),
+                              style: TextStyle(fontSize: 12),
                             ),
-                            style: TextStyle(fontSize: 12),
                           ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 12),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
 
-                    TextField(
-                      controller: _cityController,
-                      decoration: const InputDecoration(
-                        labelText: '城市',
-                        hintText: '输入城市',
-                        border: OutlineInputBorder(),
-                        labelStyle: TextStyle(fontSize: 12),
+                      TextField(
+                        controller: _cityController,
+                        decoration: const InputDecoration(
+                          labelText: '城市',
+                          hintText: '输入城市',
+                          border: OutlineInputBorder(),
+                          labelStyle: TextStyle(fontSize: 12),
+                        ),
+                        style: TextStyle(fontSize: 12),
                       ),
-                      style: TextStyle(fontSize: 12),
-                    ),
-                    const SizedBox(height: 12),
-                    Center(
-                      child: Text(
-                        '补充说明',
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
+                      const SizedBox(height: 12),
+                      Center(
+                        child: Text(
+                          '补充说明',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 12),
-                    TextField(
-                      controller: _noteController,
-                      decoration: const InputDecoration(
-                        labelText: '备注',
-                        hintText: '输入备注信息',
-                        border: OutlineInputBorder(),
-                        labelStyle: TextStyle(fontSize: 12),
+                      const SizedBox(height: 12),
+                      TextField(
+                        controller: _noteController,
+                        decoration: const InputDecoration(
+                          labelText: '备注',
+                          hintText: '输入备注信息',
+                          border: OutlineInputBorder(),
+                          labelStyle: TextStyle(fontSize: 12),
+                        ),
+                        style: TextStyle(fontSize: 12),
+                        maxLines: null, // 不限制最大行数
+                        keyboardType: TextInputType.multiline, // 支持多行文本输入
                       ),
-                      style: TextStyle(fontSize: 12),
-                      maxLines: null, // 不限制最大行数
-                      keyboardType: TextInputType.multiline, // 支持多行文本输入
-                    ),
-                    const SizedBox(height: 12),
-                    TextField(
-                      controller: _outLinkController,
-                      decoration: const InputDecoration(
-                        labelText: '外部链接',
-                        hintText: '输入外部链接',
-                        border: OutlineInputBorder(),
-                        labelStyle: TextStyle(fontSize: 12),
+                      const SizedBox(height: 12),
+                      TextField(
+                        controller: _outLinkController,
+                        decoration: const InputDecoration(
+                          labelText: '外部链接',
+                          hintText: '输入外部链接',
+                          border: OutlineInputBorder(),
+                          labelStyle: TextStyle(fontSize: 12),
+                        ),
+                        style: TextStyle(fontSize: 12),
+                        maxLines: null, // 不限制最大行数
+                        keyboardType: TextInputType.multiline, // 支持多行文本输入
                       ),
-                      style: TextStyle(fontSize: 12),
-                      maxLines: null, // 不限制最大行数
-                      keyboardType: TextInputType.multiline, // 支持多行文本输入
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text(
+                      '取消',
+                      style: TextStyle(
+                        color: Colors.black, // 设置文本颜色为蓝色
+                      ),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      _saveRecord();
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text(
+                      '保存',
+                      style: TextStyle(
+                        color: Colors.black, // 设置文本颜色为蓝色
+                      ),
+                    ),
+                  ),
+                ],
               ),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('取消'),
-                ),
-                TextButton(
-                  onPressed: () {
-                    _saveRecord();
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('保存'),
-                ),
-              ],
             );
           },
         );

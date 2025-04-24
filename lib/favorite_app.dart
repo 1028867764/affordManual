@@ -287,21 +287,24 @@ class _FavoriteAppState extends State<FavoriteApp> {
                 children: [
                   TextField(
                     controller: nameController,
-                    style: const TextStyle(color: Colors.black),
+                    style: const TextStyle(color: Colors.black, fontSize: 12),
                     decoration: const InputDecoration(
                       labelText: '自定义名称',
                       border: OutlineInputBorder(),
+                      labelStyle: TextStyle(fontSize: 12),
                     ),
                   ),
                   const SizedBox(height: 16),
                   TextField(
                     controller: descriptionController,
-                    style: const TextStyle(color: Colors.black),
+                    style: const TextStyle(color: Colors.black, fontSize: 12),
                     decoration: const InputDecoration(
                       labelText: '简短描述',
                       border: OutlineInputBorder(),
+                      labelStyle: TextStyle(fontSize: 12),
                     ),
-                    maxLines: 3,
+
+                    maxLines: 5,
                   ),
                 ],
               ),
