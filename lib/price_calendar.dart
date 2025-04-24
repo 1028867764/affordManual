@@ -482,17 +482,78 @@ class _PriceCalendarState extends State<PriceCalendar> {
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setState) {
             return AlertDialog(
-              title: Text(
-                _selectedDate == null
-                    ? '添加记录'
-                    : '${DateFormat('yyyy-MM-dd').format(_selectedDate!)}',
+              title: Center(
+                child: Text(
+                  _selectedDate == null
+                      ? '添加记录'
+                      : '${DateFormat('yyyy-MM-dd').format(_selectedDate!)}',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
               content: SingleChildScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    // 使用 RadioListTile 实现的货币选择器
+                    const SizedBox(height: 12),
+                    TextField(
+                      controller: _customizedNameController,
+                      decoration: InputDecoration(
+                        labelText: '自定义名称',
+                        hintText: '输入自定义名称（可选）',
+                        border: const OutlineInputBorder(),
+                        labelStyle: TextStyle(fontSize: 12),
+                      ),
+                      style: TextStyle(fontSize: 12),
+                      maxLines: null, // 不限制最大行数
+                      keyboardType: TextInputType.multiline, // 支持多行文本输入
+                    ),
+                    const SizedBox(height: 12),
+                    Center(
+                      child: Text(
+                        '价格',
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
                     Row(
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            controller: _priceController,
+                            decoration: const InputDecoration(
+                              labelText: '价格',
+                              hintText: '输入价格',
+                              border: OutlineInputBorder(),
+                              labelStyle: TextStyle(fontSize: 12),
+                            ),
+                            keyboardType: TextInputType.number,
+                            style: TextStyle(fontSize: 12),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: TextField(
+                            controller: _unitController,
+                            decoration: const InputDecoration(
+                              labelText: '单位',
+                              hintText: '输入单位（如：斤、kg等）',
+                              border: OutlineInputBorder(),
+                              labelStyle: TextStyle(fontSize: 12),
+                            ),
+                            style: TextStyle(fontSize: 12),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Row(
                           children: [
@@ -525,35 +586,67 @@ class _PriceCalendarState extends State<PriceCalendar> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 16),
-                    TextField(
-                      controller: _priceController,
-                      decoration: const InputDecoration(
-                        labelText: '价格',
-                        hintText: '输入价格',
-                        border: OutlineInputBorder(),
-                      ),
-                      keyboardType: TextInputType.number,
-                    ),
+
                     const SizedBox(height: 12),
-                    TextField(
-                      controller: _unitController,
-                      decoration: const InputDecoration(
-                        labelText: '单位',
-                        hintText: '输入单位（如：斤、kg等）',
-                        border: OutlineInputBorder(),
+                    Center(
+                      child: Text(
+                        '地址',
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 12),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            controller: _countryController,
+                            decoration: const InputDecoration(
+                              labelText: '国家',
+                              hintText: '输入国家',
+                              border: OutlineInputBorder(),
+                              labelStyle: TextStyle(fontSize: 12),
+                            ),
+                            style: TextStyle(fontSize: 12),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: TextField(
+                            controller: _provinceController,
+                            decoration: const InputDecoration(
+                              labelText: '省份/州',
+                              hintText: '输入省份或州',
+                              border: OutlineInputBorder(),
+                              labelStyle: TextStyle(fontSize: 12),
+                            ),
+                            style: TextStyle(fontSize: 12),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+
                     TextField(
-                      controller: _customizedNameController,
-                      decoration: InputDecoration(
-                        labelText: '自定义名称',
-                        hintText:
-                            displayName.isNotEmpty
-                                ? displayName
-                                : '输入自定义名称（可选）',
-                        border: const OutlineInputBorder(),
+                      controller: _cityController,
+                      decoration: const InputDecoration(
+                        labelText: '城市',
+                        hintText: '输入城市',
+                        border: OutlineInputBorder(),
+                        labelStyle: TextStyle(fontSize: 12),
+                      ),
+                      style: TextStyle(fontSize: 12),
+                    ),
+                    const SizedBox(height: 12),
+                    Center(
+                      child: Text(
+                        '补充说明',
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 12),
@@ -563,35 +656,11 @@ class _PriceCalendarState extends State<PriceCalendar> {
                         labelText: '备注',
                         hintText: '输入备注信息',
                         border: OutlineInputBorder(),
+                        labelStyle: TextStyle(fontSize: 12),
                       ),
-                      maxLines: 2,
-                    ),
-                    const SizedBox(height: 12),
-                    TextField(
-                      controller: _countryController,
-                      decoration: const InputDecoration(
-                        labelText: '国家',
-                        hintText: '输入国家',
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    TextField(
-                      controller: _provinceController,
-                      decoration: const InputDecoration(
-                        labelText: '省份/州',
-                        hintText: '输入省份或州',
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    TextField(
-                      controller: _cityController,
-                      decoration: const InputDecoration(
-                        labelText: '城市',
-                        hintText: '输入城市',
-                        border: OutlineInputBorder(),
-                      ),
+                      style: TextStyle(fontSize: 12),
+                      maxLines: null, // 不限制最大行数
+                      keyboardType: TextInputType.multiline, // 支持多行文本输入
                     ),
                     const SizedBox(height: 12),
                     TextField(
@@ -600,7 +669,11 @@ class _PriceCalendarState extends State<PriceCalendar> {
                         labelText: '外部链接',
                         hintText: '输入外部链接',
                         border: OutlineInputBorder(),
+                        labelStyle: TextStyle(fontSize: 12),
                       ),
+                      style: TextStyle(fontSize: 12),
+                      maxLines: null, // 不限制最大行数
+                      keyboardType: TextInputType.multiline, // 支持多行文本输入
                     ),
                   ],
                 ),
@@ -772,6 +845,7 @@ class _PriceCalendarState extends State<PriceCalendar> {
                 ),
               ],
             ),
+            const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween, // 控制容器之间的间距
               children: [
@@ -826,6 +900,7 @@ class _PriceCalendarState extends State<PriceCalendar> {
                   ),
               ],
             ),
+            const SizedBox(height: 10),
             SelectableText(
               record == null || (record.note?.isEmpty ?? true)
                   ? '暂无备注'
@@ -837,7 +912,7 @@ class _PriceCalendarState extends State<PriceCalendar> {
               SizedBox(height: 10),
             if (record?.price != null &&
                 record!.outLink.isNotEmpty) // 检查 outLink 是否非空
-              SelectableText('外部链接：', style: const TextStyle(fontSize: 12)),
+              Text('外部链接：', style: const TextStyle(fontSize: 12)),
             if (record?.price != null &&
                 record!.outLink.isNotEmpty) // 检查 outLink 是否非空
               SelectableText(
