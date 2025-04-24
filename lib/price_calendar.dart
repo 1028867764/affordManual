@@ -834,13 +834,18 @@ class _PriceCalendarState extends State<PriceCalendar> {
                             ),
                           ],
                         ),
-                        SelectableText(
-                          record?.price != null
-                              ? record?.city.isEmpty ?? false
-                                  ? '未知城市'
-                                  : record!.city
-                              : '',
-                          style: TextStyle(fontSize: 12),
+                        Row(
+                          children: [
+                            Text('🌏️', style: TextStyle(fontSize: 12)),
+                            SelectableText(
+                              record?.price != null
+                                  ? record?.city.isEmpty ?? false
+                                      ? '未知城市'
+                                      : record!.city
+                                  : '',
+                              style: TextStyle(fontSize: 12),
+                            ),
+                          ],
                         ),
                       ],
                     ),
