@@ -38,7 +38,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
   bool _isFavorited = false;
   late final String _favoriteKey;
   late TabController _tabController;
-  final List<String> _tabs = ['介绍', '报价', '记账'];
+  final List<String> _tabs = ['介绍', '记账', '报价'];
   final ScrollController _scrollController = ScrollController();
   bool _isScrolled = false; // 是否滚动超过 50px
   bool _showBackToTop = false;
@@ -771,8 +771,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                     controller: _tabController,
                     children: [
                       _buildDetailContent(),
-                      _buildPriceContent(),
                       _buildCalendarContent(),
+                      _buildPriceContent(),
                     ],
                   ),
                 ),

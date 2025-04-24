@@ -81,7 +81,8 @@ class _PriceCalendarState extends State<PriceCalendar> {
   DateTime? _selectedDate;
   final Map<DateTime, PriceRecord> _records = {};
   SharedPreferences? _prefs;
-  static const String _lastSelectedDateKey = 'last_selected_date';
+  //这个修改将确保每个产品都有自己独立的最后选择日期存储键
+  String get _lastSelectedDateKey => 'last_selected_date_${widget.productId}';
 
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _unitController = TextEditingController();
@@ -243,10 +244,11 @@ class _PriceCalendarState extends State<PriceCalendar> {
   void _goToToday() {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
+    // 直接调用 _onDateSelected 来模拟点击今天的日期
+    _onDateSelected(today);
 
     setState(() {
       _currentMonth = DateTime(now.year, now.month); // 确保切换到当前月份
-      _selectedDate = today; // 选中今天的日期
 
       // 更新表单数据
       final record = _records[today];
