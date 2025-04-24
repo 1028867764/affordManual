@@ -836,7 +836,10 @@ class _PriceCalendarState extends State<PriceCalendar> {
                         ),
                         Row(
                           children: [
-                            Text('🌏️', style: TextStyle(fontSize: 12)),
+                            Text(
+                              record?.price == null ? '' : '🌏️',
+                              style: TextStyle(fontSize: 12),
+                            ),
                             SelectableText(
                               record?.price != null
                                   ? record?.city.isEmpty ?? false
