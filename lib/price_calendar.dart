@@ -943,7 +943,7 @@ class _PriceCalendarState extends State<PriceCalendar> {
             if (record?.price != null &&
                 record!.outLink.isNotEmpty) // 检查 outLink 是否非空
               SelectableText(
-                '🗝️${record.outLink}',
+                '${record.outLink}',
                 style: const TextStyle(fontSize: 12, color: Colors.blue),
               ),
           ],
