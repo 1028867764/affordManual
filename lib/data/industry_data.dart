@@ -872,5 +872,9 @@ final Map<String, List<Map<String, dynamic>>> factories = {
       "id": "factories81_13_0",
       "name": ["泛醇", "Panthenol"],
     },
+    {
+      "id": "factories43133_95_5",
+      "name": ["加氢石脑油", "hydrogenated naphtha"],
+    },
   ],
 };
