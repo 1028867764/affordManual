@@ -12,6 +12,9 @@ import 'data/industry_data.dart';
 import 'favorite_app.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'product_detail_screen.dart';
+import 'clinic_page.dart';
+import 'data/clinic_examine.dart';
+import 'star/screens/star_home_screen.dart';
 
 //B站粉红
 const Color kBilibiliPink = Color(0xFFFB7299);
@@ -86,9 +89,12 @@ class MainHomePage extends StatelessWidget {
               width: MediaQuery.of(context).size.width * 0.7,
               height: 30,
               decoration: BoxDecoration(
-                color: Colors.white,
+                image: DecorationImage(
+                  image: AssetImage('assets/images/beach1.jpg'), // 替换为你的本地图片路径
+                  fit: BoxFit.cover,
+                ),
                 borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.black), // 添加黑色边框
+                border: Border.all(color: Colors.black),
               ),
               child: const TextField(
                 style: TextStyle(fontSize: 15),
@@ -99,8 +105,8 @@ class MainHomePage extends StatelessWidget {
                     horizontal: 16,
                     vertical: -3,
                   ),
-                  suffixIcon: Icon(Icons.search, color: Colors.grey),
-                  hintText: '搜索...',
+                  suffixIcon: Icon(Icons.search, color: Colors.white),
+                  hintText: '',
                 ),
               ),
             ),
@@ -117,7 +123,7 @@ class MainHomePage extends StatelessWidget {
           children: [
             _buildImageButton(
               context,
-              'assets/images/biology_bg.webp',
+              'assets/images/biology_bg.png',
               '生物篇',
               () {
                 Navigator.push(
@@ -151,7 +157,7 @@ class MainHomePage extends StatelessWidget {
             ),
             _buildImageButton(
               context,
-              'assets/images/industry_bg.jpg',
+              'assets/images/industry_bg.png',
               '工业篇',
               () {
                 Navigator.push(
@@ -219,7 +225,7 @@ class MainHomePage extends StatelessWidget {
             ),
             _buildImageButton(
               context,
-              'assets/images/favorite_bg.jpg',
+              'assets/images/favorite_bg.png',
               '收藏夹',
               () {
                 Navigator.push(
@@ -228,6 +234,71 @@ class MainHomePage extends StatelessWidget {
                     pageBuilder:
                         (context, animation, secondaryAnimation) =>
                             const FavoriteApp(),
+                    transitionsBuilder: (
+                      context,
+                      animation,
+                      secondaryAnimation,
+                      child,
+                    ) {
+                      const begin = Offset(1.0, 0.0);
+                      const end = Offset.zero;
+                      const curve = Curves.ease;
+                      var tween = Tween(
+                        begin: begin,
+                        end: end,
+                      ).chain(CurveTween(curve: curve));
+                      var offsetAnimation = animation.drive(tween);
+                      return SlideTransition(
+                        position: offsetAnimation,
+                        child: child,
+                      );
+                    },
+                  ),
+                );
+              },
+            ),
+            _buildImageButton(context, 'assets/images/star_bg.png', '星空篇', () {
+              Navigator.push(
+                context,
+                PageRouteBuilder(
+                  pageBuilder:
+                      (context, animation, secondaryAnimation) =>
+                          StarHomeScreen(),
+                  transitionsBuilder: (
+                    context,
+                    animation,
+                    secondaryAnimation,
+                    child,
+                  ) {
+                    const begin = Offset(1.0, 0.0);
+                    const end = Offset.zero;
+                    const curve = Curves.ease;
+                    var tween = Tween(
+                      begin: begin,
+                      end: end,
+                    ).chain(CurveTween(curve: curve));
+                    var offsetAnimation = animation.drive(tween);
+                    return SlideTransition(
+                      position: offsetAnimation,
+                      child: child,
+                    );
+                  },
+                ),
+              );
+            }),
+            _buildImageButton(
+              context,
+              'assets/images/clinic_bg.png',
+              '临床篇',
+              () {
+                Navigator.push(
+                  context,
+                  PageRouteBuilder(
+                    pageBuilder:
+                        (context, animation, secondaryAnimation) =>
+                            ExaminationListPage(
+                              examine: ClinicExamine.createFullStructure(),
+                            ),
                     transitionsBuilder: (
                       context,
                       animation,
