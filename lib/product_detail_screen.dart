@@ -185,7 +185,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
             : "未知";
 
     final markdownContent = """
-![示例图片](http://img.tukuppt.com/photo-small/19/94/23/706589110a5f2073682.jpg)
+![示例图片](https://sparrow-done-1360679961.cos.ap-guangzhou.myqcloud.com/${widget.product.id}_picture_1.jpg)
+![示例图片](https://sparrow-done-1360679961.cos.ap-guangzhou.myqcloud.com/${widget.product.id}_picture_2.jpg)
    
 &emsp;&emsp;这是一段示例描述。产品ID: '${widget.product.id}' 以下几种薄荷品种通常产量较大：  
 &emsp;&emsp;这是一段示例描述。产品ID: '${widget.product.id}_markdown_1' 以下几种薄荷品种通常产量较大：  
