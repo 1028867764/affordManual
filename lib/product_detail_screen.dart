@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter/services.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -13,6 +14,7 @@ import 'search_page.dart';
 import 'dart:ui';
 import 'price_tag.dart';
 import 'price_calendar.dart';
+import 'dart:convert'; // 添加这个import
 
 // 闲鱼科技蓝
 const Color xianyuBlue = Color(0xFF00E5FF);
@@ -27,8 +29,13 @@ const Color tableFontColors = Colors.black;
 
 class ProductDetailScreen extends StatefulWidget {
   final dynamic product;
+  final String? markdownUrl;
 
-  const ProductDetailScreen({super.key, required this.product});
+  const ProductDetailScreen({
+    super.key,
+    required this.product,
+    this.markdownUrl,
+  });
 
   @override
   State<ProductDetailScreen> createState() => _ProductDetailScreenState();
@@ -47,6 +54,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
   bool _isScrolled = false; // 是否滚动超过 50px
   bool _showBackToTop = false;
   final double _backToTopThreshold = 129.9; // 显示返回顶部按钮的滚动阈值
+  String _markdownData = '加载中...';
+  String? _error;
 
   void _handleScroll() {
     // 检查是否滚动超过 50 像素
@@ -126,6 +135,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
     _loadFavoriteStatus();
     _tabController = TabController(length: _tabs.length, vsync: this);
     _loadPriceHistory();
+    _loadMarkdownFromCloud();
     _scrollController.addListener(_handleScroll); // 添加滚动监听
     Future.delayed(const Duration(milliseconds: 500), () {
       if (mounted) {
@@ -134,6 +144,36 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
         });
       }
     });
+  }
+
+  Future<void> _loadMarkdownFromCloud() async {
+    try {
+      final response = await http.get(
+        Uri.parse(
+          "https://markdown-1360679961.cos.ap-guangzhou.myqcloud.com/${widget.product.id}_markdown_1.md",
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        // 关键修改：使用bodyBytes和utf8.decode来避免乱码
+        final utf8String = utf8.decode(response.bodyBytes);
+
+        setState(() {
+          _markdownData = utf8String;
+        });
+      } else {
+        setState(() {
+          // 修复这里缺少的括号
+          _error = '加载失败: ${response.statusCode}';
+          _markdownData = '加载失败: ${response.statusCode}';
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _error = '加载出错: $e';
+        _markdownData = '加载出错: $e';
+      });
+    }
   }
 
   Future<void> _loadFavoriteStatus() async {
@@ -191,17 +231,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
 &emsp;&emsp;这是一段示例描述。产品ID: '${widget.product.id}' 以下几种薄荷品种通常产量较大：  
 &emsp;&emsp;这是一段示例描述。产品ID: '${widget.product.id}_markdown_1' 以下几种薄荷品种通常产量较大：  
 &emsp;&emsp;这是一段示例描述。产品ID: '${widget.product.id}_picture_1' 以下几种薄荷品种通常产量较大：
-- **“73~8”薄荷**：由轻工业部香料工业科学研究所培育的青茎高产品种。该品种生长旺盛，抗逆性强，叶片油腺密度大，挥发油产量较高。其分枝多，节间短，叶大，腺鳞分布较密，鲜草得油率0.3% - 0.51%，每667米²产油量为9.75 - 15.22千克，含薄荷油为80.1% - 87.6%。
-- **“上海39号”薄荷（亚洲39）**：轻工业部香料工业科学研究所培育的紫茎型薄荷新品种。生长旺盛，“头刀”薄荷株高90 - 120cm，“二刀”薄荷70 - 80cm，分枝多，抗逆性、适应性强，鲜草产量高。
-- **“阜油1号”薄荷**：属于青茎类型品系。生长健壮，抗倒伏、抗逆性强，“头刀”主茎100 - 140cm，“二刀”主茎50 - 70cm；具有早熟性，比一般品种早开花7 - 10天。
-- **青茎圆叶种**：植株的茎上部呈青色，叶短卵圆形有光泽，株矮，分枝多，富含薄荷脑。在肥沃土地上种植，其高产特性明显，是栽培中的优良品种之一。
-
-![示例图片](http://gd-hbimg.huaban.com/2288348e418d1372bab85e5266cae51b2d66503c6155b-KgiKde)
-#### &emsp;第一节
-&emsp;&emsp;《夜蝉》的故事发生在一个宁静而又略显封闭的小镇。小镇的生活节奏缓慢，人们过着平淡而又规律的日子，仿佛时间在这里停滞了一般。然而，一起突如其来的谋杀案打破了这份宁静，如同平静的湖面投入了一颗巨石。  
-&emsp;&emsp;案件发生在一个看似普通的夜晚，一位与小镇生活息息相关的人物被发现离奇死亡。随着调查的展开，各种线索逐渐浮出水面，但这些线索却如同夜空中的繁星，看似繁多却又各自独立，让人难以捉摸其中的关联。北村薰以其独特的叙事手法，将读者带入了一个充满悬念和神秘色彩的世界，让人们对这起案件充满了好奇和探索的欲望。
-#### &emsp;第二节
-&emsp;&emsp;这是一段示例描述。《零的焦点》则以一对夫妻的生活为切入点，展现了一幅日本战后社会的众生相。女主人公绫子看似拥有幸福美满的家庭，然而，丈夫的神秘失踪打破了这份平静。随着调查的深入，一系列惊人的真相逐渐浮出水面。原来，丈夫的过去涉及到一些不为人知的秘密，而这些秘密与当时日本社会的种种问题紧密相连。在这个过程中，作者揭示了战争给人们带来的创伤以及战后社会的混乱与迷茫。人们在追求物质生活的同时，往往忽略了内心的真实需求，导致道德观念的扭曲和人际关系的冷漠。通过对这起案件的描写，读者不仅能够感受到推理小说的紧张刺激，还能对社会现实进行深刻的反思。  
 
 """;
 
@@ -540,6 +569,57 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                   ),
                   child: Markdown(
                     data: markdownContent,
+                    shrinkWrap: true,
+                    selectable: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    padding: const EdgeInsets.fromLTRB(10, 5, 10, 15),
+                    imageBuilder: (uri, title, alt) {
+                      return GestureDetector(
+                        onTap: () => _enlargeImage(uri.toString()),
+                        child: Center(
+                          child: CachedNetworkImage(
+                            imageUrl: uri.toString(),
+                            placeholder:
+                                (context, url) => Container(
+                                  color: Colors.grey[300],
+                                  width: 100,
+                                  height: 100,
+                                  child: const Icon(
+                                    Icons.image,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                            errorWidget:
+                                (context, url, error) => Container(
+                                  color: Colors.grey[300],
+                                  width: 100,
+                                  height: 100,
+                                  child: const Icon(
+                                    Icons.broken_image,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                            width: MediaQuery.of(context).size.width * 0.6,
+                            fit: BoxFit.scaleDown,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.fromLTRB(16, 20, 16, 0),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(0), // 左上角
+                      topRight: Radius.circular(0), // 右上角
+                      bottomLeft: Radius.circular(0), // 左下角
+                      bottomRight: Radius.circular(0), // 右下角
+                    ),
+                  ),
+                  child: Markdown(
+                    data: _markdownData,
                     shrinkWrap: true,
                     selectable: true,
                     physics: const NeverScrollableScrollPhysics(),

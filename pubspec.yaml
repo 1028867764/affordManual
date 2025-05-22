@@ -31,7 +31,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_html: ^3.0.0
-  flutter_markdown: ^0.6.0
+  flutter_markdown: ^0.7.0
   cached_network_image: ^3.2.3
   intl: ^0.18.1 
   shared_preferences: ^2.2.2
