@@ -18,7 +18,9 @@ import 'star/screens/star_home_screen.dart';
 
 //B站粉红
 const Color kBilibiliPink = Color(0xFFFB7299);
-
+// 防抖
+final String requestTimeStamp =
+    '?timestamp=${DateTime.now().millisecondsSinceEpoch}';
 void main() {
   runApp(const MyApp());
 }
