@@ -272,6 +272,26 @@ final Map<String, List<Map<String, dynamic>>> factories = {
       "id": "factories144_55_8",
       "name": ["碳酸氢钠", "Sodium bicarbonate"],
     },
+    {
+      "id": "factories56038_13_2",
+      "name": ["三氯蔗糖", "Sucralose"],
+    },
+    {
+      "id": "factoriesCola",
+      "name": ["可乐", "Cola"],
+    },
+    {
+      "id": "factoriesMonosodium_glutamate",
+      "name": ["谷氨酸钠", "Monosodium glutamate"],
+    },
+    {
+      "id": "factoriesIMP",
+      "name": ["5’-呈味鸟苷酸二钠", "Inosine monophosphate"],
+    },
+    {
+      "id": "factoriesGMP",
+      "name": ["5’-呈味肌苷酸二钠", "Guanosine monophosphate"],
+    },
   ],
   "木材·纸": [
     {

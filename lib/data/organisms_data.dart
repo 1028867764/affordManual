@@ -269,7 +269,7 @@ final List<Category> organisms = [
                 id: "organismsSaccharum2",
                 name: ["一级白糖", "Grade A white sugar"],
               ),
-              Product(id: "organismsSaccharum3", name: ["三氯蔗糖", "Sucralose"]),
+              Product(id: "organismsSaccharum3", name: ["红糖", "Brown Sugar"]),
               Product(id: "organismsSaccharum4", name: ["蔗渣", "Bagasse"]),
             ],
           ),
@@ -289,9 +289,8 @@ final List<Category> organisms = [
                 id: "organismsTriticum3",
                 name: ["低筋面粉", "Low-gluten flour"],
               ),
-              Product(id: "organismsTriticum4", name: ["澄粉", "Wheat starch"]),
+              Product(id: "organismsTriticum4", name: ["小麦淀粉", "Wheat starch"]),
               Product(id: "organismsTriticum5", name: ["麦麸", "Wheat bran"]),
-              Product(id: "organismsTriticum6", name: ["麦秆", "Wheat straw"]),
             ],
           ),
           ParentProduct(
@@ -461,16 +460,6 @@ final List<Category> organisms = [
             ],
           ),
           ParentProduct(
-            id: "Wurfbainia",
-            name: ["砂仁属"],
-            childProducts: [
-              Product(
-                id: "organismsWurfbainia1",
-                name: ["爪哇白豆蔻", "Java cardamom"],
-              ),
-            ],
-          ),
-          ParentProduct(
             id: "Lanxangia",
             name: ["草果属"],
             childProducts: [
@@ -559,16 +548,6 @@ final List<Category> organisms = [
             name: ["胡桃属"],
             childProducts: [
               Product(id: "organismsJuglans1", name: ["核桃", "Walnut"]),
-            ],
-          ),
-          ParentProduct(
-            id: "Engelhardtia",
-            name: ["黄杞属"],
-            childProducts: [
-              Product(
-                id: "organismsEngelhardtia1",
-                name: ["大叶茶", "Large-leaf tea"],
-              ),
             ],
           ),
         ],
@@ -863,6 +842,14 @@ final List<Category> organisms = [
               ),
               Product(
                 id: "organismsBrassica_rapa4",
+                name: ["柳叶菜心", "Narrow-Leaf Chinese Flowering Cabbage"],
+              ),
+              Product(
+                id: "organismsBrassica_rapa5",
+                name: ["广东菜心", "Choy Sum"],
+              ),
+              Product(
+                id: "organismsBrassica_rapa6",
                 name: ["其它白菜", "Other Chinese cabbages"],
               ),
             ],
@@ -946,13 +933,14 @@ final List<Category> organisms = [
             id: "Allium",
             name: ["葱属"],
             childProducts: [
-              Product(id: "organismsAllium1", name: ["葱", "Scallion"]),
-              Product(id: "organismsAllium2", name: ["韭菜", "Garlic chives"]),
-              Product(id: "organismsAllium3", name: ["蒜瓣", "Garlic clove"]),
-              Product(id: "organismsAllium4", name: ["蒜苗", "Garlic sprout"]),
-              Product(id: "organismsAllium5", name: ["荞头", "Chinese onion"]),
-              Product(id: "organismsAllium6", name: ["洋葱", "Onion"]),
-              Product(id: "organismsAllium7", name: ["红葱头", "Shallot"]),
+              Product(id: "organismsAllium1", name: ["大葱", "Thicker Scallion"]),
+              Product(id: "organismsAllium2", name: ["小葱", "Thinner Scallion"]),
+              Product(id: "organismsAllium3", name: ["韭菜", "Garlic chives"]),
+              Product(id: "organismsAllium4", name: ["蒜瓣", "Garlic clove"]),
+              Product(id: "organismsAllium5", name: ["蒜苗", "Garlic sprout"]),
+              Product(id: "organismsAllium6", name: ["荞头", "Chinese onion"]),
+              Product(id: "organismsAllium7", name: ["洋葱", "Onion"]),
+              Product(id: "organismsAllium8", name: ["红葱头", "Shallot"]),
             ],
           ),
         ],
@@ -1041,7 +1029,7 @@ final List<Category> organisms = [
             id: "Cinnamomum",
             name: ["肉桂属"],
             childProducts: [
-              Product(id: "organismsCinnamomum1", name: ["肉桂", "Cinnamon"]),
+              Product(id: "organismsCinnamomum1", name: ["肉桂皮", "Cinnamon"]),
             ],
           ),
           ParentProduct(
@@ -1049,13 +1037,6 @@ final List<Category> organisms = [
             name: ["月桂属"],
             childProducts: [
               Product(id: "organismsLaurus1", name: ["月桂叶", "Bay leaf"]),
-            ],
-          ),
-          ParentProduct(
-            id: "Camphora",
-            name: ["樟属"],
-            childProducts: [
-              Product(id: "organismsCamphora1", name: ["樟树木材", "Camphor wood"]),
             ],
           ),
         ],
@@ -1083,10 +1064,6 @@ final List<Category> organisms = [
             name: ["油棕属"],
             childProducts: [
               Product(id: "organismsElaeis1", name: ["棕榈油", "Palm oil"]),
-              Product(
-                id: "organismsElaeis2",
-                name: ["棕榈仁油", "Palm kernel oil"],
-              ),
             ],
           ),
         ],
@@ -1352,7 +1329,6 @@ final List<Category> organisms = [
               Product(id: "organismsSus4", name: ["猪板油", "Pork leaf fat"]),
               Product(id: "organismsSus5", name: ["肥膘肉", "Pork fatback"]),
               Product(id: "organismsSus6", name: ["猪面颊", "Pork jowl"]),
-              Product(id: "organismsSus7", name: ["猪下巴", "Pork chin"]),
               Product(id: "organismsSus8", name: ["猪颈肉", "Pork neck"]),
               Product(id: "organismsSus9", name: ["猪舌头", "Pork tongue"]),
               Product(id: "organismsSus10", name: ["猪耳", "Pork ear"]),
@@ -1366,8 +1342,7 @@ final List<Category> organisms = [
               Product(id: "organismsSus18", name: ["猪前大腿", "Pork ham"]),
               Product(id: "organismsSus19", name: ["猪后大腿", "Pork hind leg"]),
               Product(id: "organismsSus20", name: ["猪大腿骨", "Pork femur"]),
-              Product(id: "organismsSus21", name: ["猪前肘", "Pork fore shank"]),
-              Product(id: "organismsSus22", name: ["猪后肘", "Pork hind shank"]),
+              Product(id: "organismsSus21", name: ["猪肘子", "Pork shank"]),
               Product(
                 id: "organismsSus23",
                 name: ["猪前蹄", "Pork front trotter"],
@@ -1484,22 +1459,10 @@ final List<Category> organisms = [
               Product(id: "organismsJunlei3", name: ["醋酸菌", "Acetobacter"]),
               Product(id: "organismsJunlei4", name: ["毛霉菌", "Mucor"]),
               Product(id: "organismsJunlei5", name: ["乳杆菌", "Lactobacillus"]),
-              Product(
-                id: "organismsJunlei6",
-                name: ["谷氨酸钠", "Monosodium glutamate"],
-              ),
-              Product(
-                id: "organismsJunlei7",
-                name: ["IMP", "Inosine monophosphate"],
-              ),
+              Product(id: "organismsJunlei6", name: ["黑木耳", "Black fungus"]),
+              Product(id: "organismsJunlei7", name: ["金针菇", "Enoki mushroom"]),
               Product(
                 id: "organismsJunlei8",
-                name: ["GMP", "Guanosine monophosphate"],
-              ),
-              Product(id: "organismsJunlei9", name: ["黑木耳", "Black fungus"]),
-              Product(id: "organismsJunlei10", name: ["金针菇", "Enoki mushroom"]),
-              Product(
-                id: "organismsJunlei11",
                 name: ["香菇", "Shiitake mushroom"],
               ),
             ],
