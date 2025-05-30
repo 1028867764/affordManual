@@ -64,9 +64,9 @@ final List<Category> organisms = [
                 name: ["鸡翅根", "Chicken drumette"],
               ),
               Product(id: "organismsGallus8", name: ["鸡爪", "Chicken feet"]),
-              Product(id: "organismsGallus13", name: ["鸡皮", "Chicken skin"]),
-              Product(id: "organismsGallus14", name: ["鸡蛋", "Chicken egg"]),
-              Product(id: "organismsGallus15", name: ["鸡毛", "Chicken feather"]),
+              Product(id: "organismsGallus9", name: ["鸡皮", "Chicken skin"]),
+              Product(id: "organismsGallus10", name: ["鸡蛋", "Chicken egg"]),
+              Product(id: "organismsGallus11", name: ["鸡毛", "Chicken feather"]),
             ],
           ),
         ],
@@ -79,12 +79,12 @@ final List<Category> organisms = [
             name: ["原鸡属"],
             childProducts: [
               Product(
-                id: "organismsGallus9",
+                id: "organismsGallus12",
                 name: ["鸡肠", "Chicken intestine"],
               ),
-              Product(id: "organismsGallus10", name: ["鸡胗", "Chicken gizzard"]),
-              Product(id: "organismsGallus11", name: ["鸡心", "Chicken heart"]),
-              Product(id: "organismsGallus12", name: ["鸡肝", "Chicken liver"]),
+              Product(id: "organismsGallus13", name: ["鸡胗", "Chicken gizzard"]),
+              Product(id: "organismsGallus14", name: ["鸡心", "Chicken heart"]),
+              Product(id: "organismsGallus15", name: ["鸡肝", "Chicken liver"]),
             ],
           ),
         ],
@@ -691,6 +691,7 @@ final List<Category> organisms = [
       ),
     ],
   ),
+
   Category(
     id: "姜目",
     parentProductGroups: [
@@ -743,6 +744,16 @@ final List<Category> organisms = [
             name: ["草果属"],
             childProducts: [
               Product(id: "organismsLanxangia1", name: ["草果", "Tsao-ko"]),
+            ],
+          ),
+          ParentProduct(
+            id: "Alpinia",
+            name: ["山姜属"],
+            childProducts: [
+              Product(
+                id: "organismsAlpinia1",
+                name: ["高良姜", "Galangal", "南姜", "风姜", "良姜", "虎皮姜"],
+              ),
             ],
           ),
         ],
@@ -1203,31 +1214,6 @@ final List<Category> organisms = [
   ),
 
   Category(
-    id: "石蒜科",
-    parentProductGroups: [
-      ParentProductGroup(
-        id: "石蒜科",
-        parentProducts: [
-          ParentProduct(
-            id: "Allium",
-            name: ["葱属"],
-            childProducts: [
-              Product(id: "organismsAllium1", name: ["大葱", "Thicker Scallion"]),
-              Product(id: "organismsAllium2", name: ["小葱", "Thinner Scallion"]),
-              Product(id: "organismsAllium3", name: ["韭菜", "Garlic chives"]),
-              Product(id: "organismsAllium4", name: ["蒜瓣", "Garlic clove"]),
-              Product(id: "organismsAllium5", name: ["蒜苗", "Garlic sprout"]),
-              Product(id: "organismsAllium6", name: ["荞头", "Chinese onion"]),
-              Product(id: "organismsAllium7", name: ["洋葱", "Onion"]),
-              Product(id: "organismsAllium8", name: ["红葱头", "Shallot"]),
-            ],
-          ),
-        ],
-      ),
-    ],
-  ),
-
-  Category(
     id: "无患子目",
     parentProductGroups: [
       ParentProductGroup(
@@ -1349,9 +1335,46 @@ final List<Category> organisms = [
       ),
     ],
   ),
+
   Category(
     id: "其它植物",
     parentProductGroups: [
+      ParentProductGroup(
+        id: "石蒜科",
+        parentProducts: [
+          ParentProduct(
+            id: "Allium",
+            name: ["葱属"],
+            childProducts: [
+              Product(id: "organismsAllium1", name: ["大葱", "Thicker Scallion"]),
+              Product(id: "organismsAllium2", name: ["小葱", "Thinner Scallion"]),
+              Product(id: "organismsAllium3", name: ["韭菜", "Garlic chives"]),
+              Product(id: "organismsAllium4", name: ["蒜瓣", "Garlic clove"]),
+              Product(id: "organismsAllium5", name: ["蒜苗", "Garlic sprout"]),
+              Product(id: "organismsAllium6", name: ["荞头", "Chinese onion"]),
+              Product(id: "organismsAllium7", name: ["洋葱", "Onion"]),
+              Product(id: "organismsAllium8", name: ["红葱头", "Shallot"]),
+            ],
+          ),
+        ],
+      ),
+      ParentProductGroup(
+        id: "胡椒科",
+        parentProducts: [
+          ParentProduct(
+            id: "Piper",
+            name: ["胡椒属"],
+            childProducts: [
+              Product(id: "organismsPiper1", name: ["白胡椒", "White pepper"]),
+              Product(id: "organismsPiper2", name: ["黑胡椒", "Black pepper"]),
+              Product(
+                id: "organismsPiper3",
+                name: ["假蒟叶", "Piper sarmentosum leave", "假蒌叶", "蛤蒌叶"],
+              ),
+            ],
+          ),
+        ],
+      ),
       ParentProductGroup(
         id: "五味子科",
         parentProducts: [
